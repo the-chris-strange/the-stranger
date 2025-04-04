@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ESLintConfig",
+  "title": "ESLint configuration file generator",
+  "description": "Generate an ESLint config file for a project.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project where the eslint config should be generated.",
+      "$default": {
+        "$source": "projectName",
+        "index": 0
+      },
+      "x-prompt": "To which project would you like to add an ESLint configuration file?"
+    },
+    "fileExtension": {
+      "type": "string",
+      "description": "The file extension to use for the generated ESLint config file.",
+      "enum": ["ts", "mjs", "cjs"]
+    },
+    "extend": {
+      "type": "string",
+      "description": "The path to a base ESLint config to extend."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite existing files."
+    }
+  },
+  "required": ["project"]
+}

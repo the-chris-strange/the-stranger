@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ViteConfig",
+  "title": "Vite configuration file generator",
+  "description": "Generate a vite.config.ts file for a project.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project in which to generate a vite config.",
+      "$default": {
+        "$source": "projectName",
+        "index": 0
+      },
+      "x-prompt": "To which project would you like to add a Vite configuration file?"
+    },
+    "includeTest": {
+      "type": "boolean",
+      "default": true,
+      "description": "Include configuration for Vitest in the generated file."
+    },
+    "includeBuild": {
+      "type": "boolean",
+      "default": true,
+      "description": "Include build configuration in the generated file."
+    },
+    "testEnvironment": {
+      "type": "string",
+      "description": "The testing environment for the project.",
+      "default": "node",
+      "enum": ["node", "jsdom"]
+    },
+    "globals": {
+      "type": "boolean",
+      "description": "Allow vitest to inject jest-like API's into the testing environment.",
+      "default": false
+    },
+    "react": {
+      "type": "boolean",
+      "description": "Indicate that the project uses React.js.",
+      "default": false
+    },
+    "swc": {
+      "type": "boolean",
+      "description": "Use the SWC compiler instead of babel."
+    },
+    "tsconfigName": {
+      "type": "string",
+      "description": "Set the filename to use in the configuration for `vite-plugin-dts`. If unspecified, the generator will use the project's 'projectType' configuration value to create a file name."
+    },
+    "inSourceTests": {
+      "type": "boolean",
+      "description": "Include setup for writing tests directly in source code files, rather than creating separate *.spec files."
+    },
+    "skipTsconfigs": {
+      "type": "boolean",
+      "description": "Skip updating the project's tsconfig.json files."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite existing files."
+    }
+  },
+  "required": ["project"]
+}

@@ -1,0 +1,119 @@
+{
+  "[git-commit]": {
+    "editor.rulers": [50]
+  },
+  "[json][jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.rulers": [120],
+    "editor.wordWrapColumn": 120
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "other": "off",
+      "strings": "off"
+    },
+    "editor.rulers": [120],
+    "editor.unicodeHighlight.ambiguousCharacters": true,
+    "editor.unicodeHighlight.invisibleCharacters": true,
+    "editor.wordWrapColumn": 120
+  },
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.rulers": [88],
+    "editor.wordWrapColumn": 88
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescript][typescriptreact][javascript][javascriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.formatOnType": false,
+    "editor.rulers": [88],
+    "editor.wordWrapColumn": 88
+  },
+  "[yaml]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "full",
+    "editor.defaultColorDecorators": "auto",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.fixAll.eslint": "explicit"
+    }
+  },
+  "code-runner.executorMap": {
+    "javascript": "yarn node",
+    "typescript": "yarn exec ts-node"
+  },
+  "cSpell.enabled": true,
+  "cSpell.import": ["@cspell/dict-scientific-terms-us", "@cspell/dict-data-science"],
+  "cSpell.usePnP": true,
+  "docwriter.hotkey.mac": "⌥ + .",
+  "editor.unicodeHighlight.allowedCharacters": {},
+  "eslint.enable": true,
+  "eslint.format.enable": true,
+  "eslint.ignoreUntitled": true,
+  "eslint.validate": ["json", "jsonc", "toml"],
+  "files.associations": {
+    ".lintstagedrc": "yaml",
+    ".prettierrc": "yaml",
+    "*.template": "ejs",
+    "pre-commit": "shellscript"
+  },
+  "markiscodecoverage.searchCriteria": ".reports/coverage/packages/*/lcov.info",
+  "mypy-type-checker.importStrategy": "fromEnvironment",
+  "npm.exclude": ["dist/**/*", "packages/**/*"],
+  "npm.packageManager": "yarn",
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportGeneralTypeIssues": "none",
+    "reportImplicitStringConcatenation": "none",
+    "reportUnknownParameterType": "none"
+  },
+  "python.analysis.importFormat": "relative",
+  "python.analysis.inlayHints.callArgumentNames": "off",
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.pytestParameters": true,
+  "python.analysis.inlayHints.variableTypes": false,
+  "python.analysis.stubPath": "stubs",
+  "python.analysis.typeCheckingMode": "off",
+  "search.exclude": {
+    "**/.pnp.*": true,
+    "**/.yarn": true,
+    "coverage": true,
+    "dist": true,
+    ".reports": true
+  },
+  "snyk.features.codeQuality": false,
+  "snyk.features.openSourceSecurity": false,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.importModuleSpecifier": "project-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "vitest.maximumConfigs": 20,
+  "yaml.schemas": {
+    ".lintstagedrc": "https://json.schemastore.org/lintstagedrc.schema.json"
+  }
+}

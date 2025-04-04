@@ -1,0 +1,19 @@
+import jsoncParser from 'jsonc-eslint-parser'
+import tseslint from 'typescript-eslint'
+
+import baseConfig from '<%= options.extend ?? paths.baseConfig %>'
+
+export default tseslint.config(
+  ...baseConfig,
+
+  {
+    files: ['package.json'],
+    rules: {
+      '@nx/dependency-checks': [
+        'error',
+        <%- dependencyChecksOptions %>,
+      ],
+    },
+    languageOptions: { parser: jsoncParser },
+  },
+)

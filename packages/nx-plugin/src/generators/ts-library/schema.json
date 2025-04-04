@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "TSLibrary",
+  "title": "TypeScript library generator",
+  "description": "Generate a TypeScript library for this workspace.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the new library.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use for the new library?"
+    },
+    "bundler": {
+      "description": "The bundler to use. Choosing 'none' means this library is not buildable.",
+      "type": "string",
+      "enum": ["swc", "tsc", "rollup", "vite", "esbuild", "none"]
+    },
+    "unitTestRunner": {
+      "description": "Test runner to use for unit tests.",
+      "type": "string",
+      "enum": ["none", "jest", "vitest"]
+    },
+    "testEnvironment": {
+      "type": "string",
+      "enum": ["jsdom", "node"],
+      "description": "The test environment to use if unitTestRunner is set to jest or vitest.",
+      "default": "node"
+    },
+    "skipEslint": {
+      "type": "boolean",
+      "description": "Skip creating an ESLint configuration file for the project."
+    },
+    "skipCspell": {
+      "type": "boolean",
+      "description": "Skip creating a CSpell configuration file for the project."
+    },
+    "globals": {
+      "type": "boolean",
+      "description": "Allow vitest to inject jest-like API's into the testing environment."
+    },
+    "react": {
+      "type": "boolean",
+      "description": "Indicate that the project uses React.js."
+    },
+    "swc": {
+      "type": "boolean",
+      "description": "Use the SWC compiler instead of babel. Only relevant for projects using React.js."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite existing files."
+    },
+    "forceCspell": {
+      "type": "boolean",
+      "description": "Specify the value to pass to the cspell-config generator's `force` option."
+    },
+    "forceEslint": {
+      "type": "boolean",
+      "description": "Specify the value to pass to the eslint-config generator's `force` option."
+    },
+    "forceJest": {
+      "type": "boolean",
+      "description": "Specify the value to pass to the jest-config generator's `force` option."
+    },
+    "forceVite": {
+      "type": "boolean",
+      "description": "Specify the value to pass to the vite-config generator's `force` option."
+    }
+  },
+  "required": ["name"]
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "CSpellConfig",
+  "title": "CSpell configuration file generator",
+  "description": "Generate a cspell.config.yaml for a project.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project where the cspell config should be generated.",
+      "$default": {
+        "$source": "projectName",
+        "index": 0
+      },
+      "x-prompt": "To which project would you like to add a CSpell configuration file?"
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite existing files.",
+      "default": false
+    },
+    "skipFormat": {
+      "description": "Skip formatting files.",
+      "type": "boolean",
+      "x-priority": "internal"
+    }
+  },
+  "required": ["project"]
+}

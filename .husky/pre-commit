@@ -1,0 +1,5 @@
+# ensure package.json files are in sync
+yarn constraints
+
+# check formatting for the whole workspace
+yarn nx format:check

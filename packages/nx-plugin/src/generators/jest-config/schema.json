@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "JestConfig",
+  "title": "Jest configuration file generator",
+  "description": "Generate a jest.config.ts file for a project.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project in which to generate a jest config.",
+      "$default": {
+        "$source": "projectName"
+      },
+      "x-prompt": "To which project would you like to add a Jest configuration file?"
+    },
+    "testEnvironment": {
+      "type": "string",
+      "description": "The testing environment for the project.",
+      "enum": ["node", "jsdom"],
+      "default": "node"
+    },
+    "globals": {
+      "type": "boolean",
+      "description": "Allow jest to inject its api's into the testing environment.",
+      "default": false
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite existing files."
+    }
+  },
+  "required": ["project"]
+}

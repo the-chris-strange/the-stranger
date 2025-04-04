@@ -1,0 +1,13 @@
+/**
+ * <%= description %>
+ */
+export class <%= className %> extends <%= extended %> {
+  /**
+   * Construct a new <%= className %> error.
+   * @param message a message describing the error
+   */
+  constructor(message?: string) {
+    super(message)
+    this.name = '<%= className %>'
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "generators": {
+    "jest-config": {
+      "factory": "./src/generators/jest-config/generator",
+      "schema": "./src/generators/jest-config/schema.json",
+      "description": "Generate a jest configuration file"
+    },
+    "vite-config": {
+      "factory": "./src/generators/vite-config/generator",
+      "schema": "./src/generators/vite-config/schema.json",
+      "description": "Generate a vite/vitest configuration file"
+    },
+    "cspell-config": {
+      "factory": "./src/generators/cspell-config/generator",
+      "schema": "./src/generators/cspell-config/schema.json",
+      "description": "Generate a CSpell configuration file"
+    },
+    "error-class": {
+      "factory": "./src/generators/error-class/generator",
+      "schema": "./src/generators/error-class/schema.json",
+      "description": "Generate a custom error class"
+    },
+    "eslint-config": {
+      "factory": "./src/generators/eslint-config/generator",
+      "schema": "./src/generators/eslint-config/schema.json",
+      "description": "Generate an ESLint configuration file"
+    },
+    "ts-library": {
+      "factory": "./src/generators/ts-library/generator",
+      "schema": "./src/generators/ts-library/schema.json",
+      "description": "Generate a TS library with compatible configuration for this workspace"
+    },
+    "tsconfig": {
+      "factory": "./src/generators/tsconfig/generator",
+      "schema": "./src/generators/tsconfig/schema.json",
+      "description": "Generate tsconfig.json"
+    }
+  }
+}

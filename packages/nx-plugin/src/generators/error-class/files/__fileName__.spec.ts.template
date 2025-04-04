@@ -1,0 +1,9 @@
+import { <%= className %> } from './<%= fileName %>'
+
+it('can be constructed', () => {
+  expect(new <%= className %>()).toBeInstanceOf(<%= className %>)
+})
+
+it('sets the error name', () => {
+  expect(new <%= className %>()).toHaveProperty('name', '<%= className %>')
+})

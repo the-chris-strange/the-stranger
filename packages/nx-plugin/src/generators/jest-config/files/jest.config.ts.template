@@ -1,0 +1,12 @@
+import { JestConfigWithTsJest } from 'ts-jest'
+
+export default {
+  displayName: '<%= project %>',
+  <%_ if (paths.jestPreset) { %> preset: '<%= paths.jestPreset %>', <% } _%>
+  testEnvironment: '<%= testEnvironment %>',
+  transform: {
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: '<%= paths.coverageDirectory %>',
+} satisfies JestConfigWithTsJest

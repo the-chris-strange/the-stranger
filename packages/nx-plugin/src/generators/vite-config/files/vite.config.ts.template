@@ -1,0 +1,64 @@
+import path from 'node:path'
+
+import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
+<%_ if (react) { _%> import react from '<%= paths.reactPlugin %>' <%_ } _%>
+import dotenv from 'dotenv'
+import dts from 'vite-plugin-dts'
+import { defineConfig } from '<%= paths.defineConfig %>'
+
+dotenv.config()
+
+export default defineConfig({
+<%_ if (includeBuild) { _%>
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+    emptyOutDir: true,
+    <%_ if (projectType === 'library') { %>lib: {
+      entry: 'src/index.ts',
+      fileName: 'index',
+      formats: ['es', 'cjs'],
+      name: '<%= project %>',
+    }, <%_ } %>
+    outDir: '<%= paths.buildOutput %>',
+    reportCompressedSize: true,
+    rollupOptions: { external: [<%= rollupExternals.map(e => `'${e}'`).join(', ') %>] },
+  },
+<%_ } _%>
+
+  cacheDir: '<%= paths.viteCache %>',
+
+  plugins: [
+    <%_ if (react) { %> react(), <% } _%>
+    nxViteTsPaths(),
+    nxCopyAssetsPlugin(['*.md']),
+    <%_ if (includeBuild) { _%> dts({
+      entryRoot: 'src',
+      tsconfigPath: path.join(import.meta.dirname, '<%= tsconfigName %>'),
+    }),<%_ } _%>
+  ],
+
+  root: import.meta.dirname,
+
+<%_ if (includeTest) { _%>
+  test: {
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: '<%= paths.coverage %>',
+    },
+    environment: '<%= testEnvironment %>',
+    globals: <%= globals %>,
+    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    name: '<%= project %>',
+    typecheck: {
+      include: [
+        'src/**/*.{test,spec}-d.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+        'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+      ],
+    },
+    watch: false,
+  },
+<%_ } _%>
+})

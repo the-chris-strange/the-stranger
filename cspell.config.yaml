@@ -1,0 +1,41 @@
+version: "0.2"
+ignorePaths:
+  - .yarnrc.yml
+  - env.d.ts
+  - .env*
+  - .vscode
+  - yarn.lock
+dictionaries:
+  - companies
+  - computing-acronyms
+  - en_us
+  - en-gb
+  - filetypes
+  - fonts
+  - fullstack
+  - misc
+  - networking-terms
+  - npm
+  - softwareTerms
+  - web-services
+  - scientific-terms-us
+  - git
+words:
+  - globbify
+languageSettings:
+  - languageId: javascript,typescript
+    dictionaries:
+      - typescript
+      - node
+      - npm
+  - languageId: json,jsonc
+    dictionaries:
+      - npm
+      - node
+  - languageId: markdown
+    dictionaries:
+      - html
+      - html-symbol-entities
+      - npm
+      - node
+      - latex

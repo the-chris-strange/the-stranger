@@ -1,0 +1,22 @@
+/dist
+/coverage
+/node_modules
+/.vs
+
+# yarn
+/yarn.lock
+/.yarn
+/.pnp.*
+
+# python stuff
+.venv
+.ruff_cache
+.mypy_cache
+.pytest_cache
+
+# nx
+/.nx/cache
+/.nx/workspace-data
+
+# local cache
+/.cache
