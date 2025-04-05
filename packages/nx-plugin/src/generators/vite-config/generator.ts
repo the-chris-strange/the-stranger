@@ -15,9 +15,9 @@ import { tsconfigGenerator } from '../tsconfig/generator'
 import { ViteConfigSchema } from './schema'
 
 export function addProjectDeps(tree: Tree, options: ViteConfigSchema, pkg: string) {
-  const deps = ['vite', '@nx/vite', 'nx', 'dotenv']
+  const deps = ['vite', '@nx/vite', 'nx', 'dotenv', 'vite-plugin-dts']
   if (options.includeTest) {
-    deps.push('vitest', '@vitest/coverage-v8', 'vite-plugin-dts')
+    deps.push('vitest', '@vitest/coverage-v8')
   }
   if (options.react) {
     deps.push('vite-plugin-react')

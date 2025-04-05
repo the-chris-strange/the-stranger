@@ -3,12 +3,6 @@ import { Tsconfig } from 'tsconfig-type'
 import { GeneratorSchema } from '../../lib/generator-schema'
 import { TSConfigOptions } from '../../lib/tsconfig'
 
-export type TSCFields = GeneratorSchema &
-  Pick<
-    Tsconfig,
-    'compilerOptions' | 'exclude' | 'extends' | 'files' | 'include' | 'references'
-  >
-
 /**
  * Options for generating tsconfig.json files.
  */
@@ -27,3 +21,9 @@ export interface TSConfigSchema extends TSCFields {
    */
   tscOptions?: TSConfigOptions
 }
+
+type TSCFields = GeneratorSchema &
+  Pick<
+    Tsconfig,
+    'compilerOptions' | 'exclude' | 'extends' | 'files' | 'include' | 'references'
+  >

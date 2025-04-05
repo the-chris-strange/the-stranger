@@ -81,7 +81,7 @@
     "*.template": "ejs",
     "pre-commit": "shellscript"
   },
-  "markiscodecoverage.searchCriteria": ".reports/coverage/packages/*/lcov.info",
+  "markiscodecoverage.searchCriteria": "coverage/packages/*/lcov.info",
   "mypy-type-checker.importStrategy": "fromEnvironment",
   "npm.exclude": ["dist/**/*", "packages/**/*"],
   "npm.packageManager": "yarn",
@@ -112,8 +112,5 @@
   "typescript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "vitest.maximumConfigs": 20,
-  "yaml.schemas": {
-    ".lintstagedrc": "https://json.schemastore.org/lintstagedrc.schema.json"
-  }
+  "vitest.maximumConfigs": 20
 }
