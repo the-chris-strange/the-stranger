@@ -55,5 +55,7 @@
   },
   "engines": {
     "node": "^22"
-  }
+  },
+  "executors": "./executors.json",
+  "generators": "./generators.json"
 }
