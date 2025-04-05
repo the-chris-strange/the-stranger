@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
+  "references": [{ "path": "./packages/nx-plugin" }],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS",
