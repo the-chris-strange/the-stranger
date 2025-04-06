@@ -13,6 +13,9 @@ permissions:
   actions: read
   contents: read
 
+env:
+  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
 jobs:
   build:
     name: Run tests and build on ${{ matrix.os }}
