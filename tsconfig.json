@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
-  "references": [{ "path": "./packages/nx-plugin" }],
+  "references": [{ "path": "./packages/nx-plugin" }, { "path": "./packages/eslint-plugin" }],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS",

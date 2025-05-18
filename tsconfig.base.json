@@ -36,6 +36,7 @@
     "target": "ES2024",
     "verbatimModuleSyntax": false,
     "paths": {
+      "@the-stranger/eslint-plugin": ["packages/eslint-plugin/src/index.ts"],
       "@the-stranger/nx-plugin": ["packages/nx-plugin/src/index.ts"]
     }
   },

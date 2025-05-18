@@ -30,21 +30,12 @@ export const TS_FILES = fileGlobs('*.ts', '*.tsx', '*.mts', '*.cts')
  * Array of file patterns matching test files.
  * @example *.spec.ts, *.test.jsx
  */
-export const TEST_FILES = fileGlobs(
-  '*.spec.ts',
-  '*.spec.tsx',
-  '*.spec.js',
-  '*.spec.jsx',
-  '*.test.ts',
-  '*.test.tsx',
-  '*.test.js',
-  '*.test.jsx',
-)
+export const TEST_FILES = ['**/*.{spec,test}.{js,jsx,ts,tsx}']
 
 /**
- * Array of file patterns matching all source files (but not test files).
+ * Array of file patterns matching all source files.
  */
-export const SOURCE_FILES = [...JS_FILES, ...TS_FILES]
+export const SOURCE_FILES = ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}']
 
 /**
  * Rules for 'eslint-plugin-perfectionist'.

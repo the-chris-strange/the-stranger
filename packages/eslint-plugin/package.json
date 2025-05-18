@@ -1,0 +1,80 @@
+{
+  "name": "@the-stranger/eslint-plugin",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./nx-dependency-checks": {
+      "types": "./src/nx-dependency-checks.d.ts",
+      "import": "./src/nx-dependency-checks.js"
+    }
+  },
+  "dependencies": {
+    "@nx/eslint-plugin": "20.7.1",
+    "@typescript-eslint/utils": "^8.29.0",
+    "eslint-plugin-jsdoc": "^50.6.9",
+    "eslint-plugin-n": "^17.17.0",
+    "eslint-plugin-perfectionist": "^4.11.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-unicorn": "^58.0.0",
+    "jsonc-eslint-parser": "^2.4.0",
+    "typescript-eslint": "^8.29.0"
+  },
+  "devDependencies": {
+    "@nx/vite": "20.7.1",
+    "@types/eslint-plugin-jsx-a11y": "^6",
+    "@typescript-eslint/parser": "^8.29.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-cypress": "^3.5.0",
+    "eslint-plugin-eslint-plugin": "^6.4.0",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-jest": "^28.11.0",
+    "eslint-plugin-jsx-a11y": "6.10.1",
+    "eslint-plugin-n": "^17.17.0",
+    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react-hooks": "5.0.0",
+    "eslint-plugin-regexp": "^2.7.0",
+    "eslint-plugin-toml": "^0.12.0",
+    "eslint-plugin-yml": "^1.17.0",
+    "nx": "20.7.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-packagejson": "^2.5.10",
+    "toml-eslint-parser": "^0.10.0",
+    "typescript": "^5.8.3",
+    "vite": "6.2.5",
+    "vite-plugin-dts": "4.5.3",
+    "vitest": "^1.6.1",
+    "yaml-eslint-parser": "^1.3.0"
+  },
+  "peerDependencies": {
+    "@vitest/eslint-plugin": "^1.1.39",
+    "eslint": "^9",
+    "eslint-plugin-toml": "^0.12.0",
+    "eslint-plugin-yml": "^1.17.0",
+    "toml-eslint-parser": "^0.10.0",
+    "yaml-eslint-parser": "^1.3.0"
+  },
+  "peerDependenciesMeta": {
+    "eslint-plugin-toml": {
+      "optional": true
+    },
+    "eslint-plugin-yml": {
+      "optional": true
+    },
+    "toml-eslint-parser": {
+      "optional": true
+    },
+    "yaml-eslint-parser": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": "^22"
+  }
+}
