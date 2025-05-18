@@ -1,9 +1,3 @@
 {
-  "executors": {
-    "typedoc": {
-      "implementation": "./src/executors/typedoc/executor",
-      "schema": "./src/executors/typedoc/schema.json",
-      "description": "Execute the TypeDoc documentation generator"
-    }
-  }
+  "executors": {}
 }
