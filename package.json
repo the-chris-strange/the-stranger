@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "A collection of plugins & reusable configurations for TypeScript, ESLint, Prettier, Vite, NX, Yarn, and more.",
+  "repository": {
+    "url": "https://github.com/the-chris-strange/the-stranger"
+  },
   "license": "MIT",
   "author": {
     "name": "Chris Strange",
@@ -19,8 +22,6 @@
     "postinstall": "husky",
     "lint": "nx run-many -t lint",
     "nx": "nx",
-    "prepack": "pinst --disable",
-    "postpack": "pinst --enable",
     "test": "nx run-many -t test"
   },
   "devDependencies": {
@@ -39,6 +40,7 @@
     "@swc/cli": "~0.6.0",
     "@swc/core": "^1.11.16",
     "@swc/helpers": "~0.5.15",
+    "@types/eslint-plugin-jsx-a11y": "^6",
     "@types/node": "^22.14.0",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
     "@typescript-eslint/parser": "^8.29.0",
@@ -46,15 +48,22 @@
     "@vitest/coverage-v8": "^1.6.1",
     "@vitest/eslint-plugin": "^1.1.39",
     "@vitest/ui": "^1.6.1",
-    "@yarnpkg/types": "patch:@yarnpkg/types@npm%3A4.0.1#~/.yarn/patches/@yarnpkg-types-npm-4.0.1-e0d0f24be9.patch",
+    "@yarnpkg/types": "4.0.1",
     "cspell": "^8.18.1",
     "dotenv": "^16.4.7",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-eslint-plugin": "^6.4.0",
+    "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jest": "^28.11.0",
     "eslint-plugin-jsdoc": "^50.6.9",
+    "eslint-plugin-jsx-a11y": "6.10.1",
+    "eslint-plugin-n": "^17.17.0",
     "eslint-plugin-perfectionist": "^4.11.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react-hooks": "5.0.0",
     "eslint-plugin-regexp": "^2.7.0",
     "eslint-plugin-toml": "^0.12.0",
     "eslint-plugin-unicorn": "^58.0.0",
@@ -71,13 +80,13 @@
     "toml-eslint-parser": "^0.10.0",
     "tsconfig-type": "^1.29.0",
     "tslib": "^2.8.1",
-    "typedoc": "^0.28.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.0",
     "vite": "6.2.5",
     "vite-node": "^3.1.1",
     "vite-plugin-dts": "4.5.3",
-    "vitest": "^1.6.1"
+    "vitest": "^1.6.1",
+    "yaml-eslint-parser": "^1.3.0"
   },
   "packageManager": "yarn@4.8.1",
   "engines": {
