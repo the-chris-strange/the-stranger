@@ -8,6 +8,7 @@ import {
   Tree,
 } from '@nx/devkit'
 
+import { detectConfig } from '../../lib/detect-config'
 import { findExisting } from '../../lib/find-existing'
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
@@ -46,7 +47,7 @@ export async function eslintConfigGenerator(tree: Tree, options: ESLintConfigSch
   const offset = offsetFromRoot(project.root)
   const paths = { baseConfig: joinPathFragments(offset, baseConfig) }
   const dependencyChecksOptions = JSON.stringify(
-    resolveDependencyChecksOptions(options),
+    resolveDependencyChecksOptions(tree, options),
   )
   const data = { dependencyChecksOptions, options, paths }
 
@@ -61,17 +62,25 @@ export async function eslintConfigGenerator(tree: Tree, options: ESLintConfigSch
   await formatFiles(tree, options)
 }
 
-function resolveDependencyChecksOptions(options: ESLintConfigSchema) {
+function resolveDependencyChecksOptions(tree: Tree, options: ESLintConfigSchema) {
   const {
     buildTargets,
     checkMissingDependencies,
     checkObsoleteDependencies,
     checkVersionMismatches = false,
+    extraIgnoredFiles = [],
     ignoredDependencies,
-    ignoredFiles = [],
+    ignoredFiles = ['{projectRoot}/eslint.config.{ts,js,cjs,mjs}'],
     includeTransitiveDependencies,
     useLocalPathsForWorkspaceDependencies,
   } = options
+
+  if (detectConfig(tree, 'vitest')) {
+    ignoredFiles.push(
+      '{projectRoot}/vitest.config.{ts,js,mjs,mts}',
+      '{projectRoot}/src/**/*.spec.{ts,js,mjs,mts,tsx,jsx}',
+    )
+  }
 
   const ruleOptions: DependencyCheckOptions = {
     buildTargets,
@@ -79,11 +88,7 @@ function resolveDependencyChecksOptions(options: ESLintConfigSchema) {
     checkObsoleteDependencies,
     checkVersionMismatches,
     ignoredDependencies,
-    ignoredFiles: [
-      '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
-      '{projectRoot}/vite.config.{ts,js,mjs,mts}',
-      ...ignoredFiles,
-    ],
+    ignoredFiles: [...ignoredFiles, ...extraIgnoredFiles],
     includeTransitiveDependencies,
     useLocalPathsForWorkspaceDependencies,
   }

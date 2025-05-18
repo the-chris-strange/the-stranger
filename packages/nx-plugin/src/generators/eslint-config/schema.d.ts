@@ -30,19 +30,23 @@ export interface DependencyCheckOptions {
    */
   checkVersionMismatches?: boolean
   /**
+   * List of files to append to the {@link ignoredFiles} option. This option is not part of the implementation of the rule, but is included here to allow additional values to be passed to the `ignoredFiles` option, while still allowing the generator to detect sane defaults.
+   */
+  extraIgnoredFiles?: string[]
+  /**
    * List of dependencies to ignore for checks. Certain React-specific dependencies are added to React libraries - otherwise this is passed straight through.
    */
   ignoredDependencies?: string[]
   /**
-   * List of files to ignore when collecting dependencies. Default behavior for this workspace is to append the value of this option to the workspace defaults of `{projectRoot}/eslint.config.{ts,js,cjs,mjs}` and `{projectRoot}/vite.config.{ts,js,mjs,mts}`.
+   * List of files to ignore when collecting dependencies.
    */
   ignoredFiles?: string[]
   /**
-   * Enable to collect dependencies of children projects. Included for completeness, but likely not needed in this workspace.
+   * Enable to collect dependencies of children projects. Included for completeness, though not likely needed in one of my workspaces.
    */
   includeTransitiveDependencies?: boolean
   /**
-   * Set workspace dependencies as relative file:// paths. Included for completeness, but likely not needed in this workspace.
+   * Set workspace dependencies as relative file:// paths. Included for completeness, though not likely needed in one of my workspaces.
    */
   useLocalPathsForWorkspaceDependencies?: boolean
 }

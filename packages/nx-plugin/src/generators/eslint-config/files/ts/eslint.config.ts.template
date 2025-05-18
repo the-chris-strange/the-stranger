@@ -7,7 +7,7 @@ export default tseslint.config(
   ...baseConfig,
 
   {
-    files: ['package.json'],
+    files: ['**/*.json'],
     rules: {
       '@nx/dependency-checks': [
         'error',
