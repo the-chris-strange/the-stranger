@@ -7,7 +7,7 @@ export default tseslint.config(
   ...baseConfig,
 
   {
-    files: ['package.json'],
+    files: ['**/*.json'],
     languageOptions: { parser: jsoncParser },
     rules: {
       '@nx/dependency-checks': [
@@ -17,6 +17,7 @@ export default tseslint.config(
           ignoredFiles: [
             '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
             '{projectRoot}/vite.config.{ts,js,mjs,mts}',
+            '{projectRoot}/src/**/*.spec.{ts,js,mjs,mts,tsx,jsx}',
           ],
         },
       ],

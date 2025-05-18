@@ -48,19 +48,19 @@
     "editor.wordWrapColumn": 88
   },
   "[yaml]": {
-    "editor.insertSpaces": true,
-    "editor.tabSize": 2,
     "editor.autoIndent": "full",
-    "editor.defaultColorDecorators": "auto",
-    "editor.quickSuggestions": {
-      "other": true,
-      "comments": false,
-      "strings": true
-    },
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.fixAll.eslint": "explicit"
-    }
+    },
+    "editor.defaultColorDecorators": "auto",
+    "editor.insertSpaces": true,
+    "editor.quickSuggestions": {
+      "comments": false,
+      "other": true,
+      "strings": true
+    },
+    "editor.tabSize": 2
   },
   "code-runner.executorMap": {
     "javascript": "yarn node",
@@ -68,7 +68,6 @@
   },
   "cSpell.enabled": true,
   "cSpell.import": ["@cspell/dict-scientific-terms-us", "@cspell/dict-data-science"],
-  "cSpell.usePnP": true,
   "docwriter.hotkey.mac": "⌥ + .",
   "editor.unicodeHighlight.allowedCharacters": {},
   "eslint.enable": true,
@@ -77,7 +76,6 @@
   "eslint.validate": ["json", "jsonc", "toml"],
   "files.associations": {
     ".lintstagedrc": "yaml",
-    ".prettierrc": "yaml",
     "*.template": "ejs",
     "pre-commit": "shellscript"
   },
@@ -100,11 +98,11 @@
   "python.analysis.stubPath": "stubs",
   "python.analysis.typeCheckingMode": "off",
   "search.exclude": {
+    ".reports": true,
     "**/.pnp.*": true,
     "**/.yarn": true,
     "coverage": true,
-    "dist": true,
-    ".reports": true
+    "dist": true
   },
   "snyk.features.codeQuality": false,
   "snyk.features.openSourceSecurity": false,
@@ -112,5 +110,6 @@
   "typescript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "vitest.maximumConfigs": 20
+  "vitest.maximumConfigs": 20,
+  "nxConsole.generateAiAgentRules": true
 }

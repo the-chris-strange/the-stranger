@@ -16,7 +16,6 @@
     "importHelpers": true,
     "incremental": true,
     "isolatedModules": true,
-    "lib": ["ES2023"],
     "module": "Preserve",
     "moduleResolution": "bundler",
     "noEmitOnError": true,
@@ -34,7 +33,7 @@
     "skipLibCheck": true,
     "sourceMap": false,
     "strict": true,
-    "target": "ES2022",
+    "target": "ES2024",
     "verbatimModuleSyntax": false,
     "paths": {
       "@the-stranger/nx-plugin": ["packages/nx-plugin/src/index.ts"]

@@ -5,7 +5,8 @@
       "library": {
         "bundler": "vite",
         "linter": "eslint",
-        "unitTestRunner": "vitest"
+        "unitTestRunner": "vitest",
+        "useProjectJson": true
       }
     }
   },

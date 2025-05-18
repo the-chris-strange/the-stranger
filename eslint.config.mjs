@@ -191,6 +191,7 @@ const unicornConfig = tseslint.config(
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/prefer-number-properties': 'off',
+      'unicorn/prefer-math-trunc': 'off',
       'unicorn/import-style': [
         'warn',
         {
@@ -304,11 +305,8 @@ const nxConfig = tseslint.config(
   nx.configs['flat/typescript'],
   nx.configs['flat/javascript'],
 
-  { plugins: { '@nx': nx } },
-
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-    ignores: ['**/eslint.config.ts'],
     rules: {
       '@nx/enforce-module-boundaries': [
         'error',
@@ -332,8 +330,6 @@ const nxConfig = tseslint.config(
  */
 const vitestConfig = tseslint.config(
   vitest.configs['recommended'],
-
-  { plugins: { vitest } },
 
   {
     files: TEST_FILES,
