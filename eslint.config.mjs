@@ -1,6 +1,7 @@
 import nx from '@nx/eslint-plugin'
 import vitest from '@vitest/eslint-plugin'
 import jsdoc from 'eslint-plugin-jsdoc'
+import n from 'eslint-plugin-n'
 import perfectionist from 'eslint-plugin-perfectionist'
 import unicorn from 'eslint-plugin-unicorn'
 import tseslint from 'typescript-eslint'
@@ -181,7 +182,6 @@ const unicornConfig = tseslint.config(
     rules: {
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-array-callback-reference': 'off',
-      'unicorn/prefer-number-properties': 'off',
       'unicorn/prefer-math-trunc': 'off',
       'unicorn/import-style': [
         'warn',
@@ -328,6 +328,27 @@ const vitestConfig = tseslint.config(
       'vitest/consistent-test-it': ['warn', { fn: 'it' }],
       'vitest/valid-title': ['warn', { disallowedWords: ['should'] }],
       'vitest/prefer-hooks-in-order': 'warn',
+    },
+  },
+)
+
+const nConfig = tseslint.config(
+  { plugins: { n } },
+
+  {
+    files: SOURCE_FILES,
+    rules: {
+      'n/no-deprecated-api': 'error',
+      'n/no-process-exit': 'error',
+      'n/hashbang': 'error',
+      'n/prefer-node-protocol': 'error',
+      'n/prefer-global/buffer': ['error', 'never'],
+      'n/prefer-global/console': ['error', 'never'],
+      'n/prefer-global/process': ['error', 'never'],
+      'n/prefer-global/text-decoder': ['error', 'never'],
+      'n/prefer-global/text-encoder': ['error', 'never'],
+      'n/prefer-global/url-search-params': ['error', 'never'],
+      'n/prefer-global/url': ['error', 'never'],
     },
   },
 )

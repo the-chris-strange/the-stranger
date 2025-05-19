@@ -10,17 +10,14 @@ import manifest from './package.json'
 
 dotenv.config()
 
-const external: string[] = Object.entries({
+const external: string[] = Object.keys({
   ...manifest.dependencies,
   // ...manifest.devDependencies,
   ...manifest.peerDependencies,
-}).map(([key, _]) => key)
+})
 
 export default defineConfig({
   build: {
-    // commonjsOptions: {
-    //   transformMixedEsModules: false,
-    // },
     emptyOutDir: true,
     lib: {
       entry: {

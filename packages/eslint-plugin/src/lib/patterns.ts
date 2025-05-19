@@ -68,37 +68,6 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
 }
 
 /**
- * Convenient function to generate some common glob patterns.
- * @param fileType the type of file pattern to generate
- * @returns a glob pattern that matches the indicated file type
- */
-export function getPattern(fileType: FilePattern) {
-  switch (fileType) {
-    case 'js-source-files': {
-      return sourceFilePattern(expandExtension('js'))
-    }
-    case 'js-test-files': {
-      return testFilePattern('js', 'jsx')
-    }
-    case 'source-files': {
-      return sourceFilePattern(expandExtension('js'), expandExtension('ts'))
-    }
-    case 'test-files': {
-      return testFilePattern('js', 'jsx', 'ts', 'tsx')
-    }
-    case 'ts-source-files': {
-      return sourceFilePattern(expandExtension('ts'))
-    }
-    case 'ts-test-files': {
-      return testFilePattern('ts', 'tsx')
-    }
-    default: {
-      return sourceFilePattern(fileType.replace(/-files$/, ''))
-    }
-  }
-}
-
-/**
  * Normalize a file extension by removing leading dot or glob wildcards.
  * @param value the file extension to normalize
  * @returns the normalized file extension
@@ -163,19 +132,3 @@ export enum FilePatterns {
    */
   tsTest = 'ts-test-files',
 }
-
-export type FilePattern =
-  | 'cjs-files'
-  | 'cts-files'
-  | 'js-files'
-  | 'js-source-files'
-  | 'js-test-files'
-  | 'jsx-files'
-  | 'mjs-files'
-  | 'mts-files'
-  | 'source-files'
-  | 'test-files'
-  | 'ts-files'
-  | 'ts-source-files'
-  | 'ts-test-files'
-  | 'tsx-files'

@@ -125,12 +125,7 @@ export default [
   },
 
   {
-    files: [
-      'eslint.config.ts',
-      'eslint.config.mjs',
-      'prettier.config.mjs',
-      'yarn.config.cjs',
-    ],
+    files: ['eslint.config.*', 'prettier.config.*', 'yarn.config.cjs'],
     rules: {
       'perfectionist/sort-objects': 'off',
     },

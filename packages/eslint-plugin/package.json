@@ -13,17 +13,18 @@
     }
   },
   "dependencies": {
-    "@nx/eslint-plugin": "20.7.1",
     "@typescript-eslint/utils": "^8.29.0",
     "eslint-plugin-jsdoc": "^50.6.9",
     "eslint-plugin-n": "^17.17.0",
     "eslint-plugin-perfectionist": "^4.11.0",
     "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-regexp": "^2.7.0",
     "eslint-plugin-unicorn": "^58.0.0",
     "jsonc-eslint-parser": "^2.4.0",
     "typescript-eslint": "^8.29.0"
   },
   "devDependencies": {
+    "@nx/eslint-plugin": "20.7.1",
     "@nx/vite": "20.7.1",
     "@types/eslint-plugin-jsx-a11y": "^6",
     "@typescript-eslint/parser": "^8.29.0",
@@ -36,10 +37,8 @@
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jest": "^28.11.0",
     "eslint-plugin-jsx-a11y": "6.10.1",
-    "eslint-plugin-n": "^17.17.0",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "5.0.0",
-    "eslint-plugin-regexp": "^2.7.0",
     "eslint-plugin-toml": "^0.12.0",
     "eslint-plugin-yml": "^1.17.0",
     "nx": "20.7.1",
@@ -53,6 +52,7 @@
     "yaml-eslint-parser": "^1.3.0"
   },
   "peerDependencies": {
+    "@nx/eslint-plugin": "20.7.1",
     "@vitest/eslint-plugin": "^1.1.39",
     "eslint": "^9",
     "eslint-plugin-toml": "^0.12.0",
@@ -61,6 +61,12 @@
     "yaml-eslint-parser": "^1.3.0"
   },
   "peerDependenciesMeta": {
+    "@nx/eslint-plugin": {
+      "optional": true
+    },
+    "@vitest/eslint-plugin": {
+      "optional": true
+    },
     "eslint-plugin-toml": {
       "optional": true
     },

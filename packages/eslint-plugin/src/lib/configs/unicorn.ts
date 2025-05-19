@@ -16,9 +16,11 @@ export default [
       'unicorn/import-style': ['warn', { styles: { path: { named: true } } }],
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-reduce': 'off',
+      'unicorn/no-keyword-prefix': 'error',
       'unicorn/numeric-separators-style': ['warn', { number: { minimumDigits: 12 } }],
+      'unicorn/prefer-import-meta-properties': 'warn',
       'unicorn/prefer-math-trunc': 'off',
-      'unicorn/prefer-number-properties': 'off',
+      'unicorn/prefer-node-protocol': 'off',
     },
   },
 

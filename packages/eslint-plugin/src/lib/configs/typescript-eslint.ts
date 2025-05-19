@@ -1,13 +1,13 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
-import { SOURCE_FILES, TEST_FILES } from '../files'
+import { FilePatterns, getFilePatterns } from '../patterns'
 
 /**
  * Default configuration for [typescript-eslint](https://typescript-eslint.io/).
  */
 export default [
   {
-    files: SOURCE_FILES,
+    files: getFilePatterns(FilePatterns.source),
     rules: {
       // I'll declare whatever I want ¯\_(ツ)_/¯
       '@typescript-eslint/no-explicit-any': 'off',
@@ -17,7 +17,7 @@ export default [
   },
 
   {
-    files: TEST_FILES,
+    files: getFilePatterns(FilePatterns.test),
     rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
   },
 ] satisfies FlatConfig.ConfigArray

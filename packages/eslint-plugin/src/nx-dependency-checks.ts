@@ -1,4 +1,4 @@
-import type { Linter } from '@typescript-eslint/utils/ts-eslint'
+import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 export default {
   files: ['**/*.json'],
@@ -17,4 +17,4 @@ export default {
       },
     ],
   },
-} satisfies Linter.ConfigType
+} satisfies FlatConfig.Config
