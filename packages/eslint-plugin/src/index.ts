@@ -1,5 +1,6 @@
 import tseslint from 'typescript-eslint'
 
+import cypress from './lib/configs/cypress'
 import jsdoc from './lib/configs/jsdoc'
 import n from './lib/configs/n'
 import nx from './lib/configs/nx'
@@ -47,6 +48,7 @@ const recommended = tseslint.config(base, vitest)
 
 export const configs = {
   base,
+  cypress,
   jsdoc,
   nx,
   'nx/dependency-checks': dependencyChecksConfig,
