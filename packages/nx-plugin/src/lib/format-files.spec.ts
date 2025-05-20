@@ -6,7 +6,7 @@ import { formatFiles } from './format-files'
 
 describe('formatFiles wrapper', () => {
   let tree: nx.Tree
-  let spy: MockInstance<Parameters<typeof nx.formatFiles>>
+  let spy: MockInstance<typeof nx.formatFiles>
 
   beforeEach(() => {
     tree = createTreeWithEmptyWorkspace()

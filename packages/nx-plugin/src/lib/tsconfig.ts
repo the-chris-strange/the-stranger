@@ -1,5 +1,6 @@
 import { OverwriteStrategy, readJson, Tree } from '@nx/devkit'
-import { CompilerOptionsDefinition, Tsconfig } from 'tsconfig-type'
+
+import type { CompilerOptionsDefinition, Tsconfig } from 'tsconfig-type'
 
 import { isEmpty } from './is-empty'
 import { owStrategy } from './overwrite-strategy'

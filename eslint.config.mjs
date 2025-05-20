@@ -183,16 +183,7 @@ const unicornConfig = tseslint.config(
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/prefer-math-trunc': 'off',
-      'unicorn/import-style': [
-        'warn',
-        {
-          styles: {
-            path: {
-              named: true,
-            },
-          },
-        },
-      ],
+      'unicorn/import-style': 'off',
       'unicorn/numeric-separators-style': [
         'warn',
         {

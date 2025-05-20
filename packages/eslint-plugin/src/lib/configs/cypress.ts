@@ -2,8 +2,8 @@ import type { ConfigBuilder } from '../config-builder'
 
 export const cypressConfig: ConfigBuilder = async (...configs) => {
   try {
-    const cypress = await import('eslint-plugin-cypress')
-    return [cypress.configs.recommended, ...configs.flat()]
+    const cypress = await import('eslint-plugin-cypress/flat')
+    return [cypress.default.configs.recommended, ...configs.flat()]
   } catch {
     return []
   }

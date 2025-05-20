@@ -13,7 +13,7 @@ export default [
   {
     files: [getFilePatterns(FilePatterns.source)],
     rules: {
-      'unicorn/import-style': ['warn', { styles: { path: { named: true } } }],
+      'unicorn/import-style': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-keyword-prefix': 'error',
