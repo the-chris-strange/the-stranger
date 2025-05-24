@@ -70,15 +70,18 @@ function resolveDependencyChecksOptions(tree: Tree, options: ESLintConfigSchema)
     checkVersionMismatches = false,
     extraIgnoredFiles = [],
     ignoredDependencies,
-    ignoredFiles = ['{projectRoot}/eslint.config.{ts,js,cjs,mjs}'],
+    ignoredFiles = [
+      '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
+      '{projectRoot}/src/**/*.spec.{ts,js,tsx,jsx}',
+    ],
     includeTransitiveDependencies,
     useLocalPathsForWorkspaceDependencies,
   } = options
 
   if (detectConfig(tree, 'vitest')) {
     ignoredFiles.push(
-      '{projectRoot}/vitest.config.{ts,js,mjs,mts}',
-      '{projectRoot}/src/**/*.spec.{ts,js,mjs,mts,tsx,jsx}',
+      '{projectRoot}/vite.config.{js,ts,mjs,mts}',
+      '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
     )
   }
 

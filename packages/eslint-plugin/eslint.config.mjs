@@ -14,16 +14,12 @@ export default [
         'error',
         {
           ignoredFiles: [
-            '{projectRoot}/eslint.config.{js,cjs,mjs}',
-            '{projectRoot}/vite.config.{js,ts,mjs,mts}',
+            '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
             '{projectRoot}/src/**/*.spec.{ts,js,tsx,jsx}',
+            '{projectRoot}/vite.config.{js,ts,mjs,mts}',
+            '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          ignoredDependencies: [
-            'eslint',
-            'eslint-plugin-promise',
-            'toml-eslint-parser',
-            'yaml-eslint-parser',
-          ],
+          ignoredDependencies: ['eslint'],
         },
       ],
     },
