@@ -38,6 +38,8 @@ jobs:
       - run: corepack install
 
       - run: npx --yes dotenv-vault pull ci
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
 
       - uses: actions/setup-node@v4
         with:
@@ -51,5 +53,3 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - run: yarn nx-cloud record -- nx affected -t test build
-        env:
-          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
