@@ -329,9 +329,10 @@ const nConfig = tseslint.config(
   {
     files: SOURCE_FILES,
     rules: {
+      'n/exports-style': ['error', 'module.exports'],
+      'n/hashbang': 'error',
       'n/no-deprecated-api': 'error',
       'n/no-process-exit': 'error',
-      'n/hashbang': 'error',
       'n/prefer-node-protocol': 'error',
       'n/prefer-global/buffer': ['error', 'never'],
       'n/prefer-global/console': ['error', 'never'],
@@ -351,6 +352,7 @@ export default tseslint.config(
   tsEslintConfig,
   jsdocConfig,
   vitestConfig,
+  nConfig,
 
   {
     ignores: [

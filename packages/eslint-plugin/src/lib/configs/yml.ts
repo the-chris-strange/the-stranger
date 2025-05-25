@@ -1,16 +1,11 @@
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { ConfigBuilder } from '../config-builder'
 
-export async function yamlConfig(): Promise<FlatConfig.ConfigArray> {
+export const yamlConfig: ConfigBuilder = async () => {
   try {
     const yml = await import('eslint-plugin-yml')
     await import('yaml-eslint-parser')
     return yml.configs['flat/recommended']
   } catch {
-    return []
+    return
   }
 }
-
-/**
- * Default configuration for [eslint-plugin-yml](https://ota-meshi.github.io/eslint-plugin-yml/)
- */
-export default await yamlConfig()

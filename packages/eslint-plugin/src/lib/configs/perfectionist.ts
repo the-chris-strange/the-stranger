@@ -4,9 +4,6 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-/**
- * Default configuration for [eslint-plugin-perfectionist](https://perfectionist.dev).
- */
 export default [
   perfectionist.configs['recommended-natural'],
 

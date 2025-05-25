@@ -4,9 +4,6 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-/**
- * Default configuration for [eslint-plugin-promise](https://github.com/eslint-community/eslint-plugin-promise?tab=readme-ov-file#readme).
- */
 export default [
   promise.configs['flat/recommended'],
 

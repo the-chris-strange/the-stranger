@@ -1,8 +1,7 @@
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-
+import { ConfigBuilder } from '../config-builder'
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-export async function vitestConfig(): Promise<FlatConfig.ConfigArray> {
+export const vitestConfig: ConfigBuilder = async () => {
   try {
     const vitest = await import('@vitest/eslint-plugin')
     return [
@@ -18,11 +17,6 @@ export async function vitestConfig(): Promise<FlatConfig.ConfigArray> {
       },
     ]
   } catch {
-    return []
+    return
   }
 }
-
-/**
- * Default configuration for [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest#readme).
- */
-export default await vitestConfig()

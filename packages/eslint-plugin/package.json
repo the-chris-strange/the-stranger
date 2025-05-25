@@ -6,10 +6,6 @@
     ".": {
       "import": "./index.js",
       "types": "./index.d.ts"
-    },
-    "./nx-dependency-checks": {
-      "types": "./src/nx-dependency-checks.d.ts",
-      "import": "./src/nx-dependency-checks.js"
     }
   },
   "dependencies": {
@@ -29,6 +25,7 @@
     "@types/eslint-plugin-jsx-a11y": "^6.10.0",
     "@typescript-eslint/parser": "^8.32.1",
     "@vitest/coverage-v8": "^3.1.4",
+    "@vitest/eslint-plugin": "^1.2.0",
     "dotenv": "^16.5.0",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",

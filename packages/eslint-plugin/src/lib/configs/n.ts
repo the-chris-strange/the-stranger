@@ -10,7 +10,7 @@ export default [
   {
     files: getFilePatterns(FilePatterns.source),
     rules: {
-      'n/export-style': ['error', 'module.exports'],
+      'n/exports-style': ['error', 'module.exports'],
       'n/hashbang': 'error',
       'n/no-deprecated-api': 'error',
       'n/no-process-exit': 'error',

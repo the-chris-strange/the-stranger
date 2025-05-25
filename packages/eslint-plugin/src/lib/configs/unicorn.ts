@@ -4,9 +4,6 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-/**
- * Default configuration for [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn#readme).
- */
 export default [
   unicorn.configs['recommended'],
 

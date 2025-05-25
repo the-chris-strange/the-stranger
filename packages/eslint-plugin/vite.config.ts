@@ -21,8 +21,7 @@ export default defineConfig({
     emptyOutDir: true,
     lib: {
       entry: {
-        'index': 'src/index.ts',
-        'nx-dependency-checks': 'src/nx-dependency-checks.ts',
+        index: 'src/index.ts',
       },
       formats: ['es'],
       name: 'eslint-plugin',

@@ -1,19 +1,23 @@
 import tseslint from 'typescript-eslint'
 
-import cypress from './lib/configs/cypress'
+import { buildSharedConfig } from './lib/config-builder'
+import { cypressConfig } from './lib/configs/cypress'
 import jsdoc from './lib/configs/jsdoc'
 import n from './lib/configs/n'
-import nx from './lib/configs/nx'
+import { nxConfig, nxDependencyChecksConfig } from './lib/configs/nx'
 import perfectionist from './lib/configs/perfectionist'
 import promise from './lib/configs/promise'
 import re from './lib/configs/regexp'
-import toml from './lib/configs/toml'
+import { tomlConfig } from './lib/configs/toml'
 import ts from './lib/configs/typescript-eslint'
 import unicorn from './lib/configs/unicorn'
-import vitest from './lib/configs/vitest'
-import yml from './lib/configs/yml'
+import { vitestConfig } from './lib/configs/vitest'
+import { yamlConfig } from './lib/configs/yml'
 import { meta } from './lib/meta'
-import dependencyChecksConfig from './nx-dependency-checks'
+
+export { meta } from './lib/meta'
+
+const vitest = await buildSharedConfig(vitestConfig)
 
 const testFiles = tseslint.config(vitest) // todo: add jest config also
 
@@ -34,33 +38,89 @@ const base = tseslint.config(
 
   { linterOptions: { reportUnusedDisableDirectives: 'error' } },
 
-  nx,
   perfectionist,
   unicorn,
   ts,
   jsdoc,
-  promise,
-  n,
-  re,
 )
 
-const recommended = tseslint.config(base, vitest)
+const recommended = tseslint.config(base, testFiles, promise, n, re)
 
+/**
+ * Shared configurations for the various plugins included in this package. If the required peer dependencies for a plugin are not installed, the configuration is not included in the final ESLint configuration.
+ */
 export const configs = {
+  /**
+   * The base ESLint configuration, which includes the default ignored files as well as standard configurations for the following plugins:
+   * - eslint-plugin-perfectionist
+   * - eslint-plugin-unicorn
+   * - typescript-eslint
+   * - eslint-plugin-jsdoc
+   */
   base,
-  cypress,
+  /**
+   * Standard configuration for [eslint-plugin-cypress](https://github.com/cypress-io/eslint-plugin-cypress#readme).
+   */
+  'cypress': await cypressConfig(),
+  /**
+   * Standard configuration for [eslint-plugin-jsdoc](https://github.com/gajus/eslint-plugin-jsdoc#readme).
+   */
   jsdoc,
-  nx,
-  'nx/dependency-checks': dependencyChecksConfig,
+  /**
+   * Standard configuration for [eslint-plugin-n](https://github.com/eslint-community/eslint-plugin-n#readme).
+   */
+  n,
+  /**
+   * Standard configuration for [@nx/eslint-plugin](https://nx.dev/nx-api/eslint-plugin/documents/overview).
+   */
+  'nx': await nxConfig(),
+  /**
+   * The recommended nx/dependency-checks configuration for projects in an Nx workspace.
+   */
+  'nx/dependency-checks': await nxDependencyChecksConfig(),
+  /**
+   * Standard configuration for [eslint-plugin-perfectionist](https://perfectionist.dev).
+   */
   perfectionist,
+  /**
+   * Standard configuration for [eslint-plugin-promise](https://github.com/eslint-community/eslint-plugin-promise?tab=readme-ov-file#readme).
+   */
   promise,
+  /**
+   * Recommended configuration, which includes the `base` configuration as well as standard configurations for the following plugins:
+   * - eslint-plugin-n
+   * - eslint-plugin-promise
+   * - eslint-plugin-regexp
+   */
   recommended,
+  /**
+   * Recommended configurations for `@vitest/eslint-plugin` and/or `eslint-plugin-jest`.
+   */
   'recommended/tests': testFiles,
-  toml,
+  /**
+   * Standard configuration for [eslint-plugin-regexp](https://github.com/ota-meshi/eslint-plugin-regexp#readme).
+   */
+  'regexp': re,
+  /**
+   * Standard configuration for [eslint-plugin-toml](https://ota-meshi.github.io/eslint-plugin-toml/).
+   */
+  'toml': await buildSharedConfig(tomlConfig),
+  /**
+   * Standard configuration for [typescript-eslint](https://typescript-eslint.io/).
+   */
   ts,
+  /**
+   * Standard configuration for [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn#readme).
+   */
   unicorn,
+  /**
+   * Standard configuration for [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest#readme).
+   */
   vitest,
-  yml,
+  /**
+   * Standard configuration for [eslint-plugin-yml](https://ota-meshi.github.io/eslint-plugin-yml/).
+   */
+  'yml': await buildSharedConfig(yamlConfig),
 }
 
 export default { configs, meta }
