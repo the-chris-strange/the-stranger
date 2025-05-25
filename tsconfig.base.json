@@ -37,7 +37,8 @@
     "verbatimModuleSyntax": false,
     "paths": {
       "@the-stranger/eslint-plugin": ["packages/eslint-plugin/src/index.ts"],
-      "@the-stranger/nx-plugin": ["packages/nx-plugin/src/index.ts"]
+      "@the-stranger/nx-plugin": ["packages/nx-plugin/src/index.ts"],
+      "@the-stranger/yarn-config": ["packages/yarn-config/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp", "dist", "out-tsc", ".cache", ".yarn", ".nx", ".husky", ".github"]

@@ -3959,6 +3959,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.32.1"
     "@typescript-eslint/utils": "npm:^8.32.1"
     "@vitest/coverage-v8": "npm:^3.1.4"
+    "@vitest/eslint-plugin": "npm:^1.2.0"
     dotenv: "npm:^16.5.0"
     eslint: "npm:^9.27.0"
     eslint-config-prettier: "npm:^10.1.5"
@@ -3989,7 +3990,7 @@ __metadata:
     vitest: "npm:^3.1.4"
     yaml-eslint-parser: "npm:^1.3.0"
   peerDependencies:
-    "@nx/eslint-plugin": 20.7.1
+    "@nx/eslint-plugin": 21.1.0
     "@vitest/eslint-plugin": ^1.1.39
     eslint: ^9
     eslint-plugin-cypress: ^4.3.0
@@ -4129,6 +4130,37 @@ __metadata:
     vite-plugin-dts: "npm:4.5.4"
     vitest: "npm:^3.1.4"
     yaml-eslint-parser: "npm:^1.3.0"
+  languageName: unknown
+  linkType: soft
+
+"@the-stranger/yarn-config@workspace:packages/yarn-config":
+  version: 0.0.0-use.local
+  resolution: "@the-stranger/yarn-config@workspace:packages/yarn-config"
+  dependencies:
+    "@eslint/js": "npm:^9.27.0"
+    "@nx/eslint": "npm:21.1.0"
+    "@nx/eslint-plugin": "npm:21.1.0"
+    "@nx/vite": "npm:21.1.0"
+    "@typescript-eslint/parser": "npm:^8.32.1"
+    "@typescript-eslint/utils": "npm:^8.32.1"
+    "@vitest/coverage-v8": "npm:^3.1.4"
+    "@vitest/eslint-plugin": "npm:^1.2.0"
+    "@yarnpkg/types": "npm:4.0.1"
+    dotenv: "npm:^16.5.0"
+    eslint: "npm:^9.27.0"
+    eslint-config-prettier: "npm:^10.1.5"
+    eslint-plugin-jsdoc: "npm:^50.6.17"
+    eslint-plugin-n: "npm:^17.18.0"
+    eslint-plugin-perfectionist: "npm:^4.13.0"
+    eslint-plugin-promise: "npm:^7.2.1"
+    eslint-plugin-unicorn: "npm:^59.0.1"
+    jsonc-eslint-parser: "npm:^2.4.0"
+    nx: "npm:21.1.0"
+    typescript: "npm:^5.8.3"
+    typescript-eslint: "npm:^8.32.1"
+    vite: "npm:6.3.5"
+    vite-plugin-dts: "npm:4.5.4"
+    vitest: "npm:^3.1.4"
   languageName: unknown
   linkType: soft
 
