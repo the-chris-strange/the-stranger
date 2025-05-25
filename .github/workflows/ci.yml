@@ -15,6 +15,7 @@ permissions:
 
 env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+  DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
 
 jobs:
   build:
@@ -38,8 +39,6 @@ jobs:
       - run: corepack install
 
       - run: npx --yes dotenv-vault pull ci
-        env:
-          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
 
       - uses: actions/setup-node@v4
         with:
