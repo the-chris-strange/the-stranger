@@ -39,6 +39,8 @@ jobs:
       - run: corepack install
 
       - run: npx --yes dotenv-vault pull ci
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
 
       - uses: actions/setup-node@v4
         with:
