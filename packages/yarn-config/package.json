@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
+      "types": "./index.d.ts",
       "import": "./index.js",
-      "require": "./index.cjs",
-      "types": "./index.d.ts"
+      "require": "./index.cjs"
     }
   },
   "dependencies": {

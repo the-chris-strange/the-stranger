@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
+    "./package.json": "./package.json",
     ".": {
-      "import": "./index.js",
-      "types": "./index.d.ts"
+      "types": "./index.d.ts",
+      "import": "./index.js"
     }
   },
   "dependencies": {
