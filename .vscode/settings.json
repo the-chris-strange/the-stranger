@@ -64,7 +64,7 @@
   },
   "code-runner.executorMap": {
     "javascript": "yarn node",
-    "typescript": "yarn exec ts-node"
+    "typescript": "yarn exec vite-node"
   },
   "cSpell.enabled": true,
   "cSpell.import": ["@cspell/dict-scientific-terms-us", "@cspell/dict-data-science"],
@@ -73,16 +73,18 @@
   "eslint.enable": true,
   "eslint.format.enable": true,
   "eslint.ignoreUntitled": true,
-  "eslint.validate": ["json", "jsonc", "toml"],
+  "eslint.validate": ["json", "jsonc", "toml", "yaml"],
   "files.associations": {
     ".lintstagedrc": "yaml",
     "*.template": "ejs",
+    "commit-msg": "shellscript",
     "pre-commit": "shellscript"
   },
   "markiscodecoverage.searchCriteria": "coverage/packages/*/lcov.info",
   "mypy-type-checker.importStrategy": "fromEnvironment",
   "npm.exclude": ["dist/**/*", "packages/**/*"],
   "npm.packageManager": "yarn",
+  "nxConsole.generateAiAgentRules": true,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,
   "python.analysis.diagnosticSeverityOverrides": {
@@ -110,6 +112,5 @@
   "typescript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
   "typescript.tsdk": "node_modules/typescript/lib",
-  "vitest.maximumConfigs": 20,
-  "nxConsole.generateAiAgentRules": true
+  "vitest.maximumConfigs": 20
 }

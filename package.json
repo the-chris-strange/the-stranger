@@ -17,6 +17,8 @@
   "scripts": {
     "build": "nx run-many -t build",
     "build:clean": "rm -rf ./dist && nx run-many -t build",
+    "commit": "commit",
+    "commit:lint": "commitlint",
     "dotenv": "npx --yes dotenv-vault",
     "format": "nx format",
     "postinstall": "husky",
@@ -25,6 +27,10 @@
     "test": "nx run-many -t test"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/prompt-cli": "^19.8.1",
+    "@commitlint/types": "^19.8.1",
     "@cspell/dict-data-science": "^2.0.8",
     "@cspell/dict-scientific-terms-us": "^3.0.6",
     "@eslint/js": "^9.27.0",
