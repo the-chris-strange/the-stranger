@@ -39,16 +39,14 @@ jobs:
 
       - run: corepack install
 
-      - run: npx --yes dotenv-vault decrypt ${{ secrets.DOTENV_KEY }} > .env.ci
-
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: yarn
 
-      - run: yarn dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
+      - run: yarn install
 
-      - run: yarn install --immutable --refresh-lockfile
+      - run: yarn dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
 
       - uses: nrwl/nx-set-shas@v4
 
