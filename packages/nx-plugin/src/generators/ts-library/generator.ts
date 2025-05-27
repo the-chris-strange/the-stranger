@@ -11,29 +11,26 @@ import { ViteConfigSchema } from '../vite-config/schema'
 import { TSLibrarySchema } from './schema'
 
 export function extractCspellOptions(options: TSLibrarySchema) {
-  const { force, forceCspell, name: project, skipDependencies } = options
-  return { force: forceCspell ?? force, project, skipDependencies, skipFormat: true }
+  const { force, forceCspell } = options
+  return { ...extractInternalOptions(options), force: forceCspell ?? force }
 }
 
 export function extractEslintOptions(options: TSLibrarySchema) {
-  const { forceEslint } = options
-  return { ...extractCspellOptions(options), force: forceEslint ?? true }
+  const { force, forceEslint } = options
+  return { ...extractInternalOptions(options), force: forceEslint ?? force }
+}
+
+export function extractInternalOptions(options: TSLibrarySchema) {
+  const { name: project, skipDependencies } = options
+  return { project, skipDependencies, skipFormat: true }
 }
 
 export function extractJestOptions(options: TSLibrarySchema): JestConfigSchema {
-  const {
-    forceJest,
-    globals,
-    name: project,
-    skipDependencies,
-    testEnvironment,
-  } = options
+  const { force, forceJest, globals, testEnvironment } = options
   return {
-    force: forceJest ?? true,
+    ...extractInternalOptions(options),
+    force: forceJest ?? force,
     globals,
-    project,
-    skipDependencies,
-    skipFormat: true,
     testEnvironment,
   }
 }
@@ -41,26 +38,23 @@ export function extractJestOptions(options: TSLibrarySchema): JestConfigSchema {
 export function extractViteOptions(options: TSLibrarySchema): ViteConfigSchema {
   const {
     bundler = 'vite',
+    force,
     forceVite,
     globals,
-    name: project,
     react,
     rollupExternals,
-    skipDependencies,
     swc,
     testEnvironment,
     unitTestRunner = 'vitest',
   } = options
   return {
-    force: forceVite ?? true,
+    ...extractInternalOptions(options),
+    force: forceVite ?? force,
     globals,
     includeBuild: bundler === 'vite',
     includeTest: unitTestRunner === 'vitest',
-    project,
     react,
     rollupExternals,
-    skipDependencies,
-    skipFormat: true,
     swc,
     testEnvironment,
     tsconfigName: 'tsconfig.lib.json',
@@ -95,11 +89,11 @@ export async function tsLibraryGenerator(tree: Tree, options: TSLibrarySchema) {
     await cspellConfigGenerator(tree, extractCspellOptions(options))
   }
 
-  if (bundler === 'vite' || unitTestRunner === 'vitest') {
+  if (!options.skipTestConfig && (bundler === 'vite' || unitTestRunner === 'vitest')) {
     await viteConfigGenerator(tree, extractViteOptions(options))
   }
 
-  if (unitTestRunner === 'jest') {
+  if (!options.skipTestConfig && unitTestRunner === 'jest') {
     await jestConfigGenerator(tree, extractJestOptions(options))
   }
 

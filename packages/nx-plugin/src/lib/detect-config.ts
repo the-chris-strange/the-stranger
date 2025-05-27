@@ -9,16 +9,14 @@ import { findExisting } from './find-existing'
  * @param prefix the path prefix for the configuration file
  * @returns true if the configuration file exists
  */
-export function detectConfig(tree: Tree, config: DetectableConfigs, prefix?: string) {
+export function detectConfig(tree: Tree, config: ConfigTypes, prefix?: string) {
   const markerFiles = MARKER_FILES[config].map(e =>
     prefix ? joinPathFragments(prefix, e) : e,
   )
   return findExisting(tree, ...markerFiles) !== undefined
 }
 
-export type DetectableConfigs = 'cspell' | 'eslint' | 'jest' | 'vite' | 'vitest'
-
-export const MARKER_FILES: Record<DetectableConfigs, string[]> = {
+export const MARKER_FILES = {
   cspell: ['cspell.config.yaml', 'cspell.json'],
   eslint: [
     'eslint.config.cjs',
@@ -38,3 +36,5 @@ export const MARKER_FILES: Record<DetectableConfigs, string[]> = {
 }
 
 MARKER_FILES.vitest.push(...MARKER_FILES.vite)
+
+export type ConfigTypes = keyof typeof MARKER_FILES

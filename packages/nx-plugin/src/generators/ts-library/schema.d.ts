@@ -32,6 +32,10 @@ export interface TSLibrarySchema extends ExternalOptions {
    * Skip creating an ESLint configuration file for the project.
    */
   skipEslint?: boolean
+  /**
+   * Skip creating a Jest or Vitest configuration file for the project.
+   */
+  skipTestConfig?: boolean
 }
 
 type ExternalOptions = GeneratorSchema & NxLibOptions & ViteOptions
