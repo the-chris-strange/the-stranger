@@ -3,7 +3,9 @@ import vitest from '@vitest/eslint-plugin'
 import jsdoc from 'eslint-plugin-jsdoc'
 import n from 'eslint-plugin-n'
 import perfectionist from 'eslint-plugin-perfectionist'
+import re from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn'
+import yml from 'eslint-plugin-yml'
 import tseslint from 'typescript-eslint'
 
 /**
@@ -345,6 +347,10 @@ const nConfig = tseslint.config(
   },
 )
 
+const ymlConfig = tseslint.config(yml.configs['flat/standard'])
+
+const reConfig = tseslint.config(re.configs['flat/recommended'])
+
 export default tseslint.config(
   nxConfig,
   perfectionistConfig,
@@ -353,6 +359,8 @@ export default tseslint.config(
   jsdocConfig,
   vitestConfig,
   nConfig,
+  ymlConfig,
+  reConfig,
 
   {
     ignores: [
