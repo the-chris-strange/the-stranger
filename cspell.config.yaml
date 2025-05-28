@@ -1,41 +1,47 @@
 version: "0.2"
+language: en
+import:
+  - "@cspell/dict-fr-fr/cspell-ext.json"
+  - "@cspell/dict-scientific-terms-us/cspell-ext.json"
 ignorePaths:
-  - .yarnrc.yml
-  - env.d.ts
   - .env*
   - .vscode
+  - .yarnrc.yml
+  - dist
+  - env.d.ts
+  - node_modules
   - yarn.lock
 dictionaries:
   - companies
   - computing-acronyms
-  - en_us
-  - en-gb
   - filetypes
   - fonts
   - fullstack
+  - git
   - misc
   - networking-terms
   - npm
+  - scientific-terms-us
   - softwareTerms
   - web-services
-  - scientific-terms-us
-  - git
 words:
   - globbify
+  - lestranger
 languageSettings:
   - languageId: javascript,typescript
     dictionaries:
-      - typescript
       - node
       - npm
+      - typescript
   - languageId: json,jsonc
     dictionaries:
-      - npm
       - node
+      - npm
   - languageId: markdown
     dictionaries:
+      - fr-fr
       - html
       - html-symbol-entities
-      - npm
-      - node
       - latex
+      - node
+      - npm

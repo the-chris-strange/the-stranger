@@ -1844,6 +1844,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cspell/dict-fr-fr@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@cspell/dict-fr-fr@npm:2.3.0"
+  checksum: 10c0/2f08a98bf4e83085ef20391f339c82518f82023c6acdc20bb6dd30d703b5da4db1a5aaff8bb24758dbe624230b307faa522fac9b5db0467a19003ae6b39e8f85
+  languageName: node
+  linkType: hard
+
 "@cspell/dict-fsharp@npm:^1.1.0":
   version: 1.1.0
   resolution: "@cspell/dict-fsharp@npm:1.1.0"
@@ -4296,7 +4303,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:^19.8.1"
     "@commitlint/prompt-cli": "npm:^19.8.1"
     "@commitlint/types": "npm:^19.8.1"
-    "@cspell/dict-data-science": "npm:^2.0.8"
+    "@cspell/dict-fr-fr": "npm:^2.3.0"
     "@cspell/dict-scientific-terms-us": "npm:^3.0.6"
     "@eslint/js": "npm:^9.27.0"
     "@nx/devkit": "npm:21.1.0"

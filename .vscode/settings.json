@@ -2,6 +2,15 @@
   "[git-commit]": {
     "editor.rulers": [50]
   },
+  "[github-actions-workflow]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.defaultFormatter": "github.vscode-github-actions",
+    "editor.rulers": [100],
+    "editor.wordWrapColumn": 100
+  },
   "[json][jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
@@ -60,14 +69,14 @@
       "other": true,
       "strings": true
     },
-    "editor.tabSize": 2
+    "editor.rulers": [100],
+    "editor.wordWrapColumn": 100
   },
   "code-runner.executorMap": {
     "javascript": "yarn node",
     "typescript": "yarn exec vite-node"
   },
   "cSpell.enabled": true,
-  "cSpell.import": ["@cspell/dict-scientific-terms-us", "@cspell/dict-data-science"],
   "docwriter.hotkey.mac": "⌥ + .",
   "editor.unicodeHighlight.allowedCharacters": {},
   "eslint.enable": true,
