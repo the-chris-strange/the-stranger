@@ -7,9 +7,6 @@ import { FilePatterns, getFilePatterns } from '../patterns'
 // tags used by docusaurus to generate docs from jsdoc comments
 export const DOCUSAURUS_TAGS = ['document']
 
-/**
- * Default configuration for [eslint-plugin-jsdoc](https://github.com/gajus/eslint-plugin-jsdoc#readme).
- */
 export default [
   { plugins: { jsdoc } },
 

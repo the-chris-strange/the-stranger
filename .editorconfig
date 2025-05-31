@@ -23,3 +23,6 @@ insert_final_newline = false
 
 [.{env,env.*}]
 insert_final_newline = false
+
+[*.{yaml,yml}]
+indent_size = 2

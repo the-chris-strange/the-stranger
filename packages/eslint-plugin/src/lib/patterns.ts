@@ -16,7 +16,7 @@ export function combineExtensions(...extensions: (string | string[])[]) {
 /**
  * Expand a file extension into an array of file extensions that match typical Node.js module types.
  * @example
- * expandExtension('js') // ['js', 'cjs', 'mjs', 'jsx']
+ * expandExtension('js') // -> ['js', 'cjs', 'mjs', 'jsx']
  * @param ext the base file extension
  * @returns an array of file extensions
  */

@@ -6,35 +6,26 @@ import dotenv from 'dotenv'
 import dts from 'vite-plugin-dts'
 import { defineConfig } from 'vitest/config'
 
-import manifest from './package.json'
-
 dotenv.config()
-
-const external: string[] = Object.keys({
-  ...manifest.dependencies,
-  // ...manifest.devDependencies,
-  ...manifest.peerDependencies,
-})
 
 export default defineConfig({
   build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
     emptyOutDir: true,
     lib: {
-      entry: {
-        index: 'src/index.ts',
-      },
-      formats: ['es'],
-      name: 'eslint-plugin',
+      entry: 'src/index.ts',
+      fileName: 'index',
+      formats: ['es', 'cjs'],
+      name: 'yarn-config',
     },
-    outDir: '../../dist/packages/eslint-plugin',
+    outDir: '../../dist/packages/yarn-config',
     reportCompressedSize: true,
-    rollupOptions: {
-      external,
-    },
-    target: ['node22'],
+    rollupOptions: { external: [] },
   },
 
-  cacheDir: '../../node_modules/.vite/packages/eslint-plugin',
+  cacheDir: '../../node_modules/.vite/packages/yarn-config',
 
   plugins: [
     nxViteTsPaths(),
@@ -50,12 +41,13 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8',
-      reportsDirectory: '../../coverage/packages/eslint-plugin',
+      reportsDirectory: '../../coverage/packages/yarn-config',
     },
     environment: 'node',
     globals: false,
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    name: 'eslint-plugin',
+    name: 'yarn-config',
+    passWithNoTests: true,
     typecheck: {
       include: [
         'src/**/*.{test,spec}-d.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',

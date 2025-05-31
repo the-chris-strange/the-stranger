@@ -1,10 +1,9 @@
-import eslintPlugin from 'eslint-plugin-eslint-plugin'
+import jsoncParser from 'jsonc-eslint-parser'
+import tseslint from 'typescript-eslint'
 
 import baseConfig from '../../eslint.config.mjs'
 
-export default [
-  eslintPlugin.configs['flat/recommended'],
-
+export default tseslint.config(
   ...baseConfig,
 
   {
@@ -13,18 +12,16 @@ export default [
       '@nx/dependency-checks': [
         'error',
         {
+          checkVersionMismatches: false,
           ignoredFiles: [
             '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
             '{projectRoot}/src/**/*.spec.{ts,js,tsx,jsx}',
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          ignoredDependencies: ['eslint'],
         },
       ],
     },
-    languageOptions: {
-      parser: await import('jsonc-eslint-parser'),
-    },
+    languageOptions: { parser: jsoncParser },
   },
-]
+)

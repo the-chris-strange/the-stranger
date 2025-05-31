@@ -54,5 +54,14 @@
       "dependsOn": ["^build"],
       "inputs": ["default", "^default"]
     }
+  },
+  "release": {
+    "version": {
+      "conventionalCommits": true,
+      "git": {
+        "commit": false,
+        "tag": true
+      }
+    }
   }
 }

@@ -16,8 +16,9 @@ export default tseslint.config(
           checkVersionMismatches: false,
           ignoredFiles: [
             '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
-            '{projectRoot}/vite.config.{ts,js,mjs,mts}',
-            '{projectRoot}/src/**/*.spec.{ts,js,mjs,mts,tsx,jsx}',
+            '{projectRoot}/src/**/*.spec.{ts,js,tsx,jsx}',
+            '{projectRoot}/vite.config.{js,ts,mjs,mts}',
+            '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
         },
       ],

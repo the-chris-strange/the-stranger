@@ -1,0 +1,7 @@
+ignores:
+  - LICENSE
+
+config:
+  fenced-code-language: false
+  no-inline-html: false
+  line-length: false

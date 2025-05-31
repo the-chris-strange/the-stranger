@@ -2,8 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "declaration": true,
-    "tsBuildInfoFile": "../../dist/packages/nx-plugin/tsconfig.lib.tsbuildinfo",
+    "tsBuildInfoFile": "../../dist/packages/yarn-config/tsconfig.lib.tsbuildinfo",
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],

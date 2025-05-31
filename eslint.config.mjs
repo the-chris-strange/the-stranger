@@ -3,7 +3,9 @@ import vitest from '@vitest/eslint-plugin'
 import jsdoc from 'eslint-plugin-jsdoc'
 import n from 'eslint-plugin-n'
 import perfectionist from 'eslint-plugin-perfectionist'
+import re from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn'
+import yml from 'eslint-plugin-yml'
 import tseslint from 'typescript-eslint'
 
 /**
@@ -183,16 +185,7 @@ const unicornConfig = tseslint.config(
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/prefer-math-trunc': 'off',
-      'unicorn/import-style': [
-        'warn',
-        {
-          styles: {
-            path: {
-              named: true,
-            },
-          },
-        },
-      ],
+      'unicorn/import-style': 'off',
       'unicorn/numeric-separators-style': [
         'warn',
         {
@@ -338,9 +331,10 @@ const nConfig = tseslint.config(
   {
     files: SOURCE_FILES,
     rules: {
+      'n/exports-style': ['error', 'module.exports'],
+      'n/hashbang': 'error',
       'n/no-deprecated-api': 'error',
       'n/no-process-exit': 'error',
-      'n/hashbang': 'error',
       'n/prefer-node-protocol': 'error',
       'n/prefer-global/buffer': ['error', 'never'],
       'n/prefer-global/console': ['error', 'never'],
@@ -353,6 +347,10 @@ const nConfig = tseslint.config(
   },
 )
 
+const ymlConfig = tseslint.config(yml.configs['flat/standard'])
+
+const reConfig = tseslint.config(re.configs['flat/recommended'])
+
 export default tseslint.config(
   nxConfig,
   perfectionistConfig,
@@ -360,6 +358,9 @@ export default tseslint.config(
   tsEslintConfig,
   jsdocConfig,
   vitestConfig,
+  nConfig,
+  ymlConfig,
+  reConfig,
 
   {
     ignores: [

@@ -1,8 +1,9 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
+import { ConfigBuilder } from '../config-builder'
 import { getFilePatterns } from '../patterns'
 
-export async function tomlConfig(): Promise<FlatConfig.ConfigArray> {
+export const tomlConfig: ConfigBuilder = async () => {
   try {
     const toml = await import('eslint-plugin-toml')
     await import('toml-eslint-parser')
@@ -40,11 +41,6 @@ export async function tomlConfig(): Promise<FlatConfig.ConfigArray> {
       },
     ]
   } catch {
-    return []
+    return
   }
 }
-
-/**
- * Default configuration for [eslint-plugin-toml](https://ota-meshi.github.io/eslint-plugin-toml/)
- */
-export default await tomlConfig()

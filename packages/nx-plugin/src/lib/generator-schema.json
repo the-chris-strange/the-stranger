@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "TheLIMSGeneratorSchema",
+  "$id": "BaseGeneratorSchema",
   "title": "Base generator schema",
   "description": "Base schema for generators included in this plugin",
   "type": "object",

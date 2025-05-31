@@ -4,16 +4,13 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-/**
- * Default configuration for [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn#readme).
- */
 export default [
   unicorn.configs['recommended'],
 
   {
     files: [getFilePatterns(FilePatterns.source)],
     rules: {
-      'unicorn/import-style': ['warn', { styles: { path: { named: true } } }],
+      'unicorn/import-style': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-keyword-prefix': 'error',

@@ -1,8 +1,17 @@
-import { addDependenciesToPackageJson, readJson, Tree } from '@nx/devkit'
-import { PackageJson } from 'nx/src/utils/package-json'
+import { dirname } from 'node:path'
+
+import {
+  addDependenciesToPackageJson,
+  installPackagesTask,
+  readJson,
+  Tree,
+  workspaceRoot,
+} from '@nx/devkit'
+
+import type { PackageJson } from 'nx/src/utils/package-json'
 
 /**
- * Add dependencies to a project, using the versions specified in the workspace's root package.json.
+ * Add dependencies to a project's package.json, using the versions specified in the workspace's root package.json.
  * @param tree the NX virtual file system
  * @param dependencies an array of package names to add to the project's dependencies
  * @param devDependencies an array of package names to add to the project's devDependencies
@@ -51,4 +60,17 @@ export function getWorkspaceVersion(
   }
 
   return version
+}
+
+export function installDependencies(
+  tree: Tree,
+  dependencies: string[] = [],
+  devDependencies: string[] = [],
+  packageJsonPath?: string,
+) {
+  addDependenciesToProject(tree, dependencies, devDependencies, packageJsonPath)
+
+  const cwd = packageJsonPath ? dirname(packageJsonPath) : workspaceRoot
+
+  installPackagesTask(tree, true, cwd, 'yarn')
 }
