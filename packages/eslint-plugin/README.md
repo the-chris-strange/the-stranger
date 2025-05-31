@@ -1,11 +1,3 @@
-# eslint-config
+# @the-stranger/eslint-plugin
 
-This library was generated with [Nx](https://nx.dev).
-
-## Building
-
-Run `nx build eslint-config` to build the library.
-
-## Running unit tests
-
-Run `nx test eslint-config` to execute the unit tests via [Vitest](https://vitest.dev/).
+ESLint plugin, which mostly contains shared configs that I can extend, though I have plans to add some custom rules in the future.

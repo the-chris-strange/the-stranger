@@ -14,6 +14,7 @@ export default [
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-keyword-prefix': 'error',
+      'unicorn/no-useless-undefined': ['error', { checkArrowFunctionBody: false }],
       'unicorn/numeric-separators-style': ['warn', { number: { minimumDigits: 12 } }],
       'unicorn/prefer-import-meta-properties': 'warn',
       'unicorn/prefer-math-trunc': 'off',
@@ -52,6 +53,14 @@ export default [
 
   {
     files: getFilePatterns(FilePatterns.test),
-    rules: { 'unicorn/consistent-function-scoping': 'off' },
+    rules: {
+      'unicorn/consistent-function-scoping': 'off',
+      'unicorn/no-nested-ternary': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/no-useless-undefined': [
+        'error',
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
+    },
   },
 ] satisfies FlatConfig.ConfigArray

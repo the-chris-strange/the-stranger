@@ -1,6 +1,6 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
-import { ConfigBuilder } from '../config-builder'
+import { ConfigBuilder } from '../config'
 import { getFilePatterns } from '../patterns'
 
 export const tomlConfig: ConfigBuilder = async () => {

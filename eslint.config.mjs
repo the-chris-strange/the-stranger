@@ -228,7 +228,15 @@ const unicornConfig = tseslint.config(
 
   {
     files: TEST_FILES,
-    rules: { 'unicorn/consistent-function-scoping': 'off' },
+    rules: {
+      'unicorn/no-nested-ternary': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/no-useless-undefined': [
+        'error',
+        { checkArrowFunctionBody: false, checkArguments: false },
+      ],
+      'unicorn/consistent-function-scoping': 'off',
+    },
   },
 )
 

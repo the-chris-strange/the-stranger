@@ -1,6 +1,6 @@
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
-import { ConfigBuilder } from '../config-builder'
+import { ConfigBuilder } from '../config'
 
 export const nxConfig: ConfigBuilder = async () => {
   try {
