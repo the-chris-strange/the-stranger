@@ -1,6 +1,10 @@
 {
   "name": "@the-stranger/eslint-plugin",
   "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/the-chris-strange/the-stranger",
+    "directory": "packages/eslint-plugin"
+  },
   "type": "module",
   "exports": {
     "./package.json": "./package.json",

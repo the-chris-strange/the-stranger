@@ -1,4 +1,4 @@
-import { ConfigBuilder } from '../config-builder'
+import { ConfigBuilder } from '../config'
 import { FilePatterns, getFilePatterns } from '../patterns'
 
 export const vitestConfig: ConfigBuilder = async () => {

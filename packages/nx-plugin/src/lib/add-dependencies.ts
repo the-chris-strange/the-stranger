@@ -1,12 +1,4 @@
-import { dirname } from 'node:path'
-
-import {
-  addDependenciesToPackageJson,
-  installPackagesTask,
-  readJson,
-  Tree,
-  workspaceRoot,
-} from '@nx/devkit'
+import { addDependenciesToPackageJson, readJson, Tree } from '@nx/devkit'
 
 import type { PackageJson } from 'nx/src/utils/package-json'
 
@@ -60,17 +52,4 @@ export function getWorkspaceVersion(
   }
 
   return version
-}
-
-export function installDependencies(
-  tree: Tree,
-  dependencies: string[] = [],
-  devDependencies: string[] = [],
-  packageJsonPath?: string,
-) {
-  addDependenciesToProject(tree, dependencies, devDependencies, packageJsonPath)
-
-  const cwd = packageJsonPath ? dirname(packageJsonPath) : workspaceRoot
-
-  installPackagesTask(tree, true, cwd, 'yarn')
 }

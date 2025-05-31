@@ -1,4 +1,4 @@
-import { ConfigBuilder } from '../config-builder'
+import { ConfigBuilder } from '../config'
 
 export const yamlConfig: ConfigBuilder = async () => {
   try {

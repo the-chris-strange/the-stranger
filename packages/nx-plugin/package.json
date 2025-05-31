@@ -1,6 +1,10 @@
 {
   "name": "@the-stranger/nx-plugin",
   "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/the-chris-strange/the-stranger",
+    "directory": "packages/nx-plugin"
+  },
   "type": "commonjs",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
