@@ -2,6 +2,26 @@ import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import { ConfigBuilder } from '../config'
 
+export const nxModuleBoundariesConfig: FlatConfig.Config = {
+  files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+  name: 'NX module boundaries rule',
+  rules: {
+    '@nx/enforce-module-boundaries': [
+      'error',
+      {
+        allow: [],
+        depConstraints: [
+          {
+            onlyDependOnLibsWithTags: ['*'],
+            sourceTag: '*',
+          },
+        ],
+        enforceBuildableLibDependency: true,
+      },
+    ],
+  },
+}
+
 export const nxConfig: ConfigBuilder = async () => {
   try {
     const nx = await import('@nx/eslint-plugin')
@@ -9,26 +29,7 @@ export const nxConfig: ConfigBuilder = async () => {
       nx.configs['flat/base'] as FlatConfig.Config,
       ...nx.configs['flat/javascript'],
       ...nx.configs['flat/typescript'],
-
-      {
-        files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-        name: 'NX module boundaries rule',
-        rules: {
-          '@nx/enforce-module-boundaries': [
-            'error',
-            {
-              allow: [],
-              depConstraints: [
-                {
-                  onlyDependOnLibsWithTags: ['*'],
-                  sourceTag: '*',
-                },
-              ],
-              enforceBuildableLibDependency: true,
-            },
-          ],
-        },
-      },
+      nxModuleBoundariesConfig,
     ]
   } catch {
     return
