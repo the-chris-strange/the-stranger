@@ -2,8 +2,9 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "references": [
-    { "path": "./packages/nx-plugin" },
     { "path": "./packages/eslint-plugin" },
+    { "path": "./packages/nx-plugin" },
+    { "path": "./packages/prettier-config" },
     { "path": "./packages/yarn-config" }
   ],
   "ts-node": {
