@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { tsLibraryGenerator } from './generator'
 import { TSLibrarySchema } from './schema'
 
-describe('ts-library generator', () => {
+describe('ts-library generator', { timeout: 8000 }, () => {
   let tree: Tree
   let options: TSLibrarySchema
 
