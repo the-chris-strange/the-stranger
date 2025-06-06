@@ -38,7 +38,7 @@ describe('TSConfig', () => {
         types: ['type1', 'type2', 'type3'],
       },
       exclude: ['src/**/*.ts'],
-      extends: '../../tsconfig.json',
+      extends: ['../../tsconfig.json'],
       files: ['src/**/*.spec.ts'],
       include: ['src/**/*.spec.ts'],
       references: [{ path: './tsconfig.spec.json' }, { path: './tsconfig.lib.json' }],
@@ -92,13 +92,6 @@ describe('TSConfig', () => {
       tsconfig.removeTypes('type1', 'type3')
 
       expect(tsconfig).toHaveProperty(paths.types, ['type2'])
-    })
-
-    it('removes the types option entirely if it is empty', () => {
-      const configTypes = ['type1', 'type2', 'type3']
-      tsconfig.removeTypes(...configTypes)
-
-      expect(tsconfig).not.toHaveProperty(paths.types)
     })
   })
 

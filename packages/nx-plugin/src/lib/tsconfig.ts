@@ -1,15 +1,16 @@
 import { OverwriteStrategy, readJson, Tree } from '@nx/devkit'
 
-import type { CompilerOptionsDefinition, Tsconfig } from 'tsconfig-type'
+import type { Tsconfig } from 'tsconfig-type'
 
 import { isEmpty } from './is-empty'
 import { owStrategy } from './overwrite-strategy'
+import { PickRequiredProperties, toArray } from './type-utils'
 
 /**
  * Encapsulates operations on a `tsconfig.json` file.
  */
-export class TSConfig implements Tsconfig {
-  private $config: Tsconfig
+export class TSConfig implements TSConfigType {
+  private $config: TSConfigType
 
   /**
    * Construct a new TSConfig instance.
@@ -22,26 +23,40 @@ export class TSConfig implements Tsconfig {
     private $path: string,
     private $options?: TSConfigOptions,
   ) {
-    this.$config = $tree.exists($path) ? readJson<Tsconfig>($tree, $path) : {}
+    const cfg = $tree.exists($path) ? readJson<Tsconfig>($tree, $path) : {}
+    this.$config = {
+      ...cfg,
+      compilerOptions: {},
+      exclude: toArray(cfg.exclude),
+      extends: toArray(cfg.extends),
+      files: toArray(cfg.files),
+      include: toArray(cfg.include),
+      references: [],
+    }
+    this.references = cfg.references
+    this.compilerOptions = cfg.compilerOptions
   }
 
-  get compilerOptions(): CompilerOptions {
-    this.$config.compilerOptions ??= {}
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.$config.compilerOptions!
+  get compilerOptions(): TSConfigType['compilerOptions'] {
+    return this.$config.compilerOptions
   }
 
-  set compilerOptions(value) {
-    this.$config.compilerOptions = value
+  set compilerOptions(value: Tsconfig['compilerOptions']) {
+    this.$config.compilerOptions = value ?? {}
   }
 
-  get exclude(): string[] {
-    this.$config.exclude ??= []
-    return this.$config.exclude as string[]
+  get exclude(): TSConfigType['exclude'] {
+    return this.$config.exclude
   }
 
-  set exclude(value: (string | null)[]) {
-    this.$config.exclude = this.ensureStringArray(value)
+  set exclude(value: string | Tsconfig['exclude']) {
+    if (typeof value === 'string') {
+      this.$config.exclude = [value]
+    } else if (Array.isArray(value)) {
+      this.$config.exclude = value.filter(e => typeof e === 'string')
+    } else {
+      this.$config.exclude = []
+    }
   }
 
   get extends() {
@@ -52,39 +67,41 @@ export class TSConfig implements Tsconfig {
     this.$config.extends = value
   }
 
-  get files(): string[] {
-    this.$config.files ??= []
-    return this.$config.files as string[]
+  get files(): TSConfigType['files'] {
+    return this.$config.files
   }
 
-  set files(value: (string | null)[]) {
-    this.$config.files = this.ensureStringArray(value)
+  set files(value: string | Tsconfig['files']) {
+    this.$config.files = toArray(value)
   }
 
-  get include(): string[] {
-    this.$config.include ??= []
-    return this.$config.include as string[]
+  get include(): TSConfigType['include'] {
+    return this.$config.include
   }
 
-  set include(value: (string | null)[]) {
-    this.$config.include = this.ensureStringArray(value)
+  set include(value: string | Tsconfig['include']) {
+    this.$config.include = toArray(value)
   }
 
-  get references(): TsconfigReference[] {
-    this.$config.references ??= []
-    return this.$config.references as TsconfigReference[]
+  get references(): TSConfigType['references'] {
+    return this.$config.references
   }
 
-  set references(value: (string | { path?: string | null } | null)[]) {
-    this.$config.references = value.filter(typeGuardRefs).map(this.asRef)
-  }
-
-  /**
-   * Add references to the {@link Tsconfig.references} configuration.
-   * @param refs the references to add
-   */
-  addReference(...refs: (string | { path: string })[]) {
-    this.references.push(...refs.map(this.asRef))
+  set references(value: string | string[] | Tsconfig['references']) {
+    if (value === null || value === undefined) {
+      this.$config.references = []
+    } else if (typeof value === 'string') {
+      this.$config.references = [{ path: value }]
+    } else if (Array.isArray(value)) {
+      this.$config.references = []
+      for (const v of value) {
+        if (typeof v === 'string') {
+          this.$config.references.push({ path: v })
+        } else if (isProjectReference(v)) {
+          this.$config.references.push(v)
+        }
+      }
+    }
   }
 
   /**
@@ -92,14 +109,11 @@ export class TSConfig implements Tsconfig {
    * @param types the types to add
    */
   addTypes(...types: string[]) {
-    this.$config.compilerOptions ??= {}
-    const ts = this.getTypes()
-
+    const ts = this.types
     for (const type of types) {
       ts.add(type)
     }
-
-    this.$config.compilerOptions.types = [...ts]
+    this.types = [...ts]
   }
 
   /**
@@ -107,23 +121,15 @@ export class TSConfig implements Tsconfig {
    * @param types the types to remove
    */
   removeTypes(...types: string[]) {
-    if (this.$config.compilerOptions?.types) {
-      const ts = this.getTypes()
-
-      for (const type of types) {
-        ts.delete(type)
-      }
-
-      if (ts.size === 0) {
-        delete this.$config.compilerOptions.types
-      } else {
-        this.$config.compilerOptions.types = [...ts]
-      }
+    const ts = this.types
+    for (const type of types) {
+      ts.delete(type)
     }
+    this.types = [...ts]
   }
 
   /**
-   * Create a minimal JSON object from the config. Only keys with a truthy value, or those specified in {@link TSConfigOptions.includeProperties}.
+   * Create a minimal JSON object from the config containing only keys with a truthy value, or those specified in {@link TSConfigOptions.includeProperties}.
    * @returns the plain JSON object
    */
   toJSON(): Tsconfig {
@@ -138,9 +144,9 @@ export class TSConfig implements Tsconfig {
       config.references = this.references
     }
 
-    // if (!this.includeProperty('compilerOptions') && isEmpty(config.compilerOptions)) {
-    //   delete config.compilerOptions
-    // }
+    if (Array.isArray(this.extends) && this.extends.length === 1) {
+      this.extends = this.extends[0]
+    }
 
     return config
   }
@@ -182,24 +188,6 @@ export class TSConfig implements Tsconfig {
     return new TSConfig(tree, path, options)
   }
 
-  private asRef(value: string | { path: string }): TsconfigReference {
-    return typeof value === 'string' ? { path: value } : value
-  }
-
-  private ensureStringArray(value?: (string | null)[] | null): string[] {
-    return value?.filter(e => typeof e === 'string') ?? []
-  }
-
-  /**
-   * Get a set of all non-null types defined in compilerOptions.types. If no types are defined, returns an empty set.
-   * @returns a set containing non-null types
-   */
-  private getTypes() {
-    return new Set(
-      this.$config.compilerOptions?.types?.filter(e => typeof e === 'string'),
-    )
-  }
-
   /**
    * Check whether a value should be included in the JSON object to which this class serializes.
    * @param property the property to test
@@ -223,20 +211,24 @@ export class TSConfig implements Tsconfig {
     this.$options ??= {}
     this.$options.overwriteStrategy = value
   }
+
+  private get types(): Set<string> {
+    return new Set(toArray(this.$config.compilerOptions.types))
+  }
+
+  private set types(value: string | (string | null)[] | null | undefined) {
+    this.$config.compilerOptions.types = toArray(value)
+  }
 }
 
-export function typeGuardRefs(
-  value?: string | { path?: string | null } | null,
-): value is string | { path: string } {
+export function isProjectReference(value?: unknown): value is TSConfigReference {
   return (
-    typeof value === 'string' ||
-    (typeof value === 'object' && typeof value?.path === 'string')
+    value !== null &&
+    typeof value === 'object' &&
+    'path' in value &&
+    typeof value.path === 'string'
   )
 }
-
-export type CompilerOptions = NonNullable<
-  Required<CompilerOptionsDefinition>['compilerOptions']
->
 
 export interface TSConfigOptions {
   /**
@@ -249,9 +241,11 @@ export interface TSConfigOptions {
   includeProperties?: (keyof Tsconfig)[]
 }
 
-/**
- * A non-nullable element of the {@link Tsconfig.references} array.
- */
-export interface TsconfigReference {
-  path: string
-}
+export type TSConfigType = PickRequiredProperties<Tsconfig, 'compilerOptions'> &
+  PickRequiredProperties<
+    Tsconfig,
+    'exclude' | 'extends' | 'files' | 'include' | 'references',
+    true
+  >
+
+type TSConfigReference = TSConfigType['references'][number]
