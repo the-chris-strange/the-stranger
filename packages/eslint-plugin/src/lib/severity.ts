@@ -38,20 +38,20 @@ export function isSeverityString(value: any): value is SeverityString {
 
 /**
  * Set the severity of all rules in a configuration object.
- * @param severity the severity to set
  * @param config a configuration object
+ * @param severity the severity to set
  * @returns the configuration object with the specified severity set for all rules
  */
 export function setConfigSeverity(
-  severity: Severity,
   config: FlatConfig.Config,
+  severity: Severity,
 ): FlatConfig.Config {
   if (config.rules) {
     const ruleArray: [string, FlatConfig.RuleEntry][] = Object.entries(config.rules)
       .filter(([_, value]) => value !== undefined)
       .map(([key, value]) => [
         key,
-        setRuleSeverity(severity, value as FlatConfig.RuleEntry),
+        setRuleSeverity(value as FlatConfig.RuleEntry, severity),
       ])
     return { ...config, rules: Object.fromEntries(ruleArray) }
   }
@@ -60,13 +60,13 @@ export function setConfigSeverity(
 
 /**
  * Set the severity of a single rule entry.
- * @param severity the severity to set
  * @param rule a rule entry from a configuration object
+ * @param severity the severity to set
  * @returns the rule entry with the specified severity set
  */
 export function setRuleSeverity(
-  severity: Severity,
   rule: FlatConfig.RuleEntry,
+  severity: Severity,
 ): FlatConfig.RuleEntry {
   if (isSeverity(rule)) {
     return toSeverity(severity)
@@ -90,7 +90,7 @@ export async function setSeverity(
   ...configs: ConfigLike[]
 ): Promise<FlatConfig.ConfigArray> {
   const flatConfigs = await config(...configs)
-  return flatConfigs.map(e => setConfigSeverity(severity, e))
+  return flatConfigs.map(e => setConfigSeverity(e, severity))
 }
 
 /**

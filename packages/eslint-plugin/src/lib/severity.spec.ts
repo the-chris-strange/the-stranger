@@ -63,28 +63,32 @@ describe('setConfigSeverity', () => {
         foo: 1,
       },
     }
-    const result = setConfigSeverity('error', config)
-    expect(result.rules?.['foo']).toBe('error')
-    expect(Array.isArray(result.rules?.['bar'])).toBe(true)
-    expect((result.rules?.['bar'] as any[])[0]).toBe('error')
+    const expected: FlatConfig.Config = {
+      rules: {
+        bar: ['error', { opt: true }],
+        foo: 'error',
+      },
+    }
+    const result = setConfigSeverity(config, 'error')
+    expect(result).toStrictEqual(expected)
     expect(result.rules?.['baz']).toBeUndefined()
   })
 
   it('returns config unchanged if no rules', () => {
     const config: FlatConfig.Config = {}
-    expect(setConfigSeverity('warn', config)).toEqual(config)
+    expect(setConfigSeverity(config, 'warn')).toEqual(config)
   })
 })
 
 describe('setRuleSeverity', () => {
   it('replaces severity if rule is a severity', () => {
-    expect(setRuleSeverity('warn', 2)).toBe('warn')
-    expect(setRuleSeverity('off', 'error')).toBe('off')
+    expect(setRuleSeverity(2, 'warn')).toBe('warn')
+    expect(setRuleSeverity('error', 'off')).toBe('off')
   })
 
   it('sets severity in rule array', () => {
     const rule: FlatConfig.RuleEntry = ['warn', { foo: true }]
-    const result = setRuleSeverity('error', rule)
+    const result = setRuleSeverity(rule, 'error')
     expect(Array.isArray(result)).toBe(true)
     expect((result as any[])[0]).toBe('error')
     expect((result as any[])[1]).toEqual({ foo: true })
@@ -92,7 +96,7 @@ describe('setRuleSeverity', () => {
 
   it('returns rule unchanged for non-severity, non-array', () => {
     const rule: any = { foo: true }
-    expect(setRuleSeverity('warn', rule)).toBe(rule)
+    expect(setRuleSeverity(rule, 'warn')).toBe(rule)
   })
 })
 
