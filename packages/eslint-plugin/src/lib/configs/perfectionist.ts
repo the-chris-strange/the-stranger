@@ -3,9 +3,10 @@ import perfectionist from 'eslint-plugin-perfectionist'
 import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
 
 import { FilePatterns, getFilePatterns } from '../patterns'
+import { setConfigSeverity } from '../severity'
 
 export default [
-  perfectionist.configs['recommended-natural'],
+  setConfigSeverity(perfectionist.configs['recommended-natural'], 'warn'),
 
   {
     files: getFilePatterns(FilePatterns.source),
