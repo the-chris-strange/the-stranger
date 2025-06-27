@@ -20,8 +20,7 @@ export default defineConfig({
     },
     outDir: '../../dist/packages/prettier-config',
     reportCompressedSize: true,
-    rollupOptions: {},
-    target: ['node22'],
+    target: ['node24'],
   },
 
   cacheDir: '../../node_modules/.vite/packages/prettier-config',

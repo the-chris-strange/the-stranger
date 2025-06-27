@@ -12,7 +12,6 @@ dotenv.config()
 
 const external: string[] = Object.keys({
   ...manifest.dependencies,
-  // ...manifest.devDependencies,
   ...manifest.peerDependencies,
 })
 
@@ -28,10 +27,8 @@ export default defineConfig({
     },
     outDir: '../../dist/packages/eslint-plugin',
     reportCompressedSize: true,
-    rollupOptions: {
-      external,
-    },
-    target: ['node22'],
+    rollupOptions: { external },
+    target: ['node24'],
   },
 
   cacheDir: '../../node_modules/.vite/packages/eslint-plugin',

@@ -22,7 +22,7 @@ export default defineConfig({
     },
     outDir: '../../dist/packages/yarn-config',
     reportCompressedSize: true,
-    rollupOptions: { external: [] },
+    target: ['node24'],
   },
 
   cacheDir: '../../node_modules/.vite/packages/yarn-config',
