@@ -8,7 +8,16 @@ import { FilePatterns, getFilePatterns } from '../patterns'
 export const DOCUSAURUS_TAGS = ['document']
 
 export default [
-  { plugins: { jsdoc } },
+  {
+    plugins: { jsdoc },
+    settings: {
+      jsdoc: {
+        tagNamePreference: {
+          augments: 'extends',
+        },
+      },
+    },
+  },
 
   {
     ...jsdoc.configs['flat/recommended-typescript'],
