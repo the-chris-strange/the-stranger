@@ -7,7 +7,7 @@ import perfectionist from './lib/configs/perfectionist'
 import promise from './lib/configs/promise'
 import re from './lib/configs/regexp'
 import { tomlConfig } from './lib/configs/toml'
-import ts from './lib/configs/typescript-eslint'
+import { typescriptEslintConfig } from './lib/configs/typescript-eslint'
 import unicorn from './lib/configs/unicorn'
 import { vitestConfig } from './lib/configs/vitest'
 import { yamlConfig } from './lib/configs/yml'
@@ -18,6 +18,7 @@ export { meta } from './lib/meta'
 
 const vitest = await config(vitestConfig)
 const testFiles = await config(vitest) // todo: add jest config also
+const ts = await config(typescriptEslintConfig)
 const base = await config(
   {
     ignores: [
