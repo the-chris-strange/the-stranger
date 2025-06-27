@@ -24,6 +24,7 @@
     "postinstall": "husky",
     "lint": "nx run-many -t lint",
     "nx": "nx",
+    "prepack": "nx run-many -t build",
     "test": "nx run-many -t test"
   },
   "devDependencies": {
@@ -33,7 +34,6 @@
     "@commitlint/types": "^19.8.1",
     "@cspell/dict-fr-fr": "^2.3.0",
     "@cspell/dict-scientific-terms-us": "^3.0.6",
-    "@eslint/js": "^9.27.0",
     "@nx/devkit": "21.1.0",
     "@nx/eslint": "21.1.0",
     "@nx/eslint-plugin": "21.1.0",
@@ -51,9 +51,9 @@
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "@typescript-eslint/utils": "^8.32.1",
-    "@vitest/coverage-v8": "^3.1.4",
-    "@vitest/eslint-plugin": "^1.2.0",
-    "@vitest/ui": "^3.1.4",
+    "@vitest/coverage-v8": "^3.2.4",
+    "@vitest/eslint-plugin": "^1.2.7",
+    "@vitest/ui": "^3.2.4",
     "@yarnpkg/types": "4.0.1",
     "cspell": "^9.0.2",
     "dotenv": "^16.5.0",
@@ -61,7 +61,6 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-cypress": "^4.3.0",
     "eslint-plugin-eslint-plugin": "^6.4.0",
-    "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jest": "^28.11.0",
     "eslint-plugin-jsdoc": "^50.6.17",
     "eslint-plugin-jsx-a11y": "6.10.2",
@@ -89,12 +88,12 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1",
     "vite": "6.3.5",
-    "vite-node": "^3.1.4",
+    "vite-node": "^3.2.4",
     "vite-plugin-dts": "4.5.4",
-    "vitest": "^3.1.4",
+    "vitest": "^3.2.4",
     "yaml-eslint-parser": "^1.3.0"
   },
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.9.2",
   "engines": {
     "node": "^24"
   }
