@@ -25,7 +25,9 @@ dictionaries:
   - softwareTerms
   - web-services
 words:
+  - dotenvx
   - lestranger
+  - unprefix
 ignoreWords:
   - globbify
   - unstub

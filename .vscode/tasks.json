@@ -1,17 +1,17 @@
 {
-  "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build",
-      "type": "process",
-      "command": "yarn",
       "args": ["build"],
+      "command": "yarn",
+      "detail": "Build the workspace",
       "group": {
-        "kind": "build",
-        "isDefault": true
+        "isDefault": true,
+        "kind": "build"
       },
       "isBuildCommand": true,
-      "detail": "Build the workspace"
+      "label": "Build",
+      "type": "process"
     }
-  ]
+  ],
+  "version": "2.0.0"
 }
