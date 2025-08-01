@@ -3,6 +3,7 @@ import vitest from '@vitest/eslint-plugin'
 import jsdoc from 'eslint-plugin-jsdoc'
 import n from 'eslint-plugin-n'
 import perfectionist from 'eslint-plugin-perfectionist'
+import promise from 'eslint-plugin-promise'
 import re from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn'
 import yml from 'eslint-plugin-yml'
@@ -345,7 +346,7 @@ const nConfig = tseslint.config(
       'n/no-process-exit': 'error',
       'n/prefer-node-protocol': 'error',
       'n/prefer-global/buffer': ['error', 'never'],
-      'n/prefer-global/console': ['error', 'never'],
+      'n/prefer-global/console': ['error', 'always'],
       'n/prefer-global/process': ['error', 'never'],
       'n/prefer-global/text-decoder': ['error', 'never'],
       'n/prefer-global/text-encoder': ['error', 'never'],
@@ -359,6 +360,17 @@ const ymlConfig = tseslint.config(yml.configs['flat/standard'])
 
 const reConfig = tseslint.config(re.configs['flat/recommended'])
 
+const promiseConfig = tseslint.config(promise.configs['flat/recommended'], {
+  name: 'Additional rules for asynchronous code',
+  files: SOURCE_FILES,
+  rules: {
+    'promise/no-multiple-resolved': 'warn',
+    'promise/prefer-await-to-callbacks': 'warn',
+    'promise/prefer-await-to-then': 'warn',
+    'promise/spec-only': 'error',
+  },
+})
+
 export default tseslint.config(
   nxConfig,
   perfectionistConfig,
@@ -369,6 +381,7 @@ export default tseslint.config(
   nConfig,
   ymlConfig,
   reConfig,
+  promiseConfig,
 
   {
     ignores: [

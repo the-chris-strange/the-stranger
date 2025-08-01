@@ -8,3 +8,5 @@ words:
   - pyupgrade
   - taplo
   - tmpl
+ignoreWords:
+  - markdownlintrc

@@ -1,14 +1,13 @@
+import '@dotenvx/dotenvx/config'
+
 import path from 'node:path'
 
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
-import dotenv from 'dotenv'
 import dts from 'vite-plugin-dts'
 import { defineConfig } from 'vitest/config'
 
-dotenv.config()
-
-export default defineConfig({
+export default defineConfig(() => ({
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
@@ -17,7 +16,7 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       fileName: 'index',
-      formats: ['es', 'cjs'],
+      formats: ['es' as const, 'cjs' as const],
       name: 'yarn-config',
     },
     outDir: '../../dist/packages/yarn-config',
@@ -40,20 +39,20 @@ export default defineConfig({
 
   test: {
     coverage: {
-      provider: 'v8',
+      provider: 'v8' as const,
       reportsDirectory: '../../coverage/packages/yarn-config',
     },
     environment: 'node',
     globals: false,
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     name: 'yarn-config',
     passWithNoTests: true,
     typecheck: {
       include: [
-        'src/**/*.{test,spec}-d.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-        'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+        'src/**/*.{test,spec}-d.?(c|m)[jt]s?(x)',
+        'src/**/*.{test,spec}.?(c|m)[jt]s?(x)',
       ],
     },
     watch: false,
   },
-})
+}))

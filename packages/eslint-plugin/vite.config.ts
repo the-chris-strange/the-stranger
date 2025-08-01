@@ -1,28 +1,27 @@
+import '@dotenvx/dotenvx/config'
+
 import path from 'node:path'
 
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
-import dotenv from 'dotenv'
 import dts from 'vite-plugin-dts'
 import { defineConfig } from 'vitest/config'
 
 import manifest from './package.json'
-
-dotenv.config()
 
 const external: string[] = Object.keys({
   ...manifest.dependencies,
   ...manifest.peerDependencies,
 })
 
-export default defineConfig({
+export default defineConfig(() => ({
   build: {
     emptyOutDir: true,
     lib: {
       entry: {
         index: 'src/index.ts',
       },
-      formats: ['es'],
+      formats: ['es' as const],
       name: 'eslint-plugin',
     },
     outDir: '../../dist/packages/eslint-plugin',
@@ -46,19 +45,19 @@ export default defineConfig({
 
   test: {
     coverage: {
-      provider: 'v8',
+      provider: 'v8' as const,
       reportsDirectory: '../../coverage/packages/eslint-plugin',
     },
     environment: 'node',
     globals: false,
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     name: 'eslint-plugin',
     typecheck: {
       include: [
-        'src/**/*.{test,spec}-d.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-        'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+        'src/**/*.{test,spec}-d.?(c|m)[jt]s?(x)',
+        'src/**/*.{test,spec}.?(c|m)[jt]s?(x)',
       ],
     },
     watch: false,
   },
-})
+}))
