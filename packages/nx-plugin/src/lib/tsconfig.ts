@@ -1,13 +1,13 @@
-import { OverwriteStrategy, readJson, Tree } from '@nx/devkit'
+import { logger, OverwriteStrategy, readJson, Tree } from '@nx/devkit'
 
 import type { Tsconfig } from 'tsconfig-type'
 
 import { isEmpty } from './is-empty'
 import { owStrategy } from './overwrite-strategy'
-import { PickRequiredProperties, toArray } from './type-utils'
+import { PickNonNullable, PickRequired, toArray } from './type-utils'
 
 /**
- * Encapsulates operations on a `tsconfig.json` file.
+ * Encapsulate operations on a `tsconfig.json` file.
  */
 export class TSConfig implements TSConfigType {
   private $config: TSConfigType
@@ -21,20 +21,10 @@ export class TSConfig implements TSConfigType {
   constructor(
     private $tree: Tree,
     private $path: string,
-    private $options?: TSConfigOptions,
+    private $options: TSConfigOptions = {},
   ) {
-    const cfg = $tree.exists($path) ? readJson<Tsconfig>($tree, $path) : {}
-    this.$config = {
-      ...cfg,
-      compilerOptions: {},
-      exclude: toArray(cfg.exclude),
-      extends: toArray(cfg.extends),
-      files: toArray(cfg.files),
-      include: toArray(cfg.include),
-      references: [],
-    }
-    this.references = cfg.references
-    this.compilerOptions = cfg.compilerOptions
+    const config = $tree.exists($path) ? readJson<Tsconfig>($tree, $path) : {}
+    this.$config = TSConfig.normalize(config)
   }
 
   get compilerOptions(): TSConfigType['compilerOptions'] {
@@ -42,7 +32,7 @@ export class TSConfig implements TSConfigType {
   }
 
   set compilerOptions(value: Tsconfig['compilerOptions']) {
-    this.$config.compilerOptions = value ?? {}
+    this.$config.compilerOptions = TSConfig.normalizeCompilerOptions(value)
   }
 
   get exclude(): TSConfigType['exclude'] {
@@ -50,13 +40,14 @@ export class TSConfig implements TSConfigType {
   }
 
   set exclude(value: string | Tsconfig['exclude']) {
-    if (typeof value === 'string') {
-      this.$config.exclude = [value]
-    } else if (Array.isArray(value)) {
-      this.$config.exclude = value.filter(e => typeof e === 'string')
-    } else {
-      this.$config.exclude = []
-    }
+    this.$config.exclude = toArray(value)
+  }
+
+  /**
+   * Indicates that the file exists in the file system.
+   */
+  get exists() {
+    return this.$tree.exists(this.$path)
   }
 
   get extends() {
@@ -88,18 +79,18 @@ export class TSConfig implements TSConfigType {
   }
 
   set references(value: string | string[] | Tsconfig['references']) {
-    if (value === null || value === undefined) {
-      this.$config.references = []
-    } else if (typeof value === 'string') {
-      this.$config.references = [{ path: value }]
-    } else if (Array.isArray(value)) {
-      this.$config.references = []
-      for (const v of value) {
-        if (typeof v === 'string') {
-          this.$config.references.push({ path: v })
-        } else if (isProjectReference(v)) {
-          this.$config.references.push(v)
-        }
+    this.$config.references = TSConfig.normalizeReferences(value)
+  }
+
+  /**
+   * Add references to the {@link Tsconfig.references} array.
+   * @param values references to add to the config
+   */
+  addReferences(...values: (string | TSConfigReference)[]) {
+    for (const value of values) {
+      const ref = typeof value === 'string' ? { path: value } : value
+      if (!this.$config.references.some(e => e.path === ref.path)) {
+        this.$config.references.push(ref)
       }
     }
   }
@@ -109,11 +100,17 @@ export class TSConfig implements TSConfigType {
    * @param types the types to add
    */
   addTypes(...types: string[]) {
-    const ts = this.types
+    const t = new Set(this.$config.compilerOptions.types)
     for (const type of types) {
-      ts.add(type)
+      if (type) {
+        t.add(type)
+      }
     }
-    this.types = [...ts]
+    this.$config.compilerOptions.types = [...t]
+  }
+
+  apply(config: Tsconfig) {
+    this.$config = TSConfig.normalize(config)
   }
 
   /**
@@ -156,7 +153,7 @@ export class TSConfig implements TSConfigType {
   }
 
   /**
-   * Write the config to the file system. File is unformatted since this method is intended for use within a generator, which will eventually format everything with Prettier.
+   * Write the config to the file system. File is unformatted since this method is intended for use within a generator, which will format everything at once.
    * @param tree the NX virtual file system
    * @param path the path to the `tsconfig.json`
    * @param options options that specify how to interact with the filesystem
@@ -166,11 +163,62 @@ export class TSConfig implements TSConfigType {
     this.$path = path ?? this.$path
     this.$options = options ?? this.$options
 
-    if (this.exists && this.overwriteStrategy === OverwriteStrategy.ThrowIfExisting) {
-      throw new Error(`${this.$path} may not be overwritten`)
-    } else if (!this.exists || this.overwriteStrategy === OverwriteStrategy.Overwrite) {
+    if (this.exists) {
+      if (this.overwriteStrategy === OverwriteStrategy.ThrowIfExisting) {
+        throw new Error(`${this.$path} may not be overwritten`)
+      } else if (this.overwriteStrategy === OverwriteStrategy.KeepExisting) {
+        logger.warn(`Refusing to overwrite existing configuration file: ${this.$path}`)
+      }
+    }
+
+    if (!this.exists || this.overwriteStrategy === OverwriteStrategy.Overwrite) {
       this.$tree.write(this.$path, this.toString())
     }
+  }
+
+  static normalize(config: Tsconfig): TSConfigType {
+    return {
+      ...config,
+      compilerOptions: TSConfig.normalizeCompilerOptions(config.compilerOptions),
+      exclude: toArray(config.exclude),
+      extends: toArray(config.extends),
+      files: toArray(config.files),
+      include: toArray(config.include),
+      references: TSConfig.normalizeReferences(config.references),
+    }
+  }
+
+  static normalizeCompilerOptions(options: Tsconfig['compilerOptions']) {
+    return Object.entries(options ?? {}).reduce(
+      (acc, [key, value]) => {
+        if (!isEmpty(value)) {
+          if (Array.isArray(value)) {
+            const values = value.filter(e => !isEmpty(e))
+            acc[key] = key === 'types' ? [...new Set(values)] : values
+          } else {
+            acc[key] = value
+          }
+        }
+        return acc
+      },
+      {} as Record<string, any>,
+    ) satisfies TSConfigType['compilerOptions']
+  }
+
+  static normalizeReferences(value: string | string[] | Tsconfig['references']) {
+    const refs: TSConfigReference[] = []
+    if (typeof value === 'string') {
+      refs.push({ path: value })
+    } else if (Array.isArray(value)) {
+      for (const v of value.filter(e => !isEmpty(e))) {
+        if (typeof v === 'string') {
+          refs.push({ path: v })
+        } else if (isProjectReference(v)) {
+          refs.push(v)
+        }
+      }
+    }
+    return refs
   }
 
   /**
@@ -197,10 +245,6 @@ export class TSConfig implements TSConfigType {
     return this.$options?.includeProperties?.includes(property)
   }
 
-  private get exists() {
-    return this.$tree.exists(this.$path)
-  }
-
   private get overwriteStrategy(): OverwriteStrategy {
     return typeof this.$options?.overwriteStrategy === 'string'
       ? this.$options.overwriteStrategy
@@ -213,7 +257,7 @@ export class TSConfig implements TSConfigType {
   }
 
   private get types(): Set<string> {
-    return new Set(toArray(this.$config.compilerOptions.types))
+    return new Set(toArray(this.compilerOptions.types))
   }
 
   private set types(value: string | (string | null)[] | null | undefined) {
@@ -241,11 +285,20 @@ export interface TSConfigOptions {
   includeProperties?: (keyof Tsconfig)[]
 }
 
-export type TSConfigType = PickRequiredProperties<Tsconfig, 'compilerOptions'> &
-  PickRequiredProperties<
+export type TSConfigType = Pick<
+  Tsconfig,
+  | '$schema'
+  | 'buildOptions'
+  | 'compileOnSave'
+  | 'ts-node'
+  | 'typeAcquisition'
+  | 'watchOptions'
+> &
+  PickRequired<
     Tsconfig,
     'exclude' | 'extends' | 'files' | 'include' | 'references',
     true
-  >
+  > &
+  Required<PickNonNullable<Tsconfig, 'compilerOptions', true>>
 
 type TSConfigReference = TSConfigType['references'][number]

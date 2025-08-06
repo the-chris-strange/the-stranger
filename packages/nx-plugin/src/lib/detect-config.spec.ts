@@ -2,8 +2,10 @@ import { joinPathFragments, Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createTestTree } from '../tests/helpers/create-test-tree'
+import markerFiles from './config-marker-files'
+import { detectConfig } from './detect-config'
 
-const testFiles = Object.entries(MARKER_FILES).flatMap(([key, value]) =>
+const testFiles = Object.entries(markerFiles).flatMap(([key, value]) =>
   value.map(e => [key, e]),
 )
 

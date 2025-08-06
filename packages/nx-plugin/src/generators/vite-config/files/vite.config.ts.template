@@ -1,30 +1,30 @@
+import '@dotenvx/dotenvx/config'
+
 import path from 'node:path'
 
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 <%_ if (react) { _%> import react from '<%= paths.reactPlugin %>' <%_ } _%>
-import dotenv from 'dotenv'
 import dts from 'vite-plugin-dts'
 import { defineConfig } from '<%= paths.defineConfig %>'
 
-dotenv.config()
-
-export default defineConfig({
+export default defineConfig(() => ({
 <%_ if (includeBuild) { _%>
   build: {
     commonjsOptions: {
       transformMixedEsModules: true,
     },
     emptyOutDir: true,
-    <%_ if (projectType === 'library') { %>lib: {
+    <%_ if (projectType === 'library') { %> lib: {
       entry: 'src/index.ts',
       fileName: 'index',
-      formats: ['es', 'cjs'],
+      formats: [<%= formats.map(e => `'${e}' as const`).join(', ') %>],
       name: '<%= project %>',
     }, <%_ } %>
     outDir: '<%= paths.buildOutput %>',
     reportCompressedSize: true,
-    rollupOptions: { external: [<%= rollupExternals.map(e => `'${e}'`).join(', ') %>] },
+    <%_ if (rollupExternals.length > 0) { %> rollupOptions: { external: [<%= rollupExternals.map(e => `'${e}'`).join(', ') %>] }, <%_ } %>
+    <%_ if (target.length > 0) { %> target: [<%= target.map(e => `'${e}'`).join(', ') %>], <%_ } %>
   },
 <%_ } _%>
 
@@ -36,7 +36,7 @@ export default defineConfig({
     nxCopyAssetsPlugin(['*.md']),
     <%_ if (includeBuild) { _%> dts({
       entryRoot: 'src',
-      tsconfigPath: path.join(import.meta.dirname, '<%= tsconfigName %>'),
+      tsconfigPath: path.join(import.meta.dirname, '<%= names.base.build %>'),
     }),<%_ } _%>
   ],
 
@@ -45,20 +45,26 @@ export default defineConfig({
 <%_ if (includeTest) { _%>
   test: {
     coverage: {
-      provider: 'v8',
+      provider: 'v8' as const,
       reportsDirectory: '<%= paths.coverage %>',
     },
     environment: '<%= testEnvironment %>',
     globals: <%= globals %>,
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    include: ['{src,tests}/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     name: '<%= project %>',
     typecheck: {
       include: [
-        'src/**/*.{test,spec}-d.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
-        'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
+        'src/**/*.{test,spec}-d.?(c|m)[jt]s?(x)',
+        'src/**/*.{test,spec}.?(c|m)[jt]s?(x)',
       ],
     },
     watch: false,
   },
 <%_ } _%>
-})
+
+<%_ if (worker) { _%>
+  worker: {
+    plugins: [ nxViteTsPaths() ],
+  },
+<%_ } _%>
+}))
