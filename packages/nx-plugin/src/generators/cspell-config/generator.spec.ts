@@ -1,7 +1,7 @@
-import { addProjectConfiguration, Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
 import { cspellConfigGenerator } from './generator'
 import { CspellConfigSchema } from './schema'
 
@@ -10,11 +10,7 @@ describe('cspell-config generator', () => {
   let options: CspellConfigSchema
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
-    addProjectConfiguration(tree, 'tests', { root: 'packages/tests' })
-    addProjectConfiguration(tree, 'more-tests', { root: 'packages/more-tests' })
-    addProjectConfiguration(tree, 'another-test', { root: 'packages/another-test' })
-
+    tree = createTestTree('tests', 'more-tests', 'another-test')
     options = { project: 'tests', skipFormat: true }
   })
 

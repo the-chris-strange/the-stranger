@@ -9,65 +9,103 @@ export function toArray<T>(value?: (T | null)[] | T | null): T[] {
     return []
   } else if (Array.isArray(value)) {
     return value.flatMap(e => toArray(e))
-    // return value.filter(e => e !== null)
   } else {
     return [value]
   }
 }
 
 /**
- * Utility type to recursively make all properties of an object non-nullable.
- * @template T the original type
+ * Exclude `null` from a type, optionally recursively.
+ * @template T the type
+ * @template R if true, recursively apply the exclusion
  */
-export type DeepNonNullable<T> = T extends object
-  ? { [K in keyof T]-?: DeepNonNullable<NonNullable<T[K]>> }
-  : NonNullable<T>
+export type DeepNonNullable<T, R extends boolean = false> = T extends object
+  ? { [K in keyof T]: R extends true ? DeepNonNullable<T[K], R> : Exclude<T[K], null> }
+  : Exclude<T, null>
 
 /**
- * Utility type to make specific properties of an object required while keeping the rest of the properties unchanged. Required properties are typed using the {@link DeepNonNullable} utility type.
+ * Recursively make properties of an object optional.
  * @template T the original type
- * @template K the keys that should be required
  */
-export type DeepNonNullableProperties<T, K extends keyof T> = T & {
-  [P in K]-?: DeepNonNullable<T[P]>
+export type DeepPartial<T> = {
+  [K in keyof T]?: (T[K] extends object ? DeepPartial<T[K]> : Partial<T[K]>) | undefined
 }
 
 /**
- * Utility type to make specific properties of an object required while keeping the rest of the properties unchanged. Required properties are typed using the {@link NonNullable} utility type.
+ * Recursively exclude `null` and `undefined` from a type, effectively making the type itself (if it was nullable) and any properties of that type required.
  * @template T the original type
- * @template K the keys that should be required
+ * @template R if true, recursively apply the exclusion
  */
-export type NonNullableProperties<T, K extends keyof T> = Omit<T, K> & {
-  [P in K]-?: NonNullable<T[P]>
-}
+export type DeepRequired<T, R extends boolean = false> = T extends null | undefined
+  ? DeepRequired<Exclude<T, null | undefined>, R>
+  : T extends object
+    ? {
+        [P in keyof T]-?: R extends true
+          ? DeepRequired<T[P], R>
+          : Exclude<T[P], null | undefined>
+      }
+    : Exclude<T, null | undefined>
 
 /**
- * Utility type to pick specific properties from an object and make them required using the {@link NonNullable} utility type.
+ * Make a type that includes all properties of {@link T}, making the selected properties ({@link K}) optional while keeping the rest of the properties unchanged.
  * @template T the original type
- * @template K the keys that should be required
+ * @template K the properties to make optional
+ * @template R if `true`, recursively apply the transformation
  */
-export type PickNonNullableProperties<T, K extends keyof T> = {
-  [P in K]-?: NonNullable<T[P]>
-}
+export type ExtendOptional<
+  T extends object,
+  K extends keyof T,
+  R extends boolean = false,
+> = Omit<T, K> & PickOptional<T, K, R>
 
 /**
- * Pick specific properties from an object and make them required.
+ * Make a type that includes all properties of {@link T}, making the selected properties ({@link K}) required while keeping the rest of the properties unchanged.
  * @template T the original type
- * @template K the properties that should be required
- * @template R if true, recursively make the resulting properties non-nullable
+ * @template K the properties to make required
+ * @template R if `true`, recursively apply the transformation
  */
-export type PickRequiredProperties<T, K extends keyof T, R extends boolean = false> = {
-  [P in K]-?: R extends true ? DeepNonNullable<T[P]> : NonNullable<T[P]>
-}
+export type ExtendRequired<
+  T extends object,
+  K extends keyof T,
+  R extends boolean = false,
+> = Omit<T, K> & PickRequired<T, K, R>
 
 /**
- * Make some properties of an object required while keeping the rest of the properties unchanged.
+ * Make a type that includes only selected properties ({@link K}) of {@link T}, all of which are non-nullable.
  * @template T the original type
- * @template K the properties that should be required
- * @template R if true, recursively make the resulting properties non-nullable
+ * @template K the properties to make non-nullable
+ * @template R if true, recursively apply the transformation
  */
-export type RequiredProperties<T, K extends keyof T, R extends boolean = false> = Omit<
+export type PickNonNullable<
   T,
-  K
-> &
-  PickRequiredProperties<T, K, R>
+  K extends keyof T = keyof T,
+  R extends boolean = false,
+> = { [P in K]: DeepNonNullable<T[P], R> }
+
+/**
+ * Make a type that includes only selected properties ({@link K}) of {@link T}, all of which are optional.
+ * @template T the original type
+ * @template K properties to make optional
+ * @template R if true, recursively apply the transformation
+ */
+export type PickOptional<T, K extends keyof T = keyof T, R extends boolean = false> = {
+  [P in K]?: R extends true ? PickOptional<T[P], keyof T[P], true> : Partial<T[P]>
+}
+
+/**
+ * Make a type that includes only selected properties ({@link K}) of {@link T}, all of which are required (i.e. not null or undefined).
+ * @template T the original type
+ * @template K the properties to make required
+ * @template R if true, recursively apply the transformation
+ */
+export type PickRequired<T, K extends keyof T = keyof T, R extends boolean = false> = {
+  [P in K]-?: DeepRequired<T[P], R>
+}
+
+/**
+ * Ensure that at least one property of a type is required.
+ * @template T the object type
+ * @template K the properties that should be required
+ */
+export type RequireAtLeastOne<T, K extends keyof T = keyof T> = Omit<T, K> &
+  { [P in K]-?: Partial<Record<Exclude<K, P>, undefined>> & PickRequired<T, P> }[K]

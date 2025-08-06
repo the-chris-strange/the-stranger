@@ -1,17 +1,16 @@
-import nx from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { formatFiles as nxFormatFiles, Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
 
+import { createTestTree } from '../tests/helpers/create-test-tree'
 import { formatFiles } from './format-files'
 
 describe('formatFiles wrapper', () => {
-  let tree: nx.Tree
-  let spy: MockInstance<typeof nx.formatFiles>
+  let tree: Tree
+  let spy: MockInstance<typeof nxFormatFiles>
 
-  beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
-    nx.addProjectConfiguration(tree, 'test', { root: 'packages/test' })
-    spy = vi.spyOn(nx, 'formatFiles')
+  beforeEach(async () => {
+    tree = createTestTree('test')
+    spy = vi.spyOn(await import('@nx/devkit'), 'formatFiles')
   })
 
   it("doesn't run the formatter if skipFormat is undefined", async () => {

@@ -1,7 +1,7 @@
 import { Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
 import { errorClassGenerator } from './generator'
 import { ErrorClassSchema } from './schema'
 
@@ -14,7 +14,7 @@ describe('custom error class generator', () => {
   }
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
+    tree = createTestTree()
   })
 
   it('runs successfully', async () => {
