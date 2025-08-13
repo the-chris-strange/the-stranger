@@ -60,7 +60,7 @@ export interface ESLintConfigSchema extends ExternalOptions {
    */
   project: string
   /**
-   * Specify a configuration file to extend. If not specified, the configuration file at the root of the workspace is used.
+   * Specify a configuration file to extend. If unspecified, the configuration file at the root of the workspace is used.
    */
   extend?: string
   /**

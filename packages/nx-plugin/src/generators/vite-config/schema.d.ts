@@ -16,7 +16,7 @@ export interface ViteConfigSchema extends GeneratorSchema {
    */
   coveragePath?: string
   /**
-   * Formats produced by the build process.
+   * Module formats produced by the build process. This option is ignored if {@link includeBuild} is false.
    * @default ['es']
    */
   formats?: LibraryFormats[]
@@ -57,7 +57,7 @@ export interface ViteConfigSchema extends GeneratorSchema {
    */
   swc?: boolean
   /**
-   * Build targets. Ignored if {@link includeBuild} is false.
+   * Build targets. This options is ignored if {@link includeBuild} is false.
    */
   target?: string[]
   /**
@@ -76,6 +76,7 @@ export interface ViteConfigSchema extends GeneratorSchema {
   tsconfigName?: string
   /**
    * Indicates whether the project uses workers.
+   * @default false
    */
   worker?: boolean
 }

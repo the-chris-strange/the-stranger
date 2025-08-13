@@ -9,22 +9,6 @@ export interface TSLibrarySchema extends ExternalOptions {
    */
   name: string
   /**
-   * Value to pass to the cspell-config generator's `force` option, regardless of {@link force} setting.
-   */
-  forceCspell?: boolean
-  /**
-   * Value to pass to the eslint-config generator's `force` option, regardless of {@link force} setting.
-   */
-  forceEslint?: boolean
-  /**
-   * Value to pass to the jest-config generator's `force` option, regardless of {@link force} setting.
-   */
-  forceJest?: boolean
-  /**
-   * Value to pass to the vite-config generator's `force` option, regardless of {@link force} setting.
-   */
-  forceVite?: boolean
-  /**
    * Skip creating a CSpell configuration file for the project.
    */
   skipCspell?: boolean
