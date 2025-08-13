@@ -4,7 +4,7 @@ import type { Tsconfig } from 'tsconfig-type'
 
 import { isEmpty } from './is-empty'
 import { owStrategy } from './overwrite-strategy'
-import { PickNonNullable, PickRequired, toArray } from './type-utils'
+import { ExtendRequired, PickNonNullable, toArray } from './type-utils'
 
 /**
  * Encapsulate operations on a `tsconfig.json` file.
@@ -285,20 +285,11 @@ export interface TSConfigOptions {
   includeProperties?: (keyof Tsconfig)[]
 }
 
-export type TSConfigType = Pick<
-  Tsconfig,
-  | '$schema'
-  | 'buildOptions'
-  | 'compileOnSave'
-  | 'ts-node'
-  | 'typeAcquisition'
-  | 'watchOptions'
+export type TSConfigType = ExtendRequired<
+  Omit<Tsconfig, 'compilerOptions'>,
+  'exclude' | 'extends' | 'files' | 'include' | 'references',
+  true
 > &
-  PickRequired<
-    Tsconfig,
-    'exclude' | 'extends' | 'files' | 'include' | 'references',
-    true
-  > &
   Required<PickNonNullable<Tsconfig, 'compilerOptions', true>>
 
 type TSConfigReference = TSConfigType['references'][number]

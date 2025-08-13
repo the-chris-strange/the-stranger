@@ -18,13 +18,13 @@ export default defineConfig(() => ({
     <%_ if (projectType === 'library') { %> lib: {
       entry: 'src/index.ts',
       fileName: 'index',
-      formats: [<%= formats.map(e => `'${e}' as const`).join(', ') %>],
+      formats: [<%- formats.map(e => `'${e}' as const`).join(', ') %>],
       name: '<%= project %>',
     }, <%_ } %>
     outDir: '<%= paths.buildOutput %>',
     reportCompressedSize: true,
-    <%_ if (rollupExternals.length > 0) { %> rollupOptions: { external: [<%= rollupExternals.map(e => `'${e}'`).join(', ') %>] }, <%_ } %>
-    <%_ if (target.length > 0) { %> target: [<%= target.map(e => `'${e}'`).join(', ') %>], <%_ } %>
+    <%_ if (rollupExternals?.length) { %> rollupOptions: { external: [<%- rollupExternals.map(e => `'${e}'`).join(', ') %>] }, <%_ } %>
+    <%_ if (target?.length) { %> target: [<%- target.map(e => `'${e}'`).join(', ') %>], <%_ } %>
   },
 <%_ } _%>
 

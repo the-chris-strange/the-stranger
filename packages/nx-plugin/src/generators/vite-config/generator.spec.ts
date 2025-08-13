@@ -85,4 +85,42 @@ describe('vite config generator', () => {
     await viteConfigGenerator(tree, options)
     expect(spy).not.toHaveBeenCalled()
   })
+
+  it('renders `formats` correctly', async () => {
+    options.formats = ['es', 'cjs']
+    await viteConfigGenerator(tree, options)
+    expect(tree.read('packages/test/vite.config.ts', 'utf8')).toContain(
+      "formats: ['es' as const, 'cjs' as const]",
+    )
+  })
+
+  it("doesn't set `target` if no value is provided", async () => {
+    options.target = undefined
+    await viteConfigGenerator(tree, options)
+    expect(tree.read('packages/test/vite.config.ts', 'utf8')).not.toContain('target: [')
+  })
+
+  it('renders `target` correctly if a value is provided', async () => {
+    options.target = ['node22', 'modules']
+    await viteConfigGenerator(tree, options)
+    expect(tree.read('packages/test/vite.config.ts', 'utf8')).toContain(
+      "target: ['node22', 'modules']",
+    )
+  })
+
+  it("doesn't set `rollupExternals` if no value is provided", async () => {
+    options.rollupExternals = undefined
+    await viteConfigGenerator(tree, options)
+    expect(tree.read('packages/test/vite.config.ts', 'utf8')).not.toMatch(
+      /rollupOptions:\s*\{\s*external:\s*\[.*\]\s*\}/,
+    )
+  })
+
+  it('renders `rollupExternals` correctly if a value is provided', async () => {
+    options.rollupExternals = ['react', 'react-dom']
+    await viteConfigGenerator(tree, options)
+    expect(tree.read('packages/test/vite.config.ts', 'utf8')).toMatch(
+      /rollupOptions:\s*\{\s*external:\s*\[\s*'react', 'react-dom'\s*\]\s*\}/,
+    )
+  })
 })

@@ -1,22 +1,22 @@
-import { OverwriteStrategy, readJson, Tree, writeJson } from '@nx/devkit'
+import { logger, OverwriteStrategy, readJson, Tree, writeJson } from '@nx/devkit'
 import { Tsconfig } from 'tsconfig-type'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createTestTree } from '../tests/helpers/create-test-tree'
 import { TSConfig } from './tsconfig'
 
-const paths = {
-  compilerOptions: '$config.compilerOptions',
-  exclude: '$config.exclude',
-  extends: '$config.extends',
-  files: '$config.files',
-  include: '$config.include',
-  references: '$config.references',
-  tsconfig: 'packages/test/tsconfig.json',
-  types: '$config.compilerOptions.types',
-}
-
 describe('TSConfig', () => {
+  const paths = {
+    compilerOptions: '$config.compilerOptions',
+    exclude: '$config.exclude',
+    extends: '$config.extends',
+    files: '$config.files',
+    include: '$config.include',
+    references: '$config.references',
+    tsconfig: 'packages/test/tsconfig.json',
+    types: '$config.compilerOptions.types',
+  }
+
   let config: Tsconfig
   let tsconfig: TSConfig
   let tree: Tree
@@ -325,7 +325,7 @@ describe('TSConfig', () => {
     })
 
     it('writes a warning to console if overwrite strategy is KeepExisting', () => {
-      const spy = vi.spyOn(console, 'warn')
+      const spy = vi.spyOn(logger, 'warn')
       tsconfig.write(tree, paths.tsconfig, {
         overwriteStrategy: OverwriteStrategy.KeepExisting,
       })

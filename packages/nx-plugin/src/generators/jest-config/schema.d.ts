@@ -9,6 +9,10 @@ export interface JestConfigSchema extends GeneratorSchema, JestOptions {
    * The name of the project in which to generate a jest config.
    */
   project: string
+  /**
+   * Inject the Jest API into the global environment.
+   */
+  globals?: Config['injectGlobals']
 }
 
-type JestOptions = Pick<Config, 'globals' | 'testEnvironment'>
+type JestOptions = Pick<Config, 'testEnvironment'>

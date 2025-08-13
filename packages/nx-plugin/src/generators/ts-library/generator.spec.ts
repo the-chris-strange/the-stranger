@@ -1,16 +1,29 @@
-import { readProjectConfiguration, Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { Tree } from '@nx/devkit'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
+import * as cspellGenerator from '../cspell-config/generator'
+import * as eslintGenerator from '../eslint-config/generator'
+import * as jestGenerator from '../jest-config/generator'
+import * as viteGenerator from '../vite-config/generator'
 import { tsLibraryGenerator } from './generator'
 import { TSLibrarySchema } from './schema'
 
-describe('ts-library generator', { timeout: 8000 }, () => {
+describe('ts-library generator', () => {
   let tree: Tree
   let options: TSLibrarySchema
 
+  beforeAll(() => {
+    vi.mock('@nx/js')
+    vi.mock('./dependencies.ts')
+    vi.mock('../vite-config/generator.ts')
+    vi.mock('../cspell-config/generator.ts')
+    vi.mock('../jest-config/generator.ts')
+    vi.mock('../eslint-config/generator.ts')
+  })
+
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
+    tree = createTestTree('test')
     options = {
       force: true,
       name: 'test',
@@ -19,54 +32,61 @@ describe('ts-library generator', { timeout: 8000 }, () => {
     }
   })
 
-  it('runs successfully', async () => {
+  it('runs the vite config generator if bundler is "vite"', async () => {
+    options.bundler = 'vite'
+    const spy = vi.spyOn(viteGenerator, 'viteConfigGenerator')
     await tsLibraryGenerator(tree, options)
-
-    const config = readProjectConfiguration(tree, 'test')
-    expect(config).toBeDefined()
-  })
-
-  it("doesn't generate vitest config if not using vitest runner", async () => {
-    options.unitTestRunner = 'jest'
-    const spy = vi.spyOn(
-      await import('../vite-config/generator'),
-      'viteConfigGenerator',
-    )
-
-    await tsLibraryGenerator(tree, options)
-
-    expect(spy).toHaveBeenLastCalledWith(
+    expect(spy).toHaveBeenCalledWith(
       tree,
-      expect.objectContaining({ includeTest: false }),
+      expect.objectContaining({ includeBuild: true }),
     )
   })
 
-  it("doesn't generate vite build config if not using vite compiler", async () => {
-    options.bundler = 'tsc'
+  it('runs the vite config generator if unitTestRunner is "vitest"', async () => {
     options.unitTestRunner = 'vitest'
-    const spy = vi.spyOn(
-      await import('../vite-config/generator'),
-      'viteConfigGenerator',
-    )
-
+    const spy = vi.spyOn(viteGenerator, 'viteConfigGenerator')
     await tsLibraryGenerator(tree, options)
-
-    expect(spy).toHaveBeenLastCalledWith(
+    expect(spy).toHaveBeenCalledWith(
       tree,
-      expect.objectContaining({ includeBuild: false }),
+      expect.objectContaining({ includeTest: true }),
     )
   })
 
-  it("doesn't generate a vite config if neither vite compiler or vitest runner are used", async () => {
+  it("doesn't run the vite config generator if not using vite or vitest", async () => {
     options.bundler = 'tsc'
     options.unitTestRunner = 'jest'
-    const spy = vi.spyOn(
-      await import('../vite-config/generator'),
-      'viteConfigGenerator',
-    )
-
+    const spy = vi.spyOn(viteGenerator, 'viteConfigGenerator')
     await tsLibraryGenerator(tree, options)
+    expect(spy).not.toHaveBeenCalled()
+  })
 
+  it('runs the jest config generator if unitTestRunner is "jest"', async () => {
+    options.unitTestRunner = 'jest'
+    const spy = vi.spyOn(jestGenerator, 'jestConfigGenerator')
+    await tsLibraryGenerator(tree, options)
+    expect(spy).toHaveBeenCalled()
+  })
+
+  it("doesn't run vite or jest config generators if skipTestConfig is true", async () => {
+    options.skipTestConfig = true
+    const viteSpy = vi.spyOn(viteGenerator, 'viteConfigGenerator')
+    const jestSpy = vi.spyOn(jestGenerator, 'jestConfigGenerator')
+    await tsLibraryGenerator(tree, options)
+    expect(viteSpy).not.toHaveBeenCalled()
+    expect(jestSpy).not.toHaveBeenCalled()
+  })
+
+  it("doesn't run eslint config generator if skipEslint is true", async () => {
+    options.skipEslint = true
+    const spy = vi.spyOn(eslintGenerator, 'eslintConfigGenerator')
+    await tsLibraryGenerator(tree, options)
+    expect(spy).not.toHaveBeenCalled()
+  })
+
+  it("doesn't run cspell config generator if skipCspell is true", async () => {
+    options.skipCspell = true
+    const spy = vi.spyOn(cspellGenerator, 'cspellConfigGenerator')
+    await tsLibraryGenerator(tree, options)
     expect(spy).not.toHaveBeenCalled()
   })
 })
