@@ -39,6 +39,5 @@ jobs:
           node-version: 24
           cache: yarn
       - run: yarn install
-      - run: yarn dlx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="e2e-ci"
       - uses: nrwl/nx-set-shas@v4
-      - run: yarn nx-cloud record -- nx affected -t lint test build
+      - run: yarn nx affected -t lint test build
