@@ -1,4 +1,5 @@
 import { Config } from 'jest'
+
 import { GeneratorSchema } from '../../lib/generator-schema'
 
 /**

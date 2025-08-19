@@ -37,9 +37,9 @@ export default defineConfig(() => ({
 
   test: {
     coverage: {
+      exclude: ['src/test/**'],
       provider: 'v8' as const,
       reportsDirectory: '../../coverage/packages/prettier-config',
-      exclude: ['src/test/**'],
     },
     environment: 'node',
     globals: false,
