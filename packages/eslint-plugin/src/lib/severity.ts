@@ -106,7 +106,7 @@ export function toSeverity(value: any): SeverityString {
   return severityMap.get(value) ?? 'off'
 }
 
-export type Severity = FlatConfig.Severity | FlatConfig.SeverityString
+export type Severity = SeverityNumber | SeverityString
 
 export type SeverityNumber = FlatConfig.Severity
 

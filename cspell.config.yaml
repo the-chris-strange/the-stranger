@@ -27,6 +27,7 @@ dictionaries:
 words:
   - dotenvx
   - lestranger
+  - orcid
   - unprefix
 ignoreWords:
   - globbify

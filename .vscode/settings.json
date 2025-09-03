@@ -90,7 +90,6 @@
     "pre-commit": "shellscript"
   },
   "markiscodecoverage.searchCriteria": "coverage/packages/*/lcov.info",
-  "mypy-type-checker.importStrategy": "fromEnvironment",
   "npm.exclude": ["dist/**/*", "packages/**/*"],
   "npm.packageManager": "yarn",
   "nxConsole.generateAiAgentRules": true,
