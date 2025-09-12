@@ -51,6 +51,7 @@ storybook-static
 .nx/installation
 .nx/schemas
 .cursor/rules/nx-rules.mdc
+!.github
 .github/instructions/nx.instructions.md
 
 # vscode

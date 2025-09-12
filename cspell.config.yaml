@@ -38,7 +38,7 @@ languageSettings:
       - node
       - npm
       - typescript
-  - languageId: json,jsonc
+  - languageId: json,jsonc,yaml
     dictionaries:
       - node
       - npm
