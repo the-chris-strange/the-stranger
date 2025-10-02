@@ -1,5 +1,7 @@
 import re from 'eslint-plugin-regexp'
+import { defineConfig } from 'eslint/config'
+import { objectNamer } from '../namer'
 
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-
-export default [re.configs['flat/recommended']] satisfies FlatConfig.ConfigArray
+export default defineConfig(
+  objectNamer(re.configs['flat/recommended'], 're-recommended'),
+)

@@ -1,13 +1,21 @@
 import unicorn from 'eslint-plugin-unicorn'
-
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-
+import { defineConfig } from 'eslint/config'
+import { namer } from '../namer'
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-export default [
+export default defineConfig(
   unicorn.configs['recommended'],
 
   {
+    name: namer('unicorn/allow abbreviations'),
+    files: ['**/*'],
+    rules: {
+      'unicorn/prevent-abbreviations': 'off',
+    },
+  },
+
+  {
+    name: namer('unicorn/base'),
     files: [getFilePatterns(FilePatterns.source)],
     rules: {
       'unicorn/import-style': 'off',
@@ -23,13 +31,7 @@ export default [
   },
 
   {
-    files: ['**/*'],
-    rules: {
-      'unicorn/prevent-abbreviations': 'off',
-    },
-  },
-
-  {
+    name: namer("unicorn/CJS files don't have to be modules"),
     files: getFilePatterns(FilePatterns.cjs),
     rules: {
       'unicorn/prefer-module': 'off',
@@ -37,6 +39,7 @@ export default [
   },
 
   {
+    name: namer('unicorn/allow pascal case for react files'),
     files: getFilePatterns(FilePatterns.react),
     rules: {
       'unicorn/filename-case': [
@@ -52,6 +55,7 @@ export default [
   },
 
   {
+    name: namer('unicorn/test files'),
     files: getFilePatterns(FilePatterns.test),
     rules: {
       'unicorn/consistent-function-scoping': 'off',
@@ -63,4 +67,4 @@ export default [
       ],
     },
   },
-] satisfies FlatConfig.ConfigArray
+)

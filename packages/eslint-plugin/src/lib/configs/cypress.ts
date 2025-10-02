@@ -1,10 +1,4 @@
-import { ConfigBuilder } from '../config'
+import cypress from 'eslint-plugin-cypress/flat'
+import { defineConfig } from 'eslint/config'
 
-export const cypressConfig: ConfigBuilder = async () => {
-  try {
-    const cypress = await import('eslint-plugin-cypress/flat')
-    return cypress.default.configs.recommended
-  } catch {
-    return
-  }
-}
+export default defineConfig(cypress.configs.recommended)

@@ -20,6 +20,7 @@ export default defineConfig(() => ({
     lib: {
       entry: {
         index: 'src/index.ts',
+        utils: 'src/utils.ts',
       },
       formats: ['es' as const],
       name: 'eslint-plugin',
@@ -29,7 +30,6 @@ export default defineConfig(() => ({
     rollupOptions: { external },
     target: ['node24'],
   },
-
   cacheDir: '../../node_modules/.vite/packages/eslint-plugin',
 
   plugins: [

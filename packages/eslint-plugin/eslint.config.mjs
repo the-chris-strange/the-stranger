@@ -19,7 +19,7 @@ export default [
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          ignoredDependencies: ['eslint', 'typescript-eslint'],
+          ignoredDependencies: ['toml-eslint-parser', 'yaml-eslint-parser'],
         },
       ],
     },

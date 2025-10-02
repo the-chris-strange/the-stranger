@@ -1,13 +1,13 @@
 import promise from 'eslint-plugin-promise'
-
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-
+import { defineConfig } from 'eslint/config'
+import { namer } from '../namer'
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-export default [
+export default defineConfig(
   promise.configs['flat/recommended'],
 
   {
+    name: namer('promise'),
     files: getFilePatterns(FilePatterns.source),
     rules: {
       'promise/no-multiple-resolved': 'warn',
@@ -16,4 +16,4 @@ export default [
       'promise/spec-only': 'error',
     },
   },
-] satisfies FlatConfig.ConfigArray
+)

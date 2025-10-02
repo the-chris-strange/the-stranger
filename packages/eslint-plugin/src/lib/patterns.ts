@@ -72,7 +72,7 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
  * @param value the file extension to normalize
  * @returns the normalized file extension
  */
-export function normalizeExtPattern(value: string) {
+function normalizeExtPattern(value: string) {
   return value.replace(/^\./, '').replace(/^[*?]+(\/[*?]+\.?)?/, '')
 }
 

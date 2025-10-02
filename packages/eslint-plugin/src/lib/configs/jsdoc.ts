@@ -1,14 +1,14 @@
 import jsdoc from 'eslint-plugin-jsdoc'
-
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
-
+import { defineConfig } from 'eslint/config'
+import { namer } from '../namer'
 import { FilePatterns, getFilePatterns } from '../patterns'
 
 // tags used by docusaurus to generate docs from jsdoc comments
 export const DOCUSAURUS_TAGS = ['document']
 
-export default [
+export default defineConfig(
   {
+    name: namer('jsdoc'),
     plugins: { jsdoc },
     settings: {
       jsdoc: {
@@ -17,22 +17,7 @@ export default [
         },
       },
     },
-  },
-
-  {
-    ...jsdoc.configs['flat/recommended-typescript'],
-    files: getFilePatterns(FilePatterns.ts),
-  },
-
-  {
-    ...jsdoc.configs['flat/recommended'],
-    files: getFilePatterns(FilePatterns.js),
-  },
-
-  {
-    files: getFilePatterns(FilePatterns.source),
     rules: {
-      'jsdoc/check-tag-names': ['warn', { definedTags: DOCUSAURUS_TAGS }],
       'jsdoc/require-jsdoc': 'off',
       'jsdoc/require-returns': [
         'error',
@@ -42,4 +27,24 @@ export default [
       ],
     },
   },
-] satisfies FlatConfig.ConfigArray
+
+  {
+    name: namer('jsdoc/typescript'),
+    extends: [jsdoc.configs['flat/recommended-typescript']],
+    files: getFilePatterns(FilePatterns.ts),
+  },
+
+  {
+    name: namer('jsdoc/javascript'),
+    extends: [jsdoc.configs['flat/recommended']],
+    files: getFilePatterns(FilePatterns.js),
+  },
+
+  {
+    name: namer('jsdoc/docusaurus'),
+    files: getFilePatterns(FilePatterns.source),
+    rules: {
+      'jsdoc/check-tag-names': ['warn', { definedTags: DOCUSAURUS_TAGS }],
+    },
+  },
+)

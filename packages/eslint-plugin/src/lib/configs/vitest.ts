@@ -1,22 +1,19 @@
-import { ConfigBuilder } from '../config'
+import vitest from '@vitest/eslint-plugin'
+import type { Linter } from 'eslint'
+import { defineConfig } from 'eslint/config'
+import { namer } from '../namer'
 import { FilePatterns, getFilePatterns } from '../patterns'
 
-export const vitestConfig: ConfigBuilder = async () => {
-  try {
-    const vitest = await import('@vitest/eslint-plugin')
-    return [
-      vitest.default.configs['recommended'],
+export default defineConfig(
+  vitest.configs['recommended'] as any as Linter.Config,
 
-      {
-        files: getFilePatterns(FilePatterns.test),
-        rules: {
-          'vitest/consistent-test-it': ['error', { fn: 'it' }],
-          'vitest/prefer-hooks-in-order': 'warn',
-          'vitest/valid-title': ['warn', { disallowedWords: ['should'] }],
-        },
-      },
-    ]
-  } catch {
-    return
-  }
-}
+  {
+    name: namer('vitest'),
+    files: getFilePatterns(FilePatterns.test),
+    rules: {
+      'vitest/consistent-test-it': ['error', { fn: 'it' }],
+      'vitest/prefer-hooks-in-order': 'warn',
+      'vitest/valid-title': ['warn', { disallowedWords: ['should'] }],
+    },
+  },
+)
