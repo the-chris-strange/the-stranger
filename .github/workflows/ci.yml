@@ -1,12 +1,12 @@
 name: Node.js CI
 
 on:
-  push:
-    branches:
-      - main
-      - dev
   pull_request:
     branches:
+      - main
+  push:
+    branches:
+      - dev
       - main
 
 permissions:
@@ -15,35 +15,15 @@ permissions:
 
 jobs:
   ci:
-    name: Run linting, unit tests, and validate build for Node.js
+    name: Run lint, unit tests, and validate build for Node.js
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - name: checkout
-        uses: actions/checkout@v5
+      - uses: ./.github/workflows/setup-node.yml
         with:
-          fetch-depth: 0
-          filter: tree:0
-
-      - name: fetch main branch
-        if: ${{ github.event_name == 'pull_request' }}
-        run: git fetch origin main:main
-
-      - name: set SHAs for NX affected command
-        uses: nrwl/nx-set-shas@v4
-
-      - name: setup corepack and install yarn
-        run: |
-          corepack enable
-          corepack install
-
-      - name: setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 24
-          cache: yarn
-
+          set-nx-shas: true
       - name: install Node.js dependencies
         run: yarn install
-
       - name: lint, test, build
         run: yarn nx affected -t lint test build

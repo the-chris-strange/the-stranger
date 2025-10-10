@@ -2,29 +2,28 @@ name: Publish to NPM
 
 on:
   pull_request:
-    types:
-      - closed
     branches:
       - main
+    types:
+      - closed
+  workflow_dispatch:
 
 jobs:
   publish:
-    if: ${{ github.event.pull_request.merged == true }}
     name: Publish npm packages
+    if: ${{ github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - run: |
-          corepack enable
-          corepack install
-      - uses: actions/setup-node@v5
+      - uses: ./.github/workflows/setup-node.yml
         with:
-          node-version: 24
-          cache: yarn
-      - run: |
-          yarn install --frozen-lockfile
-          yarn build
+          fetch-depth: 0
 
-      - run: yarn nx release publish --access public
+      - run: yarn install --frozen-lockfile
+
+      - if: ${{ success() && github.ref == 'refs/heads/main' }}
+        run: yarn build
+
+      - if: ${{ success() && github.ref == 'refs/heads/main' }}
+        run: yarn nx release publish --access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
