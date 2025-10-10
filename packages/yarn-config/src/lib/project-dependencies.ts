@@ -9,7 +9,7 @@ export function enforceConsistentProjectDependencies(yarn: Yarn, ws: Workspace) 
   const rootWs = yarn.workspace({ cwd: '.' }) ?? undefined
 
   for (const pkg of yarn.dependencies({ workspace: ws })) {
-    if (pkg.type === 'peerDependencies') {
+    if (pkg.type === 'peerDependencies' || pkg.range.startsWith('workspace')) {
       continue
     }
 
