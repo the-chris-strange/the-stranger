@@ -329,7 +329,7 @@ describe('TSConfig', () => {
       tsconfig.write(tree, paths.tsconfig, {
         overwriteStrategy: OverwriteStrategy.KeepExisting,
       })
-      expect(spy).toHaveBeenCalledWith(
+      expect(spy).toHaveBeenCalledExactlyOnceWith(
         `Refusing to overwrite existing configuration file: ${paths.tsconfig}`,
       )
     })

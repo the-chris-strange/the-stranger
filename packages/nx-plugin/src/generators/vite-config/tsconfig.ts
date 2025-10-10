@@ -11,12 +11,17 @@ export function generateTsc(tree: Tree, options: NormalizedSchema) {
   const buildConfig = new TSConfig(tree, names.full.build, tscOptions)
   const testConfig = new TSConfig(tree, names.full.test, tscOptions)
 
+  if (baseConfig.compilerOptions.module) {
+    delete baseConfig.compilerOptions.module
+  }
+
+  buildConfig.compilerOptions.tsBuildInfoFile ??= tsBuildInfo
+
   if (options.includeBuild) {
     baseConfig.addReferences(names.relative.build)
     baseConfig.compilerOptions = undefined
 
     delete buildConfig.compilerOptions.declaration
-    buildConfig.compilerOptions.tsBuildInfoFile = tsBuildInfo
     buildConfig.compilerOptions.outDir = outDir
 
     if (target?.every(e => e.includes('node'))) {
@@ -30,6 +35,8 @@ export function generateTsc(tree: Tree, options: NormalizedSchema) {
     if (options.inSourceTests) {
       buildConfig.addTypes('vitest/importMeta')
     }
+  } else {
+    buildConfig.removeTypes('vite/client')
   }
 
   if (options.includeTest) {

@@ -44,7 +44,7 @@ describe('getWorkspaceVersion', () => {
     getWorkspaceVersion(tree, 'some-package')
 
     // eslint-disable-next-line unicorn/text-encoding-identifier-case
-    expect(spy).toHaveBeenCalledWith('package.json', 'utf-8')
+    expect(spy).toHaveBeenCalledExactlyOnceWith('package.json', 'utf-8')
   })
 
   it('does not parse the root package.json if a packageJson object is provided', () => {

@@ -16,6 +16,7 @@ describe('ts-library generator', () => {
   beforeAll(() => {
     vi.mock('@nx/js')
     vi.mock('./dependencies.ts')
+    vi.mock('./manifest.ts')
     vi.mock('../vite-config/generator.ts')
     vi.mock('../cspell-config/generator.ts')
     vi.mock('../jest-config/generator.ts')
@@ -36,7 +37,7 @@ describe('ts-library generator', () => {
     options.bundler = 'vite'
     const spy = vi.spyOn(viteGenerator, 'viteConfigGenerator')
     await tsLibraryGenerator(tree, options)
-    expect(spy).toHaveBeenCalledWith(
+    expect(spy).toHaveBeenCalledExactlyOnceWith(
       tree,
       expect.objectContaining({ includeBuild: true }),
     )
@@ -46,7 +47,7 @@ describe('ts-library generator', () => {
     options.unitTestRunner = 'vitest'
     const spy = vi.spyOn(viteGenerator, 'viteConfigGenerator')
     await tsLibraryGenerator(tree, options)
-    expect(spy).toHaveBeenCalledWith(
+    expect(spy).toHaveBeenCalledExactlyOnceWith(
       tree,
       expect.objectContaining({ includeTest: true }),
     )

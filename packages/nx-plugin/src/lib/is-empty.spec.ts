@@ -78,9 +78,10 @@ describe('isEmpty', () => {
 
   it('attempts to parse non-empty strings as JSON', () => {
     const obj = { that: {}, this: [] }
+    const objString = JSON.stringify(obj)
     const spy = vi.spyOn(JSON, 'parse')
-    expect(isEmpty(JSON.stringify(obj))).toBe(true)
-    expect(spy).toHaveBeenCalledOnce()
+    expect(isEmpty(objString)).toBe(true)
+    expect(spy).toHaveBeenCalledExactlyOnceWith(objString)
   })
 
   it('returns false given a non-empty, JSON-serialized object', () => {

@@ -1,11 +1,11 @@
-import '@dotenvx/dotenvx/config'
-
 import path from 'node:path'
-
+<%_ if (includeBuild) { _%>
+import '@dotenvx/dotenvx/config'
 import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
+import dts from 'vite-plugin-dts'
+<%_ } _%>
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 <%_ if (react) { _%> import react from '<%= paths.reactPlugin %>' <%_ } _%>
-import dts from 'vite-plugin-dts'
 import { defineConfig } from '<%= paths.defineConfig %>'
 
 export default defineConfig(() => ({
@@ -33,7 +33,7 @@ export default defineConfig(() => ({
   plugins: [
     <%_ if (react) { %> react(), <% } _%>
     nxViteTsPaths(),
-    nxCopyAssetsPlugin(['*.md']),
+    <%_ if (includeBuild) { _%> nxCopyAssetsPlugin(['*.md']), <%_ } _%>
     <%_ if (includeBuild) { _%> dts({
       entryRoot: 'src',
       tsconfigPath: path.join(import.meta.dirname, '<%= names.base.build %>'),

@@ -30,7 +30,7 @@ const TEST_FILES = ['**/*.{spec,test}.{js,jsx,ts,tsx}']
 /**
  * Array of file patterns matching all source files.
  */
-const SOURCE_FILES = [...JS_FILES, ...TS_FILES]
+export const SOURCE_FILES = [...JS_FILES, ...TS_FILES]
 
 /**
  * Rules for 'eslint-plugin-perfectionist'.

@@ -44,7 +44,7 @@ describe('eslint config generator', () => {
 
     await eslintConfigGenerator(tree, options)
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(spy).toHaveBeenCalledExactlyOnceWith(
       'packages/test/eslint.config.cjs',
       expect.any(String),
     )
@@ -57,7 +57,7 @@ describe('eslint config generator', () => {
 
     await eslintConfigGenerator(tree, options)
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(spy).toHaveBeenCalledExactlyOnceWith(
       'packages/test/eslint.config.ts',
       expect.any(String),
     )

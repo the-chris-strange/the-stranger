@@ -49,15 +49,12 @@ export async function eslintConfigGenerator(tree: Tree, options: ESLintConfigSch
   const dependencyChecksOptions = JSON.stringify(
     resolveDependencyChecksOptions(tree, options),
   )
-  const data = { dependencyChecksOptions, options, paths }
+  const data = { dependencyChecksOptions, fileExtension, options, paths }
+  const sourceFolder = fileExtension === 'cjs' ? 'cjs' : 'esm'
 
-  generateFiles(
-    tree,
-    path.join(__dirname, 'files', fileExtension),
-    project.root,
-    data,
-    { overwriteStrategy: owStrategy(options.force) },
-  )
+  generateFiles(tree, path.join(__dirname, 'files', sourceFolder), project.root, data, {
+    overwriteStrategy: owStrategy(options.force),
+  })
 
   await formatFiles(tree, options)
 }

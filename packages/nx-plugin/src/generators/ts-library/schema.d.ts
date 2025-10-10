@@ -9,6 +9,10 @@ export interface TSLibrarySchema extends ExternalOptions {
    */
   name: string
   /**
+   * By default, this generator produces an ES module. Set this to produce a commonjs library instead.
+   */
+  commonjs?: boolean
+  /**
    * Skip creating a CSpell configuration file for the project.
    */
   skipCspell?: boolean

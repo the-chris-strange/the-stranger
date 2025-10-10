@@ -7,6 +7,7 @@ import { eslintConfigGenerator } from '../eslint-config/generator'
 import { jestConfigGenerator } from '../jest-config/generator'
 import { viteConfigGenerator } from '../vite-config/generator'
 import { addLibDependencies } from './dependencies'
+import { updateManifest } from './manifest'
 import { normalizeOptions } from './options'
 import { TSLibrarySchema } from './schema'
 
@@ -76,6 +77,8 @@ export async function tsLibraryGenerator(tree: Tree, options: TSLibrarySchema) {
   if (!options.skipDependencies) {
     addLibDependencies(tree, { ...config, directory: projectConfig.root })
   }
+
+  updateManifest(tree, config, projectConfig)
 
   await formatFiles(tree, options)
 }
