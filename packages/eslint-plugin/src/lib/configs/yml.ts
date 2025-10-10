@@ -1,18 +1,48 @@
 import yml from 'eslint-plugin-yml'
 import { defineConfig } from 'eslint/config'
-import { namer } from '../namer'
+
+import { namer } from '../namer.js'
+
+const topLevelKeyOrder = [
+  'name',
+  'on',
+  'permissions',
+  'env',
+  'defaults',
+  'concurrency',
+  'jobs',
+]
+
+const jobKeyOrder = [
+  'strategy',
+  'name',
+  'if',
+  'needs',
+  'runs-on',
+  'permissions',
+  'environment',
+  'env',
+  'concurrency',
+  'timeout-minutes',
+  'outputs',
+  'defaults',
+  'steps',
+]
+
+const stepKeyOrder = ['id', 'name', 'if', 'run', 'uses', 'with', 'env']
+
+const topLevelAscKeys = ['on', 'permissions', 'defaults'].join('|')
 
 export default defineConfig(
   yml.configs['flat/standard'],
 
   {
+    files: ['cspell.config.yaml', '**/cspell.config.yaml'],
     name: namer('cspell-config'),
-    files: ['**/cspell.config.yaml'],
     rules: {
       'yml/sort-keys': [
         'error',
         {
-          pathPattern: '^$',
           order: [
             'version',
             'language',
@@ -24,39 +54,79 @@ export default defineConfig(
             'languageSettings',
             { order: { type: 'asc' } },
           ],
+          pathPattern: '^$',
         },
         {
-          pathPattern: 'languageSettings$',
           order: ['languageId', 'dictionaries', { order: { type: 'asc' } }],
+          pathPattern: 'languageSettings$',
         },
       ],
       'yml/sort-sequence-values': [
         'error',
         {
-          pathPattern: 'dictionaries|import|ignorePaths|ignoreWords|words$',
           order: { type: 'asc' },
+          pathPattern: 'dictionaries|import|ignorePaths|ignoreWords|words$',
         },
       ],
     },
   },
 
   {
-    name: namer('github-actions'),
     files: ['.github/workflows/*.yml'],
+    name: namer('github-actions'),
     rules: {
+      'yml/no-empty-mapping-values': 'off',
       'yml/sort-keys': [
         'error',
         {
+          order: [topLevelKeyOrder, { order: { type: 'asc' } }],
           pathPattern: '^$',
-          order: ['name', 'on', 'permissions', 'jobs'],
         },
         {
-          pathPattern: 'jobs\/\w+$',
-          order: ['name', 'runs-on', 'steps'],
+          order: { type: 'asc' },
+          pathPattern: `^${topLevelAscKeys}`,
         },
         {
-          pathPattern: 'jobs\/\w+\/steps$',
-          order: ['name', 'if', { order: { type: 'asc' } }],
+          order: [stepKeyOrder, { order: { type: 'asc' } }],
+          pathPattern: String.raw`^jobs\..+steps`,
+        },
+        {
+          order: [jobKeyOrder, { order: { type: 'asc' } }],
+          pathPattern: '^jobs',
+        },
+      ],
+      'yml/sort-sequence-values': [
+        'error',
+        {
+          order: { type: 'asc' },
+          pathPattern: `^${topLevelAscKeys}`,
+        },
+      ],
+    },
+  },
+
+  {
+    files: ['.markdownlint-cli2.yaml'],
+    name: namer('markdownlint-config'),
+    rules: {
+      'yml/sort-keys': [
+        'error',
+        { order: ['ignores', { order: { type: 'asc' } }], pathPattern: '^$' },
+        { order: { type: 'asc' }, pathPattern: '^configs' },
+      ],
+    },
+  },
+
+  {
+    files: ['.yarnrc.yml'],
+    name: namer('yarnrc'),
+    rules: {
+      'yml/sort-keys': ['error', { order: { type: 'asc' }, pathPattern: '^$' }],
+      'yml/sort-sequence-values': [
+        'error',
+        {
+          order: ['.env?', { order: { type: 'asc' } }],
+          pathPattern: '^injectEnvironmentFiles',
         },
       ],
     },

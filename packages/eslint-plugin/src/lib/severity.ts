@@ -1,5 +1,6 @@
 import type { Linter } from 'eslint'
-import { RuleLevels } from './rule-levels'
+
+import { RuleLevels } from './rule-levels.js'
 
 /**
  * Set the severity of rules in an ESLint configuration. If {@link rules} is specified, only rules with a key that matches one of these values is changed.
@@ -26,8 +27,6 @@ export function setRuleLevel(severity: Severity, config: Config, rules?: string[
   return config
 }
 
-type Severity = Linter.RuleSeverity
-
 function matchKeys(lhs: string, rhs: string) {
   if (lhs === rhs) {
     return true
@@ -48,3 +47,5 @@ function matchKeys(lhs: string, rhs: string) {
 type Config = Linter.Config
 
 type RuleEntry = Linter.RuleEntry
+
+type Severity = Linter.RuleSeverity

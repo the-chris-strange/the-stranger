@@ -35,7 +35,7 @@ describe('detectConfig', () => {
   })
 
   it('does not apply prefix if not provided', async () => {
-    const spy = vi.spyOn(await import('./find-existing'), 'findExisting')
+    const spy = vi.spyOn(await import('./find-existing.js'), 'findExisting')
     detectConfig(tree, 'cspell')
     expect(spy).toHaveBeenLastCalledWith(tree, 'cspell.config.yaml', 'cspell.json')
   })

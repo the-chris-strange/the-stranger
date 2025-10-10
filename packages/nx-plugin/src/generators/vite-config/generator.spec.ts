@@ -81,7 +81,7 @@ describe('vite config generator', () => {
 
   it("doesn't generate tsconfigs if skipTsconfigs is true", async () => {
     options.skipTsconfigs = true
-    const spy = vi.spyOn(await import('./tsconfig'), 'generateTsc')
+    const spy = vi.spyOn(await import('./tsconfig.js'), 'generateTsc')
     await viteConfigGenerator(tree, options)
     expect(spy).not.toHaveBeenCalled()
   })

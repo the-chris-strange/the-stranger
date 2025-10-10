@@ -1,5 +1,6 @@
 import type { Linter } from 'eslint'
-import { name as pkgName } from '../../package.json'
+
+import pkg from '../../package.json' with { type: 'json' }
 
 /**
  * Prepend the workspace's namespace or full name to a string. Useful for naming eslint configuration objects.
@@ -7,7 +8,7 @@ import { name as pkgName } from '../../package.json'
  * @returns prefixed value
  */
 export function namer(value?: string) {
-  const ws = /(@[a-z-]+)\/.+/i.exec(pkgName)?.[0] ?? pkgName
+  const ws = /@[a-z-]+\/.+/i.exec(pkg.name)?.[0] ?? pkg.name
   if (value) {
     return value.startsWith(ws) ? value : `${ws}/${value}`
   }
@@ -35,11 +36,17 @@ export function objectNamer(config: Config, defaultName?: string): Named<Config>
   }
 }
 
-type N = { name?: string }
-
-type Config = Linter.Config
+/**
+ * Maybe. Maybe not. Maybe f*** yourself.
+ * @template T the thing that might be
+ */
+export type Maybe<T> = T | undefined
 
 /**
  * Make the name property of an object required. Preserves JSDoc comments for objects that already have a name property.
  */
-export type Named<T extends object> = T & Required<T extends N ? Pick<T, 'name'> : N>
+export type Named<T extends object> = Required<T extends N ? Pick<T, 'name'> : N> & T
+
+type Config = Linter.Config
+
+type N = { name?: string }

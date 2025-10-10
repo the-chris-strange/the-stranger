@@ -1,1 +1,3 @@
-export { setRuleLevel } from './lib/severity'
+export { Named, namer } from './lib/namer.js'
+export { FilePatterns, getFilePatterns } from './lib/patterns.js'
+export { setRuleLevel } from './lib/severity.js'

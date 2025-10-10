@@ -1,16 +1,17 @@
 import perfectionist from 'eslint-plugin-perfectionist'
 import { defineConfig } from 'eslint/config'
-import { namer, objectNamer } from '../namer'
-import { FilePatterns, getFilePatterns } from '../patterns'
-import { setRuleLevel } from '../severity'
+
+import { namer, objectNamer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
+import { setRuleLevel } from '../severity.js'
 
 const configNatural = setRuleLevel('warn', perfectionist.configs['recommended-natural'])
 export default defineConfig(
   objectNamer(configNatural, 'perfectionist-recommended-natural'),
 
   {
-    name: namer('perfectionist'),
     files: getFilePatterns(FilePatterns.source),
+    name: namer('perfectionist'),
     rules: {
       'perfectionist/sort-classes': [
         'warn',
@@ -124,8 +125,8 @@ export default defineConfig(
   },
 
   {
-    name: namer('disable sort for configuration files'),
     files: ['eslint.config.*', 'prettier.config.*', 'yarn.config.cjs'],
+    name: namer('disable sort for configuration files'),
     rules: {
       'perfectionist/sort-objects': 'off',
     },

@@ -1,13 +1,13 @@
 import n from 'eslint-plugin-n'
-
 import { defineConfig } from 'eslint/config'
-import { namer } from '../namer'
-import { FilePatterns, getFilePatterns } from '../patterns'
+
+import { namer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
 
 export default defineConfig({
+  files: getFilePatterns(FilePatterns.source),
   name: namer('n(ode)'),
   plugins: { n },
-  files: getFilePatterns(FilePatterns.source),
   rules: {
     'n/exports-style': ['error', 'module.exports'],
     'n/hashbang': 'error',

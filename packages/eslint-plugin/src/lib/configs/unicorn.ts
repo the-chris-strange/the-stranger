@@ -1,22 +1,23 @@
 import unicorn from 'eslint-plugin-unicorn'
 import { defineConfig } from 'eslint/config'
-import { namer } from '../namer'
-import { FilePatterns, getFilePatterns } from '../patterns'
+
+import { namer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
 
 export default defineConfig(
   unicorn.configs['recommended'],
 
   {
-    name: namer('unicorn/allow abbreviations'),
     files: ['**/*'],
+    name: namer('unicorn/allow abbreviations'),
     rules: {
       'unicorn/prevent-abbreviations': 'off',
     },
   },
 
   {
-    name: namer('unicorn/base'),
     files: [getFilePatterns(FilePatterns.source)],
+    name: namer('unicorn/base'),
     rules: {
       'unicorn/import-style': 'off',
       'unicorn/no-array-callback-reference': 'off',
@@ -31,16 +32,16 @@ export default defineConfig(
   },
 
   {
-    name: namer("unicorn/CJS files don't have to be modules"),
     files: getFilePatterns(FilePatterns.cjs),
+    name: namer("unicorn/CJS files don't have to be modules"),
     rules: {
       'unicorn/prefer-module': 'off',
     },
   },
 
   {
-    name: namer('unicorn/allow pascal case for react files'),
     files: getFilePatterns(FilePatterns.react),
+    name: namer('unicorn/allow pascal case for react files'),
     rules: {
       'unicorn/filename-case': [
         'error',
@@ -55,8 +56,8 @@ export default defineConfig(
   },
 
   {
-    name: namer('unicorn/test files'),
     files: getFilePatterns(FilePatterns.test),
+    name: namer('unicorn/test files'),
     rules: {
       'unicorn/consistent-function-scoping': 'off',
       'unicorn/no-nested-ternary': 'off',
