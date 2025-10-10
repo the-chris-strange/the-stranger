@@ -1,0 +1,44 @@
+{
+  "name": "@the-stranger/eslint-config-nx",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/the-chris-strange/the-stranger",
+    "directory": "packages/eslint-config-nx"
+  },
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "dependencies": {
+    "@nx/eslint-plugin": "21.6.4",
+    "@the-stranger/eslint-plugin": "workspace:*",
+    "jsonc-eslint-parser": "^2.4.1",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.37.0",
+    "@nx/eslint": "21.6.4",
+    "@nx/js": "21.6.4",
+    "@nx/vite": "21.6.4",
+    "@types/node": "^24.7.1",
+    "@typescript-eslint/parser": "^8.46.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.37.0",
+    "jiti": "^2.6.1",
+    "jsonc-eslint-parser": "^2.4.1",
+    "nx": "21.6.4",
+    "typescript": "^5.9.3",
+    "vite": "7.1.9",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "eslint": "^9"
+  },
+  "engines": {
+    "node": "^24"
+  }
+}

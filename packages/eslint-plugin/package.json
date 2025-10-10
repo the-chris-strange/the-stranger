@@ -49,7 +49,7 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "@nx/eslint-plugin": "21.1.0",
+    "@nx/eslint-plugin": "21.6.4",
     "eslint": "^9"
   },
   "peerDependenciesMeta": {
