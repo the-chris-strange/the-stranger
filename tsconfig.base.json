@@ -26,6 +26,7 @@
     "outDir": "out-tsc",
     "paths": {
       "@the-stranger/eslint-plugin": ["./packages/eslint-plugin/src/index.ts"],
+      "@the-stranger/eslint-plugin": ["./packages/eslint-plugin/src/index.ts", "./packages/eslint-plugin/src/utils.ts"],
       "@the-stranger/nx-plugin": ["./packages/nx-plugin/src/index.ts"],
       "@the-stranger/prettier-config": ["./packages/prettier-config/src/index.ts"],
       "@the-stranger/yarn-config": ["./packages/yarn-config/src/index.ts"]
