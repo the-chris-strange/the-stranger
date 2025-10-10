@@ -6,11 +6,5 @@
     { "path": "./packages/nx-plugin" },
     { "path": "./packages/prettier-config" },
     { "path": "./packages/yarn-config" }
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS",
-      "moduleResolution": "node10"
-    }
-  }
+  ]
 }

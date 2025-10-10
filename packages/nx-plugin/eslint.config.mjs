@@ -1,9 +1,9 @@
+import { defineConfig } from 'eslint/config'
 import jsoncParser from 'jsonc-eslint-parser'
-import tseslint from 'typescript-eslint'
 
 import baseConfig, { SOURCE_FILES } from '../../eslint.config.mjs'
 
-export default tseslint.config(
+export default defineConfig(
   ...baseConfig,
 
   {

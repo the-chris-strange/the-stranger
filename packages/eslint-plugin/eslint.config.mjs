@@ -1,9 +1,20 @@
 import eslintPlugin from 'eslint-plugin-eslint-plugin'
+import { defineConfig } from 'eslint/config'
+import jsoncParser from 'jsonc-eslint-parser'
 
 import baseConfig from '../../eslint.config.mjs'
 
-export default [
+export default defineConfig(
   eslintPlugin.configs['flat/recommended'],
+
+  {
+    files: ['src/lib/configs/*.ts'],
+    rules: {
+      'eslint-plugin/require-meta-docs-description': 'error',
+      'eslint-plugin/require-meta-docs-url': 'error',
+      'eslint-plugin/require-meta-schema': 'error',
+    },
+  },
 
   ...baseConfig,
 
@@ -19,12 +30,13 @@ export default [
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          ignoredDependencies: ['toml-eslint-parser', 'yaml-eslint-parser'],
+          ignoredDependencies: [
+            // included in the yml plugin's configs, so not directly imported here
+            'yaml-eslint-parser',
+          ],
         },
       ],
     },
-    languageOptions: {
-      parser: await import('jsonc-eslint-parser'),
-    },
+    languageOptions: { parser: jsoncParser },
   },
-]
+)

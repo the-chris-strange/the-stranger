@@ -1,7 +1,8 @@
-import type { UserConfig } from '@commitlint/types'
 import { readdirSync } from 'node:fs'
 
-const pkgs = readdirSync('./packages', 'utf8')
+import type { UserConfig } from '@commitlint/types'
+
+const pkgs = readdirSync('./packages', 'utf8').filter(e => e.match(/^[a-z-]+$/i))
 
 export default {
   extends: ['@commitlint/config-conventional'],

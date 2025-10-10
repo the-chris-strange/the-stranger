@@ -7,44 +7,35 @@ import promise from 'eslint-plugin-promise'
 import re from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn'
 import yml from 'eslint-plugin-yml'
-import tseslint from 'typescript-eslint'
-
-/**
- * Ensure that the glob patterns provided start with `**`, so they apply to all nested files.
- * @param {string[]} patterns the patterns to globbify
- * @returns {string[]} the array of recursive glob patterns
- */
-export function fileGlobs(...patterns) {
-  return patterns.map(e => (e.startsWith('**/') ? e : `**/${e}`))
-}
+import { defineConfig } from 'eslint/config'
 
 /**
  * Array of file patterns matching JavaScript (but not TypeScript) files.
  * @example *.js, *.mjs
  */
-export const JS_FILES = fileGlobs('*.js', '*.jsx', '*.mjs', '*.cjs')
+const JS_FILES = ['*.{js,mjs,cjs,jsx}', '**/*.{js,mjs,cjs,jsx}']
 
 /**
  * Array of file patterns matching TypeScript (but not JavaScript) files.
  * @example *.ts, *.tsx
  */
-export const TS_FILES = fileGlobs('*.ts', '*.tsx', '*.mts', '*.cts')
+const TS_FILES = ['*.{ts,mts,cts,tsx}', '**/*.{ts,mts,cts,tsx}']
 
 /**
  * Array of file patterns matching test files.
  * @example *.spec.ts, *.test.jsx
  */
-export const TEST_FILES = ['**/*.{spec,test}.{js,jsx,ts,tsx}']
+const TEST_FILES = ['**/*.{spec,test}.{js,jsx,ts,tsx}']
 
 /**
  * Array of file patterns matching all source files.
  */
-export const SOURCE_FILES = ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}']
+const SOURCE_FILES = [...JS_FILES, ...TS_FILES]
 
 /**
  * Rules for 'eslint-plugin-perfectionist'.
  */
-const perfectionistConfig = tseslint.config(
+const perfectionistConfig = defineConfig(
   perfectionist.configs['recommended-natural'],
 
   {
@@ -177,7 +168,7 @@ const perfectionistConfig = tseslint.config(
 /**
  * Configuration objects for 'eslint-plugin-unicorn'.
  */
-const unicornConfig = tseslint.config(
+const unicornConfig = defineConfig(
   unicorn.configs['recommended'],
 
   {
@@ -244,7 +235,7 @@ const unicornConfig = tseslint.config(
 /**
  * Configuration objects for 'eslint-plugin-jsdoc'.
  */
-const jsdocConfig = tseslint.config(
+const jsdocConfig = defineConfig(
   { plugins: { jsdoc } },
 
   {
@@ -275,7 +266,7 @@ const jsdocConfig = tseslint.config(
 /**
  * Configuration objects for the typescript-eslint plugin.
  */
-const tsEslintConfig = tseslint.config(
+const tsEslintConfig = defineConfig(
   {
     files: SOURCE_FILES,
     rules: {
@@ -293,7 +284,7 @@ const tsEslintConfig = tseslint.config(
 /**
  * Configuration objects for nx.
  */
-const nxConfig = tseslint.config(
+const nxConfig = defineConfig(
   nx.configs['flat/base'],
   nx.configs['flat/typescript'],
   nx.configs['flat/javascript'],
@@ -321,7 +312,7 @@ const nxConfig = tseslint.config(
 /**
  * Configuration objects for '@vitest/eslint-plugin'.
  */
-const vitestConfig = tseslint.config(
+const vitestConfig = defineConfig(
   vitest.configs['recommended'],
 
   {
@@ -334,7 +325,7 @@ const vitestConfig = tseslint.config(
   },
 )
 
-const nConfig = tseslint.config(
+const nConfig = defineConfig(
   { plugins: { n } },
 
   {
@@ -345,9 +336,9 @@ const nConfig = tseslint.config(
       'n/no-deprecated-api': 'error',
       'n/no-process-exit': 'error',
       'n/prefer-node-protocol': 'error',
-      'n/prefer-global/buffer': ['error', 'never'],
+      'n/prefer-global/buffer': ['error', 'always'],
       'n/prefer-global/console': ['error', 'always'],
-      'n/prefer-global/process': ['error', 'never'],
+      'n/prefer-global/process': ['error', 'always'],
       'n/prefer-global/text-decoder': ['error', 'never'],
       'n/prefer-global/text-encoder': ['error', 'never'],
       'n/prefer-global/url-search-params': ['error', 'never'],
@@ -356,11 +347,138 @@ const nConfig = tseslint.config(
   },
 )
 
-const ymlConfig = tseslint.config(yml.configs['flat/standard'])
+const ymlConfig = defineConfig(
+  yml.configs['flat/standard'],
 
-const reConfig = tseslint.config(re.configs['flat/recommended'])
+  {
+    files: ['cspell.config.yaml', '**/cspell.config.yaml'],
+    rules: {
+      'yml/sort-keys': [
+        'error',
+        {
+          order: [
+            'version',
+            'language',
+            'import',
+            'ignorePaths',
+            'dictionaries',
+            'ignoreWords',
+            'words',
+            'languageSettings',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: '^$',
+        },
+        {
+          order: ['languageId', 'dictionaries', { order: { type: 'asc' } }],
+          pathPattern: 'languageSettings$',
+        },
+      ],
+      'yml/sort-sequence-values': [
+        'error',
+        {
+          order: { type: 'asc' },
+          pathPattern: 'dictionaries|import|ignorePaths|ignoreWords|words$',
+        },
+      ],
+    },
+  },
 
-const promiseConfig = tseslint.config(promise.configs['flat/recommended'], {
+  {
+    files: ['.github/workflows/*.yml'],
+    rules: {
+      'yml/no-empty-mapping-value': 'off',
+      'yml/sort-keys': [
+        'error',
+        {
+          order: [
+            'name',
+            'on',
+            'permissions',
+            'env',
+            'defaults',
+            'concurrency',
+            'jobs',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: '^$',
+        },
+        {
+          order: { type: 'asc' },
+          pathPattern: '^on|permissions|defaults',
+        },
+        {
+          order: [
+            'id',
+            'name',
+            'if',
+            'run',
+            'uses',
+            'with',
+            'env',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: String.raw`^jobs\..+steps`,
+        },
+        {
+          order: [
+            'strategy',
+            'name',
+            'if',
+            'needs',
+            'runs-on',
+            'permissions',
+            'environment',
+            'env',
+            'concurrency',
+            'timeout-minutes',
+            'outputs',
+            'defaults',
+            'steps',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: '^jobs',
+        },
+      ],
+      'yml/sort-sequence-values': [
+        'error',
+        {
+          order: { type: 'asc' },
+          pathPattern: '^on|permissions',
+        },
+      ],
+    },
+  },
+
+  {
+    files: ['.markdownlint-cli2.yaml'],
+    rules: {
+      'yml/sort-keys': [
+        'error',
+        { order: ['ignores', { order: { type: 'asc' } }], pathPattern: '^$' },
+        { order: { type: 'asc' }, pathPattern: '^configs' },
+      ],
+    },
+  },
+
+  {
+    files: ['.yarnrc.yml'],
+    rules: {
+      'yml/sort-keys': ['error', { order: { type: 'asc' }, pathPattern: '^$' }],
+      'yml/sort-sequence-values': [
+        'error',
+        {
+          order: ['.env?', { order: { type: 'asc' } }],
+          pathPattern: '^injectEnvironmentFiles',
+        },
+      ],
+    },
+  },
+)
+
+const reConfig = defineConfig(re.configs['flat/recommended'])
+
+const promiseConfig = defineConfig(promise.configs['flat/recommended'], {
   name: 'Additional rules for asynchronous code',
   files: SOURCE_FILES,
   rules: {
@@ -371,7 +489,20 @@ const promiseConfig = tseslint.config(promise.configs['flat/recommended'], {
   },
 })
 
-export default tseslint.config(
+export default defineConfig(
+  {
+    ignores: [
+      '.cache',
+      '.nx',
+      '.pnp.*',
+      '.yarn',
+      'coverage',
+      'dist',
+      'node_modules',
+      'tmp',
+    ],
+  },
+
   nxConfig,
   perfectionistConfig,
   unicornConfig,
@@ -382,18 +513,4 @@ export default tseslint.config(
   ymlConfig,
   reConfig,
   promiseConfig,
-
-  {
-    ignores: [
-      '.cache',
-      '.github',
-      '.nx',
-      '.pnp.*',
-      '.yarn',
-      'coverage',
-      'dist',
-      'node_modules',
-      'tmp',
-    ],
-  },
 )

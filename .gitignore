@@ -34,10 +34,11 @@ node_modules/
 # caches
 *.tsbuildinfo
 .cache
+.cspellcache
 
 # transient files
-vite.config.js.timestamp-*
-vite.config.ts.timestamp-*
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
 storybook-static
 
 # environment variable files
