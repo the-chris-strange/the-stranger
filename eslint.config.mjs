@@ -174,6 +174,8 @@ const unicornConfig = defineConfig(
   {
     files: SOURCE_FILES,
     rules: {
+      'unicorn/no-array-reverse': 'off',
+      'unicorn/no-array-sort': 'off',
       'unicorn/custom-error-definition': 'warn',
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-array-callback-reference': 'off',

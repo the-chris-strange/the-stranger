@@ -23,6 +23,8 @@ export default defineConfig(
       'unicorn/import-style': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-reduce': 'off',
+      'unicorn/no-array-reverse': 'off',
+      'unicorn/no-array-sort': 'off',
       'unicorn/no-keyword-prefix': 'error',
       'unicorn/no-useless-undefined': ['error', { checkArrowFunctionBody: false }],
       'unicorn/numeric-separators-style': ['warn', { number: { minimumDigits: 12 } }],
