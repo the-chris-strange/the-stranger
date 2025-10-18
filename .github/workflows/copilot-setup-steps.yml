@@ -16,9 +16,12 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: ./.github/workflows/setup-node.yml
+      - uses: actions/checkout@v5
+      - uses: nrwl/nx-set-shas@v4
+      - run: corepack enable && corepack install
+      - uses: actions/setup-node@v5
         with:
-          fetch-depth: 0
-          set-nx-shas: true
+          cache: yarn
+          node-version: 24
       - name: install Node.js dependencies
         run: yarn
