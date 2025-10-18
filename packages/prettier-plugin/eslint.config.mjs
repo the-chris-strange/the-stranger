@@ -7,6 +7,13 @@ export default defineConfig(
   ...baseConfig,
 
   {
+    files: ['**/*.ts'],
+    rules: {
+      'perfectionist/sort-interfaces': ['error'],
+    },
+  },
+
+  {
     files: ['**/*.json'],
     rules: {
       '@nx/dependency-checks': [
@@ -19,6 +26,7 @@ export default defineConfig(
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
+          ignoredDependencies: ['prettier-plugin-packagejson'],
         },
       ],
     },

@@ -4521,9 +4521,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@the-stranger/prettier-config@workspace:packages/prettier-config":
+"@the-stranger/prettier-plugin@workspace:packages/prettier-plugin":
   version: 0.0.0-use.local
-  resolution: "@the-stranger/prettier-config@workspace:packages/prettier-config"
+  resolution: "@the-stranger/prettier-plugin@workspace:packages/prettier-plugin"
   dependencies:
     "@eslint/js": "npm:^9.37.0"
     "@nx/eslint": "npm:21.6.4"
@@ -4534,7 +4534,6 @@ __metadata:
     "@vitest/coverage-v8": "npm:^3.2.4"
     eslint: "npm:^9.37.0"
     eslint-config-prettier: "npm:^10.1.8"
-    eslint-plugin-eslint-plugin: "npm:^6.5.0"
     jsonc-eslint-parser: "npm:^2.4.1"
     nx: "npm:21.6.4"
     prettier: "npm:^3.6.2"
@@ -4543,6 +4542,8 @@ __metadata:
     typescript: "npm:^5.9.3"
     vite: "npm:7.1.9"
     vitest: "npm:^3.2.4"
+  peerDependencies:
+    prettier: ^3.6.2
   languageName: unknown
   linkType: soft
 

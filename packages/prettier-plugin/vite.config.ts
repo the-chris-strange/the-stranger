@@ -2,7 +2,7 @@ import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig(() => ({
-  cacheDir: '../../node_modules/.vite/packages/prettier-config',
+  cacheDir: '../../node_modules/.vite/packages/prettier-plugin',
 
   plugins: [nxViteTsPaths()],
 
@@ -12,12 +12,12 @@ export default defineConfig(() => ({
     coverage: {
       exclude: ['src/test/**'],
       provider: 'v8' as const,
-      reportsDirectory: '../../coverage/packages/prettier-config',
+      reportsDirectory: '../../coverage/packages/prettier-plugin',
     },
     environment: 'node',
     globals: false,
     include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-    name: 'prettier-config',
+    name: 'prettier-plugin',
     passWithNoTests: true,
     typecheck: {
       include: [
