@@ -114,6 +114,10 @@ export default defineConfig(
         { order: ['ignores', { order: { type: 'asc' } }], pathPattern: '^$' },
         { order: { type: 'asc' }, pathPattern: '^configs' },
       ],
+      'yml/sort-sequence-values': [
+        'error',
+        { order: { type: 'asc' }, pathPattern: '^ignores' },
+      ],
     },
   },
 
