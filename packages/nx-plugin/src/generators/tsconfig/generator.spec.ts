@@ -1,8 +1,8 @@
-import { addProjectConfiguration, readJson, Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { readJson, Tree } from '@nx/devkit'
 import { Tsconfig } from 'tsconfig-type'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
 import { tsconfigGenerator } from './generator'
 import { TSConfigSchema } from './schema'
 
@@ -11,16 +11,12 @@ describe('tsconfig generator', () => {
   let options: TSConfigSchema
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
-    addProjectConfiguration(tree, 'test', {
-      projectType: 'library',
-      root: 'packages/test',
-    })
     options = {
       fileName: 'tsconfig.app.json',
       project: 'test',
       skipFormat: true,
     }
+    tree = createTestTree({ name: options.project, projectType: 'library' })
   })
 
   it('runs successfully', async () => {

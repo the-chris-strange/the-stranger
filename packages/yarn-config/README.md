@@ -1,3 +1,3 @@
-# yarn-config
+# @the-stranger/yarn-config
 
 A small package to assist with yarn constraints configuration.

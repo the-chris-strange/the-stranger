@@ -1,9 +1,9 @@
-import { addProjectConfiguration, readJson, Tree, writeJson } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { readJson, Tree, writeJson } from '@nx/devkit'
 import { PackageJson } from 'nx/src/utils/package-json'
 import { Tsconfig } from 'tsconfig-type'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
 import { jestConfigGenerator } from './generator'
 import { JestConfigSchema } from './schema'
 
@@ -12,8 +12,7 @@ describe('jest config generator', () => {
   let options: JestConfigSchema
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
-    addProjectConfiguration(tree, 'test', { root: 'packages/test' })
+    tree = createTestTree('test')
     writeJson<Tsconfig>(tree, 'packages/test/tsconfig.spec.json', {
       compilerOptions: { types: [] },
     })

@@ -1,10 +1,11 @@
-import { addProjectConfiguration, joinPathFragments, Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { joinPathFragments, Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { detectConfig, MARKER_FILES } from './detect-config'
+import { createTestTree } from '../tests/helpers/create-test-tree'
+import markerFiles from './config-marker-files'
+import { detectConfig } from './detect-config'
 
-const testFiles = Object.entries(MARKER_FILES).flatMap(([key, value]) =>
+const testFiles = Object.entries(markerFiles).flatMap(([key, value]) =>
   value.map(e => [key, e]),
 )
 
@@ -13,8 +14,7 @@ describe('detectConfig', () => {
   let tree: Tree
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
-    addProjectConfiguration(tree, 'test-lib', { root })
+    tree = createTestTree('test-lib')
   })
 
   it.each(testFiles)(
@@ -35,10 +35,8 @@ describe('detectConfig', () => {
   })
 
   it('does not apply prefix if not provided', async () => {
-    const spy = vi.spyOn(await import('./find-existing'), 'findExisting')
-
+    const spy = vi.spyOn(await import('./find-existing.js'), 'findExisting')
     detectConfig(tree, 'cspell')
-
     expect(spy).toHaveBeenLastCalledWith(tree, 'cspell.config.yaml', 'cspell.json')
   })
 })

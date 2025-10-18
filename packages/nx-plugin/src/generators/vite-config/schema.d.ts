@@ -1,3 +1,5 @@
+import { LibraryFormats } from 'vite'
+
 import { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
@@ -13,6 +15,11 @@ export interface ViteConfigSchema extends GeneratorSchema {
    * @default '.reports/coverage'
    */
   coveragePath?: string
+  /**
+   * Module formats produced by the build process. This option is ignored if {@link includeBuild} is false.
+   * @default ['es']
+   */
+  formats?: LibraryFormats[]
   /**
    * Allow vitest to inject jest-like API's into the testing environment.
    * @default false
@@ -50,6 +57,10 @@ export interface ViteConfigSchema extends GeneratorSchema {
    */
   swc?: boolean
   /**
+   * Build targets. This options is ignored if {@link includeBuild} is false.
+   */
+  target?: string[]
+  /**
    * The testing environment for the project.
    * @default 'node'
    */
@@ -63,4 +74,9 @@ export interface ViteConfigSchema extends GeneratorSchema {
    * Set the filename to use in the configuration for `vite-plugin-dts`. If unspecified, the generator will use the project's 'projectType' configuration value to create a file name.
    */
   tsconfigName?: string
+  /**
+   * Indicates whether the project uses workers.
+   * @default false
+   */
+  worker?: boolean
 }

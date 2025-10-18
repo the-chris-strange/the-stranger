@@ -1,20 +1,32 @@
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { type Linter } from 'eslint'
+import { defineConfig } from 'eslint/config'
+import tseslint from 'typescript-eslint'
 
-import { FilePatterns, getFilePatterns } from '../patterns'
+import { namer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-export default [
+const config: Linter.Config[] = [
   {
     files: getFilePatterns(FilePatterns.source),
+    name: namer('unnecessary ts rules'),
     rules: {
       // I do what I want ¯\_(ツ)_/¯
       '@typescript-eslint/no-explicit-any': 'off',
-      // unnecessary; ts language server covers this in vscode
-      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
     },
   },
 
   {
     files: getFilePatterns(FilePatterns.test),
+    name: namer('disable no-non-null in tests'),
     rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
   },
-] satisfies FlatConfig.ConfigArray
+]
+
+try {
+  await import('@nx/eslint-plugin')
+} catch {
+  config.unshift(...tseslint.configs.recommended)
+}
+
+export default defineConfig(config)

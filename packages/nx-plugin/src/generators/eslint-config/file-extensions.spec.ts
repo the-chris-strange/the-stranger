@@ -1,7 +1,7 @@
 import { Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
 import { FILE_EXTENSIONS, findFileExtension } from './file-extensions'
 import { ESLintConfigSchema } from './schema'
 
@@ -10,7 +10,7 @@ describe('findFileExtension', () => {
   let options: ESLintConfigSchema
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
+    tree = createTestTree()
     options = { project: 'test' }
   })
 

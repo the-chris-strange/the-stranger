@@ -4,12 +4,24 @@ import:
   - "@cspell/dict-fr-fr/cspell-ext.json"
   - "@cspell/dict-scientific-terms-us/cspell-ext.json"
 ignorePaths:
+  - .cspellcache
+  - .dcignore
   - .env*
+  - .git
+  - .gitattributes
+  - .gitignore
+  - .nx
+  - .nxignore
+  - .prettierignore
+  - .verdaccio
   - .vscode
   - .yarnrc.yml
+  - coverage
   - dist
   - env.d.ts
   - node_modules
+  - out-tsc
+  - tmp
   - yarn.lock
 dictionaries:
   - companies
@@ -24,16 +36,23 @@ dictionaries:
   - scientific-terms-us
   - softwareTerms
   - web-services
+ignoreWords:
+  - dcignore
+  - nxignore
 words:
+  - dotenvx
   - globbify
   - lestranger
+  - orcid
+  - unprefix
+  - unstub
 languageSettings:
   - languageId: javascript,typescript
     dictionaries:
       - node
       - npm
       - typescript
-  - languageId: json,jsonc
+  - languageId: json,jsonc,yaml
     dictionaries:
       - node
       - npm

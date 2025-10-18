@@ -1,5 +1,6 @@
-import type { Linter } from '@typescript-eslint/utils/ts-eslint'
+import type { ESLint } from 'eslint'
 
-import { name, version } from '../../package.json'
+import pkg from '../../package.json' with { type: 'json' }
 
-export const meta: Linter.Plugin['meta'] = { name, version }
+const { name, version } = pkg
+export const meta: ESLint.Plugin['meta'] = { name, version }

@@ -3,6 +3,10 @@
  */
 export interface GeneratorSchema {
   /**
+   * The root directory of the project.
+   */
+  directory?: string
+  /**
    * Overwrite existing files.
    */
   force?: boolean

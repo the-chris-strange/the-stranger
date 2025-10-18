@@ -1,72 +1,70 @@
-# yarn
+# runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# qa & diagnostic tools
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+lib-cov
+coverage
+*.lcov
+
+# build and packaging output
+build/Release
+dist
+tmp
+out-tsc
+*.tgz
+
+# dependencies
+## node.js
+node_modules/
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
 !.yarn/releases
-# \!.yarn/sdks
-# \!.yarn/cache
 
-# nx cache
+# yarn pnp
+.pnp.*
+# \!.pnp.*
+.yarn/sdks
+# \!.yarn/sdks
+
+# caches
+*.tsbuildinfo
+.cache
+.cspellcache
+
+# transient files
+vite.config.*.timestamp*
+vitest.config.*.timestamp*
+storybook-static
+
+# environment variable files
+.env
+.env.*
+!.env.example
+
+# nx
 .nx/cache
 .nx/workspace-data
 .nx/installation
 .nx/schemas
+.cursor/rules/nx-rules.mdc
+!.github
+.github/instructions/nx.instructions.md
 
-# storybook
-storybook-static
-
-# compiled output
-dist
-tmp
-/out-tsc
-
-# dependencies
-node_modules
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
+# vscode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/.reports
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
-.cache
-
-# System Files
+# system files
 .DS_Store
 Thumbs.db
 
-# env files
-.env*
-.flaskenv*
-!.env.project
-!.env.vault
-
-# temporary files created by vite
-**/vite.config.*.timestamp*
-**/vitest.config.*.timestamp*
-vite.config.*.timestamp*
-vitest.config.*.timestamp*
-
-# nx
-.cursor/rules/nx-rules.mdc
-.github/instructions/nx.instructions.md
+# sst
+.sst

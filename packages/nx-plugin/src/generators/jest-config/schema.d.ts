@@ -1,21 +1,19 @@
+import { Config } from 'jest'
+
 import { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
  * Schema for the jest configuration file generator.
  */
-export interface JestConfigSchema extends GeneratorSchema {
+export interface JestConfigSchema extends GeneratorSchema, JestOptions {
   /**
    * The name of the project in which to generate a jest config.
    */
   project: string
   /**
-   * Allow jest to inject its API's into the testing environment.
-   * @default false
+   * Inject the Jest API into the global environment.
    */
-  globals?: boolean
-  /**
-   * The testing environment for the project.
-   * @default node
-   */
-  testEnvironment?: 'jsdom' | 'node'
+  globals?: Config['injectGlobals']
 }
+
+type JestOptions = Pick<Config, 'testEnvironment'>

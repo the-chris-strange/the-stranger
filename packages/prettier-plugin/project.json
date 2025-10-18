@@ -1,0 +1,19 @@
+{
+  "name": "prettier-plugin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/prettier-plugin/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/prettier-plugin",
+        "main": "packages/prettier-plugin/src/index.ts",
+        "tsConfig": "packages/prettier-plugin/tsconfig.lib.json",
+        "assets": ["packages/prettier-plugin/*.md"]
+      }
+    }
+  }
+}

@@ -1,19 +1,32 @@
 import unicorn from 'eslint-plugin-unicorn'
+import { defineConfig } from 'eslint/config'
 
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { namer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-import { FilePatterns, getFilePatterns } from '../patterns'
-
-export default [
+export default defineConfig(
   unicorn.configs['recommended'],
 
   {
-    files: [getFilePatterns(FilePatterns.source)],
+    files: ['**/*'],
+    name: namer('unicorn/allow abbreviations'),
     rules: {
+      'unicorn/prevent-abbreviations': 'off',
+    },
+  },
+
+  {
+    files: [getFilePatterns(FilePatterns.source)],
+    name: namer('unicorn/base'),
+    rules: {
+      'unicorn/custom-error-definition': 'warn',
       'unicorn/import-style': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-reduce': 'off',
+      'unicorn/no-array-reverse': 'off',
+      'unicorn/no-array-sort': 'off',
       'unicorn/no-keyword-prefix': 'error',
+      'unicorn/no-useless-undefined': ['error', { checkArrowFunctionBody: false }],
       'unicorn/numeric-separators-style': ['warn', { number: { minimumDigits: 12 } }],
       'unicorn/prefer-import-meta-properties': 'warn',
       'unicorn/prefer-math-trunc': 'off',
@@ -22,14 +35,8 @@ export default [
   },
 
   {
-    files: ['**/*'],
-    rules: {
-      'unicorn/prevent-abbreviations': 'off',
-    },
-  },
-
-  {
     files: getFilePatterns(FilePatterns.cjs),
+    name: namer("unicorn/CJS files don't have to be modules"),
     rules: {
       'unicorn/prefer-module': 'off',
     },
@@ -37,6 +44,7 @@ export default [
 
   {
     files: getFilePatterns(FilePatterns.react),
+    name: namer('unicorn/allow pascal case for react files'),
     rules: {
       'unicorn/filename-case': [
         'error',
@@ -52,6 +60,15 @@ export default [
 
   {
     files: getFilePatterns(FilePatterns.test),
-    rules: { 'unicorn/consistent-function-scoping': 'off' },
+    name: namer('unicorn/test files'),
+    rules: {
+      'unicorn/consistent-function-scoping': 'off',
+      'unicorn/no-nested-ternary': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/no-useless-undefined': [
+        'error',
+        { checkArguments: false, checkArrowFunctionBody: false },
+      ],
+    },
   },
-] satisfies FlatConfig.ConfigArray
+)

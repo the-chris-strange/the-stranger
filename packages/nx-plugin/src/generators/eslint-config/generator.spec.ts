@@ -1,7 +1,7 @@
-import { addProjectConfiguration, Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
 import { FILE_EXTENSIONS } from './file-extensions'
 import { eslintConfigGenerator } from './generator'
 import { ESLintConfigSchema } from './schema'
@@ -16,8 +16,7 @@ describe('eslint config generator', () => {
 
   beforeEach(() => {
     options = { force: true, project: 'test', skipFormat: true }
-    tree = createTreeWithEmptyWorkspace()
-    addProjectConfiguration(tree, 'test', { root: 'packages/test' })
+    tree = createTestTree('test')
   })
 
   afterAll(() => {
@@ -45,7 +44,7 @@ describe('eslint config generator', () => {
 
     await eslintConfigGenerator(tree, options)
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(spy).toHaveBeenCalledExactlyOnceWith(
       'packages/test/eslint.config.cjs',
       expect.any(String),
     )
@@ -58,7 +57,7 @@ describe('eslint config generator', () => {
 
     await eslintConfigGenerator(tree, options)
 
-    expect(spy).toHaveBeenCalledWith(
+    expect(spy).toHaveBeenCalledExactlyOnceWith(
       'packages/test/eslint.config.ts',
       expect.any(String),
     )

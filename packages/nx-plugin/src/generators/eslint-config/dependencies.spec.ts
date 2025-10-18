@@ -1,10 +1,4 @@
-import {
-  addProjectConfiguration,
-  joinPathFragments,
-  ProjectConfiguration,
-  Tree,
-} from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { joinPathFragments, ProjectConfiguration, Tree } from '@nx/devkit'
 import {
   afterAll,
   beforeAll,
@@ -16,6 +10,7 @@ import {
   vi,
 } from 'vitest'
 
+import { createTestTree } from '../../tests/helpers/create-test-tree'
 import {
   addEslintDependencies,
   ESLINT_DEPENDENCIES,
@@ -35,8 +30,7 @@ describe('addEslintDependencies', () => {
   })
 
   beforeEach(async () => {
-    tree = createTreeWithEmptyWorkspace()
-    addProjectConfiguration(tree, 'test', project)
+    tree = createTestTree('test')
     spy = vi.spyOn(
       await import('../../lib/add-dependencies'),
       'addDependenciesToProject',

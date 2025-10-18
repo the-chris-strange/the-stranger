@@ -1,18 +1,14 @@
-import { addProjectConfiguration, Tree } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it } from 'vitest'
 
+import { createTestTree } from '../tests/helpers/create-test-tree'
 import { removeExisting } from './remove-existing'
 
 describe('removeExisting', () => {
   let tree: Tree
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
-    const projects = ['test1', 'test2']
-    for (const projectName of projects) {
-      addProjectConfiguration(tree, projectName, { root: `packages/${projectName}` })
-    }
+    tree = createTestTree()
     tree.write('textfile.txt', 'things here')
     tree.write('textfile2.txt', 'more things')
   })

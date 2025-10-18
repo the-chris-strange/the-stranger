@@ -1,16 +1,16 @@
-import { addProjectConfiguration, readJson, Tree, writeJson } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
+import { readJson, Tree, writeJson } from '@nx/devkit'
 import { PackageJson } from 'nx/src/utils/package-json'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { createTestTree } from '../tests/helpers/create-test-tree'
 import { addDependenciesToProject, getWorkspaceVersion } from './add-dependencies'
 
 let tree: Tree
 let packageJson: PackageJson
 
 beforeEach(() => {
-  tree = createTreeWithEmptyWorkspace()
-  addProjectConfiguration(tree, 'test', {
+  tree = createTestTree({
+    name: 'test',
     root: 'packages/test',
     sourceRoot: 'packages/test/src',
   })
@@ -44,7 +44,7 @@ describe('getWorkspaceVersion', () => {
     getWorkspaceVersion(tree, 'some-package')
 
     // eslint-disable-next-line unicorn/text-encoding-identifier-case
-    expect(spy).toHaveBeenCalledWith('package.json', 'utf-8')
+    expect(spy).toHaveBeenCalledExactlyOnceWith('package.json', 'utf-8')
   })
 
   it('does not parse the root package.json if a packageJson object is provided', () => {

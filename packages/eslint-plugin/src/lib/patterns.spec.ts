@@ -7,7 +7,7 @@ import {
   getFilePatterns,
   sourceFilePattern,
   testFilePattern,
-} from './patterns'
+} from './patterns.js'
 
 describe('combineExtensions', () => {
   it('throws if no extensions are provided', () => {

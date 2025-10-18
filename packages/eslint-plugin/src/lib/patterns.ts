@@ -68,15 +68,6 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
 }
 
 /**
- * Normalize a file extension by removing leading dot or glob wildcards.
- * @param value the file extension to normalize
- * @returns the normalized file extension
- */
-export function normalizeExtPattern(value: string) {
-  return value.replace(/^\./, '').replace(/^[*?]+(\/[*?]+\.?)?/, '')
-}
-
-/**
  * Get a glob pattern that recursively matches files with the specified extensions.
  * @param extensions file extensions to match
  * @returns a glob pattern that matches any of the file extensions
@@ -94,6 +85,9 @@ export function testFilePattern(...extensions: (string | string[])[]) {
   return `**/*.{spec,test}.${combineExtensions(...extensions)}`
 }
 
+/**
+ * Common file patterns used in ESLint configurations.
+ */
 export enum FilePatterns {
   /**
    * CommonJS files ('.cjs' and '.cts').
@@ -131,4 +125,13 @@ export enum FilePatterns {
    * TypeScript test files.
    */
   tsTest = 'ts-test-files',
+}
+
+/**
+ * Normalize a file extension by removing leading dot or glob wildcards.
+ * @param value the file extension to normalize
+ * @returns the normalized file extension
+ */
+function normalizeExtPattern(value: string) {
+  return value.replace(/^\./, '').replace(/^[*?]+(\/[*?]+\.?)?/, '')
 }

@@ -1,45 +1,51 @@
-import type { Linter } from '@typescript-eslint/utils/ts-eslint'
+import type { Linter } from 'eslint'
 
-export function isSeverity(value: any): value is Linter.Severity {
-  return (
-    (typeof value === 'string' && ['error', 'off', 'warn'].includes(value)) ||
-    (typeof value === 'number' && value >= 0 && value <= 2)
-  )
+import { RuleLevels } from './rule-levels.js'
+
+/**
+ * Set the severity of rules in an ESLint configuration. If {@link rules} is specified, only rules with a key that matches one of these values is changed.
+ * @param severity the severity to set
+ * @param config a configuration object
+ * @param rules an array of rule names or rules within the configuration object
+ * @returns the configuration object with the specified severity
+ */
+export function setRuleLevel(severity: Severity, config: Config, rules?: string[]) {
+  const levels = new RuleLevels(severity)
+  const includeKey = (key: string) => rules?.find(e => matchKeys(e, key)) ?? true
+
+  if (config.rules) {
+    config.rules = Object.entries(config.rules).reduce(
+      (acc, [key, rule]) => {
+        if (rule !== undefined) {
+          acc[key] = includeKey(key) ? levels.setLevel(rule) : rule
+        }
+        return acc
+      },
+      Object.create(null) as Record<string, RuleEntry>,
+    )
+  }
+  return config
 }
 
-export function remapRules(
-  severity: Linter.Severity,
-  rules: Partial<Linter.RulesRecord>,
-): Linter.RulesRecord {
-  const ruleArray: [string, Linter.RuleEntry][] = Object.entries(rules).map(
-    ([key, value]) => [key, setRuleSeverity(severity, value)],
-  )
-  return Object.fromEntries(ruleArray)
-}
-
-export function setRuleSeverity(
-  severity: Linter.Severity,
-  rule?: Linter.RuleEntry,
-): Linter.RuleEntry {
-  if (isSeverity(rule)) {
-    return severity
+function matchKeys(lhs: string, rhs: string) {
+  if (lhs === rhs) {
+    return true
   }
 
-  if (Array.isArray(rule)) {
-    return rule.length === 1 ? [severity] : [severity, ...rule.slice(1)]
+  if (lhs.startsWith('@')) {
+    const [ns, rn] = lhs.split('/')
+    return [ns, ns.slice(1), rn].includes(rhs)
   }
 
-  throw new Error('This should never happen; if it does, your eslint config is broken.')
+  if (rhs.startsWith('@')) {
+    return lhs.startsWith(rhs)
+  }
+
+  return false
 }
 
-export function setSeverity(severity: Linter.Severity, config: Linter.Config[]) {
-  return config.flatMap(configObject => {
-    if (configObject.rules) {
-      configObject.rules = remapRules(severity, configObject.rules)
-    }
-    return {
-      ...configObject,
-      rules: configObject.rules ? remapRules(severity, configObject.rules) : undefined,
-    }
-  })
-}
+type Config = Linter.Config
+
+type RuleEntry = Linter.RuleEntry
+
+type Severity = Linter.RuleSeverity

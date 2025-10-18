@@ -4,5 +4,16 @@
   "sourceRoot": "packages/yarn-config/src",
   "projectType": "library",
   "tags": [],
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/yarn-config",
+        "main": "packages/yarn-config/src/index.ts",
+        "tsConfig": "packages/yarn-config/tsconfig.lib.json",
+        "assets": ["packages/yarn-config/*.md"]
+      }
+    }
+  }
 }

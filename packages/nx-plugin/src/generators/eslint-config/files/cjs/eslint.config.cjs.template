@@ -1,9 +1,8 @@
 const jsoncParser = require('jsonc-eslint-parser')
-const tseslint = require('typescript-eslint')
-
+const { defineConfig } = require('eslint/config')
 const baseConfig = require('<%= options.extend ?? paths.baseConfig %>')
 
-module.exports = tseslint.config(
+module.exports = defineConfig(
   ...baseConfig,
 
   {

@@ -1,27 +1,25 @@
 import n from 'eslint-plugin-n'
+import { defineConfig } from 'eslint/config'
 
-import type { FlatConfig } from '@typescript-eslint/utils/ts-eslint'
+import { namer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-import { FilePatterns, getFilePatterns } from '../patterns'
-
-export default [
-  { plugins: { n } },
-
-  {
-    files: getFilePatterns(FilePatterns.source),
-    rules: {
-      'n/exports-style': ['error', 'module.exports'],
-      'n/hashbang': 'error',
-      'n/no-deprecated-api': 'error',
-      'n/no-process-exit': 'error',
-      'n/prefer-global/buffer': ['error', 'never'],
-      'n/prefer-global/console': ['error', 'never'],
-      'n/prefer-global/process': ['error', 'never'],
-      'n/prefer-global/text-decoder': ['error', 'never'],
-      'n/prefer-global/text-encoder': ['error', 'never'],
-      'n/prefer-global/url': ['error', 'never'],
-      'n/prefer-global/url-search-params': ['error', 'never'],
-      'n/prefer-node-protocol': 'error',
-    },
+export default defineConfig({
+  files: getFilePatterns(FilePatterns.source),
+  name: namer('n(ode)'),
+  plugins: { n },
+  rules: {
+    'n/exports-style': ['error', 'module.exports'],
+    'n/hashbang': 'error',
+    'n/no-deprecated-api': 'error',
+    'n/no-process-exit': 'error',
+    'n/prefer-global/buffer': ['error', 'always'],
+    'n/prefer-global/console': ['error', 'always'],
+    'n/prefer-global/process': ['error', 'always'],
+    'n/prefer-global/text-decoder': ['error', 'never'],
+    'n/prefer-global/text-encoder': ['error', 'never'],
+    'n/prefer-global/url': ['error', 'never'],
+    'n/prefer-global/url-search-params': ['error', 'never'],
+    'n/prefer-node-protocol': 'error',
   },
-] satisfies FlatConfig.ConfigArray
+})

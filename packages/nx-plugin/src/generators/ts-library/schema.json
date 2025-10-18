@@ -17,12 +17,14 @@
     "bundler": {
       "description": "The bundler to use. Choosing 'none' means this library is not buildable.",
       "type": "string",
-      "enum": ["swc", "tsc", "rollup", "vite", "esbuild", "none"]
+      "enum": ["swc", "tsc", "rollup", "vite", "esbuild", "none"],
+      "default": "vite"
     },
     "unitTestRunner": {
       "description": "Test runner to use for unit tests.",
       "type": "string",
-      "enum": ["none", "jest", "vitest"]
+      "enum": ["none", "jest", "vitest"],
+      "default": "vitest"
     },
     "testEnvironment": {
       "type": "string",
@@ -38,13 +40,23 @@
       "type": "boolean",
       "description": "Skip creating a CSpell configuration file for the project."
     },
+    "skipTestConfig": {
+      "type": "boolean",
+      "description": "Skip creating a Jest or Vitest configuration file for the project."
+    },
     "globals": {
       "type": "boolean",
-      "description": "Allow vitest to inject jest-like API's into the testing environment."
+      "description": "Allow vitest to inject jest-like API's into the testing environment.",
+      "default": false
     },
     "react": {
       "type": "boolean",
       "description": "Indicate that the project uses React.js."
+    },
+    "rollupExternals": {
+      "type": "array",
+      "description": "An array of values to add to the `rollupOptions.external` configuration field.",
+      "items": { "type": "string" }
     },
     "swc": {
       "type": "boolean",
@@ -53,22 +65,6 @@
     "force": {
       "type": "boolean",
       "description": "Overwrite existing files."
-    },
-    "forceCspell": {
-      "type": "boolean",
-      "description": "Specify the value to pass to the cspell-config generator's `force` option."
-    },
-    "forceEslint": {
-      "type": "boolean",
-      "description": "Specify the value to pass to the eslint-config generator's `force` option."
-    },
-    "forceJest": {
-      "type": "boolean",
-      "description": "Specify the value to pass to the jest-config generator's `force` option."
-    },
-    "forceVite": {
-      "type": "boolean",
-      "description": "Specify the value to pass to the vite-config generator's `force` option."
     }
   },
   "required": ["name"]

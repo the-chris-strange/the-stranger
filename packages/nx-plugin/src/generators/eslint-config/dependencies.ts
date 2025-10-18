@@ -7,42 +7,51 @@ import { detectConfig } from '../../lib/detect-config'
  * Dependencies required for the standard ESLint configuration.
  */
 export const ESLINT_DEPENDENCIES: string[] = [
-  '@eslint/js',
-  '@nx/eslint',
   '@nx/eslint-plugin',
+  '@nx/eslint',
   '@typescript-eslint/parser',
-  '@typescript-eslint/utils',
-  'eslint',
   'eslint-config-prettier',
   'eslint-plugin-jsdoc',
+  'eslint-plugin-n',
   'eslint-plugin-perfectionist',
+  'eslint-plugin-promise',
+  'eslint-plugin-regexp',
   'eslint-plugin-unicorn',
+  'eslint-plugin-yml',
+  'eslint',
+  'globals',
+  'jiti',
   'jsonc-eslint-parser',
   'typescript-eslint',
+  'yaml-eslint-parser',
 ]
 
 /**
- * Dependencies added if the project uses [Jest](https://jestjs.io).
+ * Dependencies to add if the project uses [Jest](https://jestjs.io).
  */
 export const JEST_DEPENDENCIES: string[] = ['eslint-plugin-jest']
 
 /**
- * Dependencies added if the project uses [Vitest](https://vitest.dev).
+ * Dependencies to add if the project uses [Vitest](https://vitest.dev).
  */
 export const VITEST_DEPENDENCIES: string[] = ['@vitest/eslint-plugin']
 
 export function addEslintDependencies(tree: Tree, options: EslintDependencyOptions) {
   const { root, unitTestRunner } = options
-  const deps = [...ESLINT_DEPENDENCIES]
+  const deps = new Set(ESLINT_DEPENDENCIES)
 
   // Check jest first, since vitest may be implied by presence of 'vite.config.m?ts'
   if (unitTestRunner === 'jest' || detectConfig(tree, 'jest', root)) {
-    deps.push(...JEST_DEPENDENCIES)
+    for (const d of JEST_DEPENDENCIES) {
+      deps.add(d)
+    }
   } else if (unitTestRunner === 'vitest' || detectConfig(tree, 'vitest', root)) {
-    deps.push(...VITEST_DEPENDENCIES)
+    for (const d of VITEST_DEPENDENCIES) {
+      deps.add(d)
+    }
   }
 
-  addDependenciesToProject(tree, [], deps, joinPathFragments(root, 'package.json'))
+  addDependenciesToProject(tree, [], [...deps], joinPathFragments(root, 'package.json'))
 }
 
 export interface EslintDependencyOptions extends ProjectConfiguration {

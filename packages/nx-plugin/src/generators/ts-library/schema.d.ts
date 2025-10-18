@@ -9,21 +9,9 @@ export interface TSLibrarySchema extends ExternalOptions {
    */
   name: string
   /**
-   * Value to pass to the cspell-config generator's `force` option, regardless of {@link force} setting.
+   * By default, this generator produces an ES module. Set this to produce a commonjs library instead.
    */
-  forceCspell?: boolean
-  /**
-   * Value to pass to the eslint-config generator's `force` option, regardless of {@link force} setting.
-   */
-  forceEslint?: boolean
-  /**
-   * Value to pass to the jest-config generator's `force` option, regardless of {@link force} setting.
-   */
-  forceJest?: boolean
-  /**
-   * Value to pass to the vite-config generator's `force` option, regardless of {@link force} setting.
-   */
-  forceVite?: boolean
+  commonjs?: boolean
   /**
    * Skip creating a CSpell configuration file for the project.
    */

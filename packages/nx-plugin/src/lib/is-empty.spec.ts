@@ -1,27 +1,31 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { isEmpty } from './is-empty'
 
 describe('isEmpty', () => {
-  it('detects an empty string', () => {
-    expect(isEmpty('')).toBe(true)
+  it.each(
+    [0, false, true, Symbol.for('tests'), () => 'things', BigInt(0)].map(e => [
+      e,
+      typeof e,
+    ]),
+  )('recognizes %s (type %s) as non-empty', (_, value) => {
+    expect(isEmpty(value)).toBe(false)
   })
 
-  it('detects an array with no members', () => {
-    expect(isEmpty([])).toBe(true)
+  it.each([null, undefined, ''])('recognizes "%s" as an empty value', value => {
+    expect(isEmpty(value)).toBe(true)
   })
 
-  it('detects an array containing only empty members', () => {
-    // eslint-disable-next-line unicorn/no-null
-    expect(isEmpty([null, undefined, [], [null, [undefined]], ''])).toBe(true)
-  })
-
-  it('detects an object with no keys', () => {
-    expect(isEmpty({})).toBe(true)
-  })
-
-  it('detects an object with only empty values', () => {
-    expect(isEmpty({ bar: [], baz: {}, spam: '' })).toBe(true)
+  it.each([
+    ['an object with only empty values', { bar: [], baz: {}, spam: '' }],
+    ['an object with no keys', {}],
+    [
+      'an array containing only empty members',
+      [null, undefined, [], [null, [undefined]], ''],
+    ],
+    ['an array with no members', []],
+  ])('recognizes %s as an empty value', (_, value) => {
+    expect(isEmpty(value)).toBe(true)
   })
 
   it.each([
@@ -31,27 +35,62 @@ describe('isEmpty', () => {
     expect(isEmpty(value, 1)).toBe(false)
   })
 
-  it('searches deeply nested arrays', () => {
+  it('returns true given a deeply nested, empty array', () => {
     const depth = 200
     let deepValue: any = []
     for (let i = depth; i > 0; i--) {
       deepValue = [deepValue]
     }
-    expect(isEmpty(deepValue, depth)).toBe(true)
+    expect(isEmpty(deepValue, depth + 1)).toBe(true)
   })
 
-  it('searches deeply nested objects', () => {
+  it('returns false given a deeply nested, non-empty array', () => {
+    const depth = 200
+    let deepValue: any = 'things'
+    for (let i = depth; i > 0; i--) {
+      deepValue = [deepValue]
+    }
+    expect(isEmpty(deepValue, depth + 1)).toBe(false)
+  })
+
+  it('returns true given a deeply nested, empty object', () => {
     const depth = 200
     let deepValue: any = {}
     for (let i = depth; i > 0; i--) {
       deepValue = { key: deepValue }
     }
-    expect(isEmpty(deepValue, depth)).toBe(true)
+    expect(isEmpty(deepValue, depth + 1)).toBe(true)
   })
 
-  it('throws if maxDepth > 200', () => {
-    expect(() => {
-      isEmpty({}, 201)
-    }).toThrow()
+  it('returns false given a deeply nested, non-empty object', () => {
+    const depth = 200
+    let deepValue: any = 'things'
+    for (let i = depth; i > 0; i--) {
+      deepValue = { key: deepValue }
+    }
+    expect(isEmpty(deepValue, depth + 1)).toBe(false)
+  })
+
+  it('returns true given an empty serialized JSON object', () => {
+    const obj = { that: {}, this: [] }
+    expect(isEmpty(JSON.stringify(obj))).toBe(true)
+  })
+
+  it('attempts to parse non-empty strings as JSON', () => {
+    const obj = { that: {}, this: [] }
+    const objString = JSON.stringify(obj)
+    const spy = vi.spyOn(JSON, 'parse')
+    expect(isEmpty(objString)).toBe(true)
+    expect(spy).toHaveBeenCalledExactlyOnceWith(objString)
+  })
+
+  it('returns false given a non-empty, JSON-serialized object', () => {
+    const obj = { that: {}, this: 'things' }
+    expect(isEmpty(JSON.stringify(obj))).toBe(false)
+  })
+
+  it('returns false given a non-empty, non-JSON string', () => {
+    const value = 'things'
+    expect(isEmpty(value)).toBe(false)
   })
 })

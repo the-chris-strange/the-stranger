@@ -14,15 +14,58 @@
       },
       "x-prompt": "To which project would you like to add a Vite configuration file?"
     },
-    "includeTest": {
+    "coveragePath": {
+      "type": "string",
+      "description": "Specify a path to write coverage reports, relative to the workspace root. This option is ignored if 'includeTest' is false.",
+      "default": ".reports/coverage"
+    },
+    "formats": {
+      "type": "array",
+      "enum": ["es", "cjs", "umd", "iife", "system"],
+      "description": "Module formats produced by the build process. This option is ignored if 'includeBuild' is false.",
+      "default": ["es"]
+    },
+    "globals": {
       "type": "boolean",
-      "default": true,
-      "description": "Include configuration for Vitest in the generated file."
+      "description": "Allow vitest to inject jest-like API's into the testing environment.",
+      "default": false
     },
     "includeBuild": {
       "type": "boolean",
       "default": true,
       "description": "Include build configuration in the generated file."
+    },
+    "includeTest": {
+      "type": "boolean",
+      "default": true,
+      "description": "Include configuration for Vitest in the generated file."
+    },
+    "inSourceTests": {
+      "type": "boolean",
+      "description": "Include setup for writing tests directly in source code files, rather than creating separate *.spec files."
+    },
+    "react": {
+      "type": "boolean",
+      "description": "Indicate that the project uses React.js.",
+      "default": false
+    },
+    "rollupExternals": {
+      "type": "array",
+      "description": "An array of values to add to the `rollupOptions.external` configuration field.",
+      "items": { "type": "string" }
+    },
+    "skipTsconfigs": {
+      "type": "boolean",
+      "description": "Skip updating the project's tsconfig.json files."
+    },
+    "swc": {
+      "type": "boolean",
+      "description": "Use the SWC compiler instead of babel."
+    },
+    "target": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Build targets. This option is ignored if 'includeBuild' is false."
     },
     "testEnvironment": {
       "type": "string",
@@ -30,31 +73,18 @@
       "default": "node",
       "enum": ["node", "jsdom"]
     },
-    "globals": {
-      "type": "boolean",
-      "description": "Allow vitest to inject jest-like API's into the testing environment.",
-      "default": false
-    },
-    "react": {
-      "type": "boolean",
-      "description": "Indicate that the project uses React.js.",
-      "default": false
-    },
-    "swc": {
-      "type": "boolean",
-      "description": "Use the SWC compiler instead of babel."
+    "testReportPath": {
+      "type": "string",
+      "description": "Specify a path to write unit test reports, relative to the workspace root. This option is ignored if 'includeTest' is false."
     },
     "tsconfigName": {
       "type": "string",
       "description": "Set the filename to use in the configuration for `vite-plugin-dts`. If unspecified, the generator will use the project's 'projectType' configuration value to create a file name."
     },
-    "inSourceTests": {
+    "worker": {
       "type": "boolean",
-      "description": "Include setup for writing tests directly in source code files, rather than creating separate *.spec files."
-    },
-    "skipTsconfigs": {
-      "type": "boolean",
-      "description": "Skip updating the project's tsconfig.json files."
+      "description": "Indicates whether the project uses workers.",
+      "default": false
     },
     "force": {
       "type": "boolean",

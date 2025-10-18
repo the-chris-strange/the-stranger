@@ -3,8 +3,11 @@ import:
   - ../../cspell.config.yaml
 dictionaries:
   - python
+ignoreWords:
+  - markdownlintrc
 words:
   - pyenv
   - pyupgrade
+  - swcrc
   - taplo
   - tmpl
