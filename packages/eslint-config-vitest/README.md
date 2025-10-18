@@ -1,11 +1,8 @@
-# eslint-config-vitest
+# @the-stranger/eslint-config-vitest
 
-This library was generated with [Nx](https://nx.dev).
+Shared ESLint configuration for test files in projects using [Vitest]. Uses [@vitest/eslint-plugin].
 
-## Building
+<!-- Links -->
 
-Run `nx build eslint-config-vitest` to build the library.
-
-## Running unit tests
-
-Run `nx test eslint-config-vitest` to execute the unit tests via [Vitest](https://vitest.dev/).
+[@vitest/eslint-plugin]: https://github.com/vitest-dev/eslint-plugin-vitest
+[Vitest]: https://vitest.dev/

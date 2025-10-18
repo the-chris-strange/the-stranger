@@ -1,11 +1,8 @@
-# eslint-config-nx
+# @the-stranger/eslint-config-nx
 
-This library was generated with [Nx](https://nx.dev).
+Shared ESLint configuration for projects using [Nx]. Uses [@nx/eslint-plugin].
 
-## Building
+<!-- Links -->
 
-Run `nx build eslint-config-nx` to build the library.
-
-## Running unit tests
-
-Run `nx test eslint-config-nx` to execute the unit tests via [Vitest](https://vitest.dev/).
+[@nx/eslint-plugin]: https://nx.dev/docs/technologies/eslint/eslint-plugin/introduction
+[Nx]: https://nx.dev/

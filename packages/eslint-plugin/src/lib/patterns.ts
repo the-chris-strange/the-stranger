@@ -85,6 +85,9 @@ export function testFilePattern(...extensions: (string | string[])[]) {
   return `**/*.{spec,test}.${combineExtensions(...extensions)}`
 }
 
+/**
+ * Common file patterns used in ESLint configurations.
+ */
 export enum FilePatterns {
   /**
    * CommonJS files ('.cjs' and '.cts').

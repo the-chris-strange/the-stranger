@@ -1,11 +1,8 @@
-# eslint-config-jest
+# @the-stranger/eslint-config-jest
 
-This library was generated with [Nx](https://nx.dev).
+Shared ESLint configuration for test files in projects using [Jest]. Uses [eslint-plugin-jest].
 
-## Building
+<!-- Links -->
 
-Run `nx build eslint-config-jest` to build the library.
-
-## Running unit tests
-
-Run `nx test eslint-config-jest` to execute the unit tests via [Vitest](https://vitest.dev/).
+[eslint-plugin-jest]: https://github.com/jest-community/eslint-plugin-jest
+[Jest]: https://jestjs.io

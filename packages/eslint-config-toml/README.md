@@ -1,11 +1,8 @@
-# eslint-config-toml
+# @the-stranger/eslint-config-toml
 
-This library was generated with [Nx](https://nx.dev).
+Shared ESLint configuration for TOML files. Uses [eslint-plugin-toml] and [toml-eslint-parser].
 
-## Building
+<!-- Links -->
 
-Run `nx build eslint-config-toml` to build the library.
-
-## Running unit tests
-
-Run `nx test eslint-config-toml` to execute the unit tests via [Vitest](https://vitest.dev/).
+[eslint-plugin-toml]: https://ota-meshi.github.io/eslint-plugin-toml
+[toml-eslint-parser]: https://github.com/ota-meshi/toml-eslint-parser
