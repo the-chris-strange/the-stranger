@@ -174,6 +174,7 @@ const unicornConfig = defineConfig(
   {
     files: SOURCE_FILES,
     rules: {
+      'unicorn/custom-error-definition': 'warn',
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/prefer-math-trunc': 'off',

@@ -19,6 +19,7 @@ export default defineConfig(
     files: [getFilePatterns(FilePatterns.source)],
     name: namer('unicorn/base'),
     rules: {
+      'unicorn/custom-error-definition': 'warn',
       'unicorn/import-style': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/no-array-reduce': 'off',
