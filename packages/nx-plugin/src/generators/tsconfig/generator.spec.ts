@@ -2,7 +2,7 @@ import { readJson, Tree } from '@nx/devkit'
 import { Tsconfig } from 'tsconfig-type'
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { createTestTree } from '../../tests/helpers/create-test-tree'
+import { createTestTree } from '../../test/helpers/create-test-tree'
 import { tsconfigGenerator } from './generator'
 import { TSConfigSchema } from './schema'
 

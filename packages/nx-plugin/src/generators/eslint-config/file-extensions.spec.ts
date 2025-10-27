@@ -1,7 +1,7 @@
 import { Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { createTestTree } from '../../tests/helpers/create-test-tree'
+import { createTestTree } from '../../test/helpers/create-test-tree'
 import { FILE_EXTENSIONS, findFileExtension } from './file-extensions'
 import { ESLintConfigSchema } from './schema'
 

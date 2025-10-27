@@ -2,7 +2,7 @@ import { logger, OverwriteStrategy, readJson, Tree, writeJson } from '@nx/devkit
 import { Tsconfig } from 'tsconfig-type'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createTestTree } from '../tests/helpers/create-test-tree'
+import { createTestTree } from '../test/helpers/create-test-tree'
 import { TSConfig } from './tsconfig'
 
 describe('TSConfig', () => {

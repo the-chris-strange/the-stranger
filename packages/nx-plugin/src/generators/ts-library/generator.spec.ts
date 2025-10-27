@@ -1,7 +1,7 @@
 import { Tree } from '@nx/devkit'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createTestTree } from '../../tests/helpers/create-test-tree'
+import { createTestTree } from '../../test/helpers/create-test-tree'
 import * as cspellGenerator from '../cspell-config/generator'
 import * as eslintGenerator from '../eslint-config/generator'
 import * as jestGenerator from '../jest-config/generator'

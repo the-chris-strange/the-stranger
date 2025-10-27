@@ -28,7 +28,7 @@
     "ts-library": {
       "factory": "./src/generators/ts-library/generator",
       "schema": "./src/generators/ts-library/schema.json",
-      "description": "Generate a TypeScript library compatible with one of my workspaces"
+      "description": "Generate a TypeScript library with some customization"
     },
     "tsconfig": {
       "factory": "./src/generators/tsconfig/generator",

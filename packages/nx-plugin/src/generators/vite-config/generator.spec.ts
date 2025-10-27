@@ -2,7 +2,7 @@ import { Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import configMarkerFiles from '../../lib/config-marker-files'
-import { createTestTree } from '../../tests/helpers/create-test-tree'
+import { createTestTree } from '../../test/helpers/create-test-tree'
 import { viteConfigGenerator } from './generator'
 import { ViteConfigSchema } from './schema'
 
