@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { toArray } from './type-utils'
+import { toArray } from './to-array'
 
 describe('toArray', () => {
   it.each([null, undefined])('returns an empty array given "%s"', value => {

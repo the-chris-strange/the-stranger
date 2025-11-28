@@ -4,7 +4,8 @@ import type { Tsconfig } from 'tsconfig-type'
 
 import { isEmpty } from './is-empty'
 import { owStrategy } from './overwrite-strategy'
-import { ExtendRequired, PickNonNullable, toArray } from './type-utils'
+import { toArray } from './to-array'
+import { ExtendRequired, PickNonNullable } from './type-utils'
 
 /**
  * Encapsulate operations on a `tsconfig.json` file.

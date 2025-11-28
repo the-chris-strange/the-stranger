@@ -1,20 +1,4 @@
 /**
- * Get an array of values from a possibly nullish value.
- * @param value the input value
- * @template T the type of value array to return
- * @returns an array of values
- */
-export function toArray<T>(value?: (T | null)[] | T | null): T[] {
-  if (value === null || value === undefined) {
-    return []
-  } else if (Array.isArray(value)) {
-    return value.flatMap(e => toArray(e))
-  } else {
-    return [value]
-  }
-}
-
-/**
  * Exclude `null` from a type, optionally recursively.
  * @template T the type
  * @template R if true, recursively apply the exclusion
@@ -69,6 +53,23 @@ export type ExtendRequired<
   K extends keyof T,
   R extends boolean = false,
 > = Omit<T, K> & PickRequired<T, K, R>
+
+/**
+ * Maybe. Maybe not. Maybe f*** yourself.
+ * @template T the thing that might be
+ * @template TNot the thing that will be if T is not
+ */
+export type Maybe<T, TNot = undefined> = T | TNot
+
+/**
+ * Create a function type with the same parameters and return type as {@link T}. Maybe.
+ * @template T the function from which a value might be returned
+ */
+export type MaybeFunc<T extends (...args: any) => any> = T extends (
+  ...args: infer P
+) => infer R
+  ? (...args: P) => Maybe<R>
+  : never
 
 /**
  * Make a type that includes only selected properties ({@link K}) of {@link T}, all of which are non-nullable.
