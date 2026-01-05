@@ -29,11 +29,6 @@
       "factory": "./src/generators/ts-library/generator",
       "schema": "./src/generators/ts-library/schema.json",
       "description": "Generate a TypeScript library with some customization"
-    },
-    "tsconfig": {
-      "factory": "./src/generators/tsconfig/generator",
-      "schema": "./src/generators/tsconfig/schema.json",
-      "description": "Generate tsconfig.json"
     }
   }
 }
