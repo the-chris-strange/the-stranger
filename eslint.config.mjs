@@ -1,6 +1,7 @@
 import nx from '@nx/eslint-plugin'
 import vitest from '@vitest/eslint-plugin'
 import jsdoc from 'eslint-plugin-jsdoc'
+import jsonc from 'eslint-plugin-jsonc'
 import n from 'eslint-plugin-n'
 import perfectionist from 'eslint-plugin-perfectionist'
 import promise from 'eslint-plugin-promise'
@@ -496,6 +497,126 @@ const promiseConfig = defineConfig(promise.configs['flat/recommended'], {
   },
 })
 
+const jsonConfig = defineConfig(
+  jsonc.configs['flat/base'],
+
+  {
+    files: ['.vscode/settings.json'],
+    rules: {
+      'jsonc/sort-array-values': [
+        'warn',
+        {
+          order: { type: 'asc' },
+          pathPattern: String.raw`(eslint\.(probe|validate))|(npm\.exclude)`,
+        },
+      ],
+      'jsonc/sort-keys': ['warn', { order: { type: 'asc' }, pathPattern: '^' }],
+    },
+  },
+
+  {
+    files: ['.vscode/extensions.json'],
+    rules: {
+      'jsonc/sort-array-values': [
+        'warn',
+        { order: { type: 'asc' }, pathPattern: '^recommendations$' },
+      ],
+    },
+  },
+
+  {
+    files: ['.vscode/launch.json', '.vscode/tasks.json'],
+    rules: {
+      'jsonc/sort-keys': [
+        'warn',
+        { order: ['version', { order: { type: 'asc' } }], pathPattern: '^$' },
+        {
+          pathPattern: String.raw`^tasks\[\d+\]`,
+          order: ['label', 'detail', 'command', 'args', { order: { type: 'asc' } }],
+        },
+        { order: { type: 'asc' }, pathPattern: '^' },
+      ],
+    },
+  },
+
+  {
+    files: ['nx.json'],
+    rules: {
+      'jsonc/sort-keys': [
+        'warn',
+        { order: { type: 'asc' }, pathPattern: '^plugins.+options' },
+        { order: ['plugin', 'options'], pathPattern: '^plugins' },
+        { order: { type: 'asc' }, pathPattern: '^' },
+      ],
+    },
+  },
+
+  {
+    files: ['project.json'],
+    rules: {
+      'jsonc/sort-array-values': [
+        'warn',
+        { order: { type: 'asc' }, pathPattern: '^tags' },
+      ],
+      'jsonc/sort-keys': [
+        'warn',
+        {
+          order: [
+            'executor',
+            'inputs',
+            'outputs',
+            'options',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: 'targets.+',
+        },
+        {
+          order: [
+            'name',
+            '$schema',
+            'projectType',
+            'sourceRoot',
+            'tags',
+            'targets',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: '^$',
+        },
+        { order: { type: 'asc' }, pathPattern: '^' },
+      ],
+    },
+  },
+
+  {
+    files: ['tsconfig.json', 'tsconfig.*.json'],
+    rules: {
+      'jsonc/sort-keys': [
+        'warn',
+        {
+          order: [
+            'extends',
+            'compilerOptions',
+            'files',
+            'include',
+            'exclude',
+            'references',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: '^$',
+        },
+        {
+          order: ['paths', { order: { type: 'asc' } }],
+          pathPattern: '^compilerOptions$',
+        },
+        {
+          order: [{ order: { type: 'asc' } }],
+          pathPattern: String.raw`^compilerOptions\.paths$`,
+        },
+      ],
+    },
+  },
+)
+
 export default defineConfig(
   {
     ignores: [
@@ -506,6 +627,7 @@ export default defineConfig(
       'coverage',
       'dist',
       'node_modules',
+      'pnpm-lock.yaml',
       'tmp',
     ],
   },
@@ -515,6 +637,7 @@ export default defineConfig(
   unicornConfig,
   tsEslintConfig,
   jsdocConfig,
+  jsonConfig,
   vitestConfig,
   nConfig,
   ymlConfig,
