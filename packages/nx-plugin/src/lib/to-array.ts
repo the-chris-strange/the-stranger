@@ -4,7 +4,7 @@
  * @template T the type of value array to return
  * @returns an array of values
  */
-export function toArray<T>(value?: (T | null)[] | T | null): T[] {
+export function toArray<T>(value?: (T | null | undefined)[] | T | null): T[] {
   if (value === null || value === undefined) {
     return []
   } else if (Array.isArray(value)) {
