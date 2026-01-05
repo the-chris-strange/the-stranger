@@ -65,4 +65,12 @@ export default defineConfig(
       ],
     },
   },
+
+  {
+    files: ['src/test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-empty-interface': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+    },
+  },
 )
