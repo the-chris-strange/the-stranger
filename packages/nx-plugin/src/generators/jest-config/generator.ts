@@ -26,7 +26,7 @@ export async function jestConfigGenerator(tree: Tree, options: JestConfigSchema)
   const projectConfig = readProjectConfiguration(tree, options.project)
 
   const tsconfigPath = joinPathFragments(projectConfig.root, 'tsconfig.spec.json')
-  const tsconfig = new TSConfig(tree, tsconfigPath, {
+  const tsconfig = new TSConfig(tsconfigPath, tree, {
     overwriteStrategy: owStrategy(options.force),
   })
   if (options.globals === false) {

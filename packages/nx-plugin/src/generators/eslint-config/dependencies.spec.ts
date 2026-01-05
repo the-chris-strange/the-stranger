@@ -32,7 +32,7 @@ describe('addEslintDependencies', () => {
   beforeEach(async () => {
     tree = createTestTree('test')
     spy = vi.spyOn(
-      await import('../../lib/add-dependencies'),
+      await import('../../lib/add-dependencies.js'),
       'addDependenciesToProject',
     )
   })
