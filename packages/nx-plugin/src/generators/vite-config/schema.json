@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "ViteConfig",
   "title": "Vite configuration file generator",
   "description": "Generate a vite.config.ts file for a project.",

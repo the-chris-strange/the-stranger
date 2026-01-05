@@ -1,11 +1,7 @@
 /**
- * Base schema for generators in this nx plugin.
+ * Configuration options common to all generators in this plugin.
  */
 export interface GeneratorSchema {
-  /**
-   * The root directory of the project.
-   */
-  directory?: string
   /**
    * Overwrite existing files.
    */

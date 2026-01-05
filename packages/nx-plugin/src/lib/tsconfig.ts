@@ -1,18 +1,11 @@
-import { existsSync } from 'node:fs'
-
-import {
-  logger,
-  OverwriteStrategy,
-  readJson,
-  readJsonFile,
-  Tree,
-  writeJson,
-  writeJsonFile,
-} from '@nx/devkit'
+import { logger, OverwriteStrategy, Tree, writeJson, writeJsonFile } from '@nx/devkit'
 
 import type { Tsconfig } from 'tsconfig-type'
 
+import { FileNotFoundError } from './errors/file-not-found'
+import { exists } from './exists'
 import { isEmpty } from './is-empty'
+import { maybeReadJson } from './json'
 import { owStrategy } from './overwrite-strategy'
 import { toArray } from './to-array'
 import { ExtendRequired, PickNonNullable } from './type-utils'
@@ -35,7 +28,7 @@ export class TSConfig implements TSConfigType {
     private $tree?: Tree,
     private $options: TSConfigOptions = {},
   ) {
-    const config = TSConfig.readJson($path, $tree) ?? {}
+    const config = maybeReadJson($path, $tree) ?? {}
     this.$config = TSConfig.normalize(config)
     this.$types = new Set(this.$config.compilerOptions.types)
   }
@@ -169,9 +162,9 @@ export class TSConfig implements TSConfigType {
     this.$tree = tree ?? this.$tree
     this.$options = options ?? this.$options
 
-    const exists = TSConfig.exists(this.$path, this.$tree)
+    const fileExists = exists(this.$path, this.$tree)
 
-    if (exists) {
+    if (fileExists) {
       if (this.overwriteStrategy === OverwriteStrategy.ThrowIfExisting) {
         throw new Error(`${this.$path} may not be overwritten`)
       } else if (this.overwriteStrategy === OverwriteStrategy.KeepExisting) {
@@ -179,26 +172,13 @@ export class TSConfig implements TSConfigType {
       }
     }
 
-    if (!exists || this.overwriteStrategy === OverwriteStrategy.Overwrite) {
+    if (!fileExists || this.overwriteStrategy === OverwriteStrategy.Overwrite) {
       if (this.$tree) {
         writeJson(this.$tree, this.$path, this.toJSON())
       } else {
         writeJsonFile(this.$path, this.toJSON())
       }
     }
-  }
-
-  /**
-   * Check if a file exists, either in the NX virtual filesystem {@link Tree}, or in the actual file system.
-   * @param path the path to a file
-   * @param tree the NX virtual file system
-   * @returns true if the file exists; false otherwise
-   */
-  private static exists(path: string, tree?: Tree) {
-    if (tree) {
-      return tree.exists(path)
-    }
-    return existsSync(path)
   }
 
   /**
@@ -278,24 +258,11 @@ export class TSConfig implements TSConfigType {
    * @returns a new instance of {@link TSConfig}
    */
   static read(path: string, tree?: Tree, options?: TSConfigOptions) {
-    if (!TSConfig.exists(path, tree)) {
-      throw new Error(`Missing file: ${path}`)
+    if (!exists(path, tree)) {
+      throw new FileNotFoundError(path)
     }
 
     return new TSConfig(path, tree, options)
-  }
-
-  /**
-   * Read a tsconfig file without creating a new instance of {@link TSConfig}.
-   * @param path the path to the `tsconfig.json`
-   * @param tree the NX virtual file system
-   * @returns the plain JSON content of the file
-   */
-  static readJson(path: string, tree?: Tree) {
-    if (TSConfig.exists(path, tree)) {
-      return tree ? readJson<Tsconfig>(tree, path) : readJsonFile<Tsconfig>(path)
-    }
-    return
   }
 
   /**

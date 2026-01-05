@@ -1,7 +1,7 @@
 import { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
- * Schema for the cspell configuration file generator.
+ * CSpell configuration file generator options.
  */
 export interface CspellConfigSchema extends GeneratorSchema {
   /**

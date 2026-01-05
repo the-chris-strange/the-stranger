@@ -13,6 +13,10 @@ export interface TSLibrarySchema extends ExternalOptions {
    */
   commonjs?: boolean
   /**
+   * The root directory of the project.
+   */
+  directory?: string
+  /**
    * Skip creating a CSpell configuration file for the project.
    */
   skipCspell?: boolean
