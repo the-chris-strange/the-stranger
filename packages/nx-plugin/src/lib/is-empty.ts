@@ -4,7 +4,7 @@
  * @param depth the maximum depth to search for nested objects
  * @returns true if the value is empty
  */
-export function isEmpty(value: unknown, depth = 3): boolean {
+export function isEmpty(value: unknown, depth = 3e3): boolean {
   const nonEmptyTypes = ['bigint', 'boolean', 'function', 'number', 'symbol']
 
   if (depth < 0 || nonEmptyTypes.includes(typeof value)) {
@@ -15,7 +15,7 @@ export function isEmpty(value: unknown, depth = 3): boolean {
     try {
       return isEmpty(JSON.parse(value), depth)
     } catch {
-      return false
+      return value.trim().length === 0
     }
   }
 
