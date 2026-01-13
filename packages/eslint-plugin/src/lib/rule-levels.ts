@@ -31,11 +31,11 @@ export class RuleLevels {
    * const levelNumber = levels.matchType(1) // 0
    * ```
    */
-  matchType(level: Linter.RuleSeverity) {
+  matchType<T extends Linter.RuleSeverity = Linter.RuleSeverity>(level: T): T {
     if (typeof level === 'string') {
-      return this.severityString
+      return this.severityString as T
     }
-    return this.severity
+    return this.severity as T
   }
 
   /**

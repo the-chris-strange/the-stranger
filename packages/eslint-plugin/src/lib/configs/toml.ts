@@ -1,8 +1,10 @@
-import { namer } from '@the-stranger/eslint-plugin/utils'
 import toml from 'eslint-plugin-toml'
-import { defineConfig } from 'eslint/config'
 
-export default defineConfig(
+import type { Linter } from 'eslint'
+
+import { namer } from '../namer.js'
+
+export default [
   toml.configs['flat/recommended'],
 
   {
@@ -35,4 +37,4 @@ export default defineConfig(
       'toml/table-bracket-spacing': 'warn',
     },
   },
-)
+] as Linter.Config[]

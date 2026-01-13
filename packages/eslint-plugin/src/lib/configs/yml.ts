@@ -1,5 +1,6 @@
 import yml from 'eslint-plugin-yml'
-import { defineConfig } from 'eslint/config'
+
+import type { Linter } from 'eslint'
 
 import { namer } from '../namer.js'
 
@@ -33,7 +34,7 @@ const stepKeyOrder = ['id', 'name', 'if', 'run', 'uses', 'with', 'env']
 
 const topLevelAscKeys = ['on', 'permissions', 'defaults'].join('|')
 
-export default defineConfig(
+export default [
   yml.configs['flat/standard'],
 
   {
@@ -135,4 +136,4 @@ export default defineConfig(
       ],
     },
   },
-)
+] as Linter.Config[]

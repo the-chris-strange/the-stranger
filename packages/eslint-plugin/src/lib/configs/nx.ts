@@ -1,10 +1,10 @@
 import nx from '@nx/eslint-plugin'
-import { Named, namer } from '@the-stranger/eslint-plugin/utils'
-import { defineConfig } from 'eslint/config'
 
 import type { Linter } from 'eslint'
 
-export const dependencyChecks = {
+import { type Named, namer } from '../namer.js'
+
+export const dependencyChecks: Named<Linter.Config> = {
   files: ['**/*.json'],
   languageOptions: {
     parser: await import('jsonc-eslint-parser'),
@@ -22,12 +22,12 @@ export const dependencyChecks = {
       },
     ],
   },
-} satisfies Named<Linter.Config>
+}
 
-export default defineConfig(
+export default [
   nx.configs['flat/base'],
-  nx.configs['flat/javascript'] as Linter.Config,
-  nx.configs['flat/typescript'] as Linter.Config,
+  nx.configs['flat/javascript'],
+  nx.configs['flat/typescript'],
 
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
@@ -48,4 +48,4 @@ export default defineConfig(
       ],
     },
   },
-)
+] as Linter.Config[]

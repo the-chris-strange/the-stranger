@@ -1,5 +1,6 @@
 import jsdoc from 'eslint-plugin-jsdoc'
-import { defineConfig } from 'eslint/config'
+
+import type { Linter } from 'eslint'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
@@ -7,7 +8,7 @@ import { FilePatterns, getFilePatterns } from '../patterns.js'
 // tags used by docusaurus to generate docs from jsdoc comments
 export const DOCUSAURUS_TAGS = ['document']
 
-export default defineConfig(
+export default [
   {
     name: namer('jsdoc'),
     plugins: { jsdoc },
@@ -48,4 +49,4 @@ export default defineConfig(
       'jsdoc/check-tag-names': ['warn', { definedTags: DOCUSAURUS_TAGS }],
     },
   },
-)
+] as Linter.Config[]

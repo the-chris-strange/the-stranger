@@ -1,6 +1,8 @@
 import unicorn from 'eslint-plugin-unicorn'
 import { defineConfig } from 'eslint/config'
 
+import type { Linter } from 'eslint'
+
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 
@@ -43,7 +45,7 @@ export default defineConfig(
   },
 
   {
-    files: getFilePatterns(FilePatterns.react),
+    files: getFilePatterns(FilePatterns.react, FilePatterns.astro),
     name: namer('unicorn/allow pascal case for react files'),
     rules: {
       'unicorn/filename-case': [
@@ -71,4 +73,12 @@ export default defineConfig(
       ],
     },
   },
-)
+
+  {
+    files: getFilePatterns(FilePatterns.astroScript),
+    name: 'ignore filename case for virtual files',
+    rules: {
+      'unicorn/filename-case': 'off',
+    },
+  },
+) as Linter.Config[]

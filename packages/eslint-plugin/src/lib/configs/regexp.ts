@@ -1,8 +1,9 @@
 import re from 'eslint-plugin-regexp'
-import { defineConfig } from 'eslint/config'
+
+import type { Linter } from 'eslint'
 
 import { objectNamer } from '../namer.js'
 
-export default defineConfig(
+export default [
   objectNamer(re.configs['flat/recommended'], 're-recommended'),
-)
+] as Linter.Config[]

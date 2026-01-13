@@ -1,6 +1,6 @@
-import { type Linter } from 'eslint'
-import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
+
+import type { Linter } from 'eslint'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
@@ -29,4 +29,4 @@ try {
   config.unshift(...tseslint.configs.recommended)
 }
 
-export default defineConfig(config)
+export default config

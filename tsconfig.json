@@ -1,10 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
   "references": [
-    { "path": "./packages/eslint-config-jest" },
-    { "path": "./packages/eslint-config-nx" },
-    { "path": "./packages/eslint-config-toml" },
-    { "path": "./packages/eslint-config-vitest" },
     { "path": "./packages/eslint-plugin" },
     { "path": "./packages/nx-plugin" },
     { "path": "./packages/prettier-plugin" },

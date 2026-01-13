@@ -50,15 +50,17 @@ describe('testFilePattern', () => {
 
 describe('getFilePatterns', () => {
   const testCases: [FilePatterns, string[]][] = [
-    [FilePatterns.js, ['**/*.{js,cjs,mjs,jsx}']],
-    [FilePatterns.ts, ['**/*.{ts,cts,mts,tsx}']],
-    [FilePatterns.jsTest, ['**/*.{spec,test}.{js,jsx}']],
-    [FilePatterns.tsTest, ['**/*.{spec,test}.{ts,tsx}']],
-    [FilePatterns.source, ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}']],
-    [FilePatterns.test, ['**/*.{spec,test}.{js,jsx,ts,tsx}']],
+    [FilePatterns.astro, ['**/*.astro']],
+    [FilePatterns.astroScript, ['**/*.astro/**/*.{js,ts}']],
     [FilePatterns.cjs, ['**/*.{cjs,cts}']],
     [FilePatterns.esm, ['**/*.{mjs,mts}']],
+    [FilePatterns.js, ['**/*.{js,cjs,mjs,jsx}']],
+    [FilePatterns.jsTest, ['**/*.{spec,test}.{js,jsx}']],
     [FilePatterns.react, ['**/*.{jsx,tsx}']],
+    [FilePatterns.source, ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,astro}']],
+    [FilePatterns.test, ['**/*.{spec,test}.{js,jsx,ts,tsx}']],
+    [FilePatterns.ts, ['**/*.{ts,cts,mts,tsx}']],
+    [FilePatterns.tsTest, ['**/*.{spec,test}.{ts,tsx}']],
   ]
   it.each(testCases)('returns the expected patterns for "%s"', (pattern, expected) => {
     expect(getFilePatterns(pattern)).toMatchObject(expected)

@@ -1,10 +1,11 @@
 import promise from 'eslint-plugin-promise'
-import { defineConfig } from 'eslint/config'
+
+import type { Linter } from 'eslint'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-export default defineConfig(
+export default [
   promise.configs['flat/recommended'],
 
   {
@@ -17,4 +18,4 @@ export default defineConfig(
       'promise/spec-only': 'error',
     },
   },
-)
+] as Linter.Config[]

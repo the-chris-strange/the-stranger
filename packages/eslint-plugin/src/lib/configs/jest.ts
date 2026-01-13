@@ -1,8 +1,11 @@
-import { FilePatterns, getFilePatterns, namer } from '@the-stranger/eslint-plugin/utils'
 import jest from 'eslint-plugin-jest'
-import { defineConfig } from 'eslint/config'
 
-export default defineConfig(
+import type { Linter } from 'eslint'
+
+import { namer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
+
+export default [
   jest.configs['flat/recommended'],
   jest.configs['flat/style'],
 
@@ -26,4 +29,4 @@ export default defineConfig(
       'jest/valid-title': ['warn', { disallowedWords: ['should'] }],
     },
   },
-)
+] as Linter.Config[]

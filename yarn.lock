@@ -4351,103 +4351,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@the-stranger/eslint-config-jest@workspace:packages/eslint-config-jest":
-  version: 0.0.0-use.local
-  resolution: "@the-stranger/eslint-config-jest@workspace:packages/eslint-config-jest"
-  dependencies:
-    "@nx/eslint": "npm:21.6.4"
-    "@nx/js": "npm:21.6.4"
-    "@nx/vite": "npm:21.6.4"
-    "@the-stranger/eslint-plugin": "workspace:*"
-    "@vitest/coverage-v8": "npm:^3.2.4"
-    eslint: "npm:^9.37.0"
-    eslint-plugin-jest: "npm:^28.11.0"
-    jiti: "npm:^2.6.1"
-    jsonc-eslint-parser: "npm:^2.4.1"
-    nx: "npm:21.6.4"
-    tslib: "npm:^2.8.1"
-    typescript: "npm:^5.9.3"
-    vite: "npm:7.1.9"
-    vitest: "npm:^3.2.4"
-  peerDependencies:
-    eslint: ^9
-  languageName: unknown
-  linkType: soft
-
-"@the-stranger/eslint-config-nx@workspace:packages/eslint-config-nx":
-  version: 0.0.0-use.local
-  resolution: "@the-stranger/eslint-config-nx@workspace:packages/eslint-config-nx"
-  dependencies:
-    "@eslint/js": "npm:^9.37.0"
-    "@nx/eslint": "npm:21.6.4"
-    "@nx/eslint-plugin": "npm:21.6.4"
-    "@nx/js": "npm:21.6.4"
-    "@nx/vite": "npm:21.6.4"
-    "@the-stranger/eslint-plugin": "workspace:*"
-    "@types/node": "npm:^24.7.1"
-    "@typescript-eslint/parser": "npm:^8.46.0"
-    "@vitest/coverage-v8": "npm:^3.2.4"
-    eslint: "npm:^9.37.0"
-    jiti: "npm:^2.6.1"
-    jsonc-eslint-parser: "npm:^2.4.1"
-    nx: "npm:21.6.4"
-    tslib: "npm:^2.8.1"
-    typescript: "npm:^5.9.3"
-    vite: "npm:7.1.9"
-    vitest: "npm:^3.2.4"
-  peerDependencies:
-    eslint: ^9
-  languageName: unknown
-  linkType: soft
-
-"@the-stranger/eslint-config-toml@workspace:packages/eslint-config-toml":
-  version: 0.0.0-use.local
-  resolution: "@the-stranger/eslint-config-toml@workspace:packages/eslint-config-toml"
-  dependencies:
-    "@nx/eslint": "npm:21.6.4"
-    "@nx/js": "npm:21.6.4"
-    "@nx/vite": "npm:21.6.4"
-    "@the-stranger/eslint-plugin": "workspace:*"
-    "@vitest/coverage-v8": "npm:^3.2.4"
-    eslint: "npm:^9.37.0"
-    eslint-plugin-toml: "npm:^0.12.0"
-    jiti: "npm:^2.6.1"
-    jsonc-eslint-parser: "npm:^2.4.1"
-    nx: "npm:21.6.4"
-    toml-eslint-parser: "npm:^0.10.0"
-    tslib: "npm:^2.8.1"
-    typescript: "npm:^5.9.3"
-    vite: "npm:7.1.9"
-    vitest: "npm:^3.2.4"
-  peerDependencies:
-    eslint: ^9
-  languageName: unknown
-  linkType: soft
-
-"@the-stranger/eslint-config-vitest@workspace:packages/eslint-config-vitest":
-  version: 0.0.0-use.local
-  resolution: "@the-stranger/eslint-config-vitest@workspace:packages/eslint-config-vitest"
-  dependencies:
-    "@nx/eslint": "npm:21.6.4"
-    "@nx/js": "npm:21.6.4"
-    "@nx/vite": "npm:21.6.4"
-    "@the-stranger/eslint-plugin": "workspace:*"
-    "@vitest/coverage-v8": "npm:^3.2.4"
-    "@vitest/eslint-plugin": "npm:^1.3.16"
-    eslint: "npm:^9.37.0"
-    jiti: "npm:^2.6.1"
-    jsonc-eslint-parser: "npm:^2.4.1"
-    nx: "npm:21.6.4"
-    tslib: "npm:^2.8.1"
-    typescript: "npm:^5.9.3"
-    vite: "npm:7.1.9"
-    vitest: "npm:^3.2.4"
-  peerDependencies:
-    eslint: ^9
-  languageName: unknown
-  linkType: soft
-
-"@the-stranger/eslint-plugin@workspace:*, @the-stranger/eslint-plugin@workspace:packages/eslint-plugin":
+"@the-stranger/eslint-plugin@workspace:packages/eslint-plugin":
   version: 0.0.0-use.local
   resolution: "@the-stranger/eslint-plugin@workspace:packages/eslint-plugin"
   dependencies:
@@ -4458,20 +4362,25 @@ __metadata:
     "@types/node": "npm:^24.7.1"
     "@typescript-eslint/parser": "npm:^8.46.0"
     "@vitest/coverage-v8": "npm:^3.2.4"
+    "@vitest/eslint-plugin": "npm:^1.3.16"
     eslint: "npm:^9.37.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-eslint-plugin: "npm:^6.5.0"
+    eslint-plugin-jest: "npm:^28.11.0"
     eslint-plugin-jsdoc: "npm:^50.8.0"
+    eslint-plugin-jsonc: "npm:^2.21.0"
     eslint-plugin-n: "npm:^17.23.1"
     eslint-plugin-perfectionist: "npm:^4.15.1"
     eslint-plugin-promise: "npm:^7.2.1"
     eslint-plugin-regexp: "npm:^2.10.0"
+    eslint-plugin-toml: "npm:^0.12.0"
     eslint-plugin-unicorn: "npm:^59.0.1"
     eslint-plugin-yml: "npm:^1.19.0"
     jsonc-eslint-parser: "npm:^2.4.1"
     nx: "npm:21.6.4"
     prettier: "npm:^3.6.2"
     prettier-plugin-packagejson: "npm:^2.5.19"
+    toml-eslint-parser: "npm:^0.10.0"
     tslib: "npm:^2.8.1"
     typescript: "npm:^5.9.3"
     typescript-eslint: "npm:^8.46.0"
@@ -4480,9 +4389,21 @@ __metadata:
     yaml-eslint-parser: "npm:^1.3.0"
   peerDependencies:
     "@nx/eslint-plugin": 21.6.4
+    "@vitest/eslint-plugin": ^1.3.16
     eslint: ^9
+    eslint-plugin-jest: ^28.11.0
+    eslint-plugin-toml: ^0.12.0
+    toml-eslint-parser: ^0.10.0
   peerDependenciesMeta:
     "@nx/eslint-plugin":
+      optional: true
+    "@vitest/eslint-plugin":
+      optional: true
+    eslint-plugin-jest:
+      optional: true
+    eslint-plugin-toml:
+      optional: true
+    toml-eslint-parser:
       optional: true
   languageName: unknown
   linkType: soft
@@ -4511,6 +4432,7 @@ __metadata:
     nx: "npm:21.6.4"
     prettier: "npm:^3.6.2"
     prettier-plugin-packagejson: "npm:^2.5.19"
+    sort-package-json: "npm:3.4.0"
     tsconfig-type: "npm:^1.29.0"
     tslib: "npm:^2.8.1"
     typescript: "npm:^5.9.3"
@@ -4584,6 +4506,7 @@ __metadata:
     eslint-plugin-eslint-plugin: "npm:^6.5.0"
     eslint-plugin-jest: "npm:^28.11.0"
     eslint-plugin-jsdoc: "npm:^50.8.0"
+    eslint-plugin-jsonc: "npm:^2.21.0"
     eslint-plugin-n: "npm:^17.23.1"
     eslint-plugin-perfectionist: "npm:^4.15.1"
     eslint-plugin-promise: "npm:^7.2.1"
@@ -4600,6 +4523,7 @@ __metadata:
     nx: "npm:21.6.4"
     prettier: "npm:^3.6.2"
     prettier-plugin-packagejson: "npm:^2.5.19"
+    sort-package-json: "npm:3.4.0"
     toml-eslint-parser: "npm:^0.10.0"
     tsconfig-type: "npm:^1.29.0"
     tslib: "npm:^2.8.1"
@@ -7843,7 +7767,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-compat-utils@npm:^0.6.0":
+"eslint-compat-utils@npm:^0.6.0, eslint-compat-utils@npm:^0.6.4":
   version: 0.6.5
   resolution: "eslint-compat-utils@npm:0.6.5"
   dependencies:
@@ -7862,6 +7786,21 @@ __metadata:
   bin:
     eslint-config-prettier: bin/cli.js
   checksum: 10c0/e1bcfadc9eccd526c240056b1e59c5cd26544fe59feb85f38f4f1f116caed96aea0b3b87868e68b3099e55caaac3f2e5b9f58110f85db893e83a332751192682
+  languageName: node
+  linkType: hard
+
+"eslint-json-compat-utils@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "eslint-json-compat-utils@npm:0.2.1"
+  dependencies:
+    esquery: "npm:^1.6.0"
+  peerDependencies:
+    eslint: "*"
+    jsonc-eslint-parser: ^2.4.0
+  peerDependenciesMeta:
+    "@eslint/json":
+      optional: true
+  checksum: 10c0/2eb584916150454da891547042d417b31ed4df9b7a8c47561c3cda08d0d9e66c698259cf3dbb4ecc139a6620c793aeba40109f572e47f4fe7b3185b9c1d388d7
   languageName: node
   linkType: hard
 
@@ -7936,6 +7875,25 @@ __metadata:
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0
   checksum: 10c0/8829eb841666e897ddce2677e8288fcdc231bab73add93236e14f2fc7f5d494f5809ac7fc1f809c64817abe532e9a7f4a6aa2eeac303c518d4f70f22ef13642c
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-jsonc@npm:^2.21.0":
+  version: 2.21.0
+  resolution: "eslint-plugin-jsonc@npm:2.21.0"
+  dependencies:
+    "@eslint-community/eslint-utils": "npm:^4.5.1"
+    diff-sequences: "npm:^27.5.1"
+    eslint-compat-utils: "npm:^0.6.4"
+    eslint-json-compat-utils: "npm:^0.2.1"
+    espree: "npm:^9.6.1 || ^10.3.0"
+    graphemer: "npm:^1.4.0"
+    jsonc-eslint-parser: "npm:^2.4.0"
+    natural-compare: "npm:^1.4.0"
+    synckit: "npm:^0.6.2 || ^0.7.3 || ^0.11.5"
+  peerDependencies:
+    eslint: ">=6.0.0"
+  checksum: 10c0/ca4169dfb1390648d0dc49b9533f6969794017e0768ce8b8e59916be7e930a740ed1fb85aa46b73e900357418c17bd3154d449f288067f1e86a9313c8cce6230
   languageName: node
   linkType: hard
 
@@ -8130,7 +8088,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"espree@npm:^10.0.1, espree@npm:^10.3.0, espree@npm:^10.4.0":
+"espree@npm:^10.0.1, espree@npm:^10.3.0, espree@npm:^10.4.0, espree@npm:^9.6.1 || ^10.3.0":
   version: 10.4.0
   resolution: "espree@npm:10.4.0"
   dependencies:
@@ -10732,6 +10690,18 @@ __metadata:
     espree: "npm:^9.0.0"
     semver: "npm:^7.3.5"
   checksum: 10c0/735bd33435fee002bf7f07d23ba969b994971ab3b333a0e2641b79cd413819fe36540ba6ed29da9ebc69062625e8bfb167ff4415321f9640fdd9d0cf92dfa999
+  languageName: node
+  linkType: hard
+
+"jsonc-eslint-parser@npm:^2.4.0":
+  version: 2.4.2
+  resolution: "jsonc-eslint-parser@npm:2.4.2"
+  dependencies:
+    acorn: "npm:^8.5.0"
+    eslint-visitor-keys: "npm:^3.0.0"
+    espree: "npm:^9.0.0"
+    semver: "npm:^7.3.5"
+  checksum: 10c0/821af0231cb8eba2afde34535bd76d723ed5b4b3711fdccff3f300f32de7bbf463ceab3ce2de9e6fd78dc3b24a9c7248ca12eb43e280cfa2695f49bd16908f87
   languageName: node
   linkType: hard
 
@@ -13606,7 +13576,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:0.11.11, synckit@npm:^0.11.8":
+"synckit@npm:0.11.11, synckit@npm:^0.11.8, synckit@npm:^0.6.2 || ^0.7.3 || ^0.11.5":
   version: 0.11.11
   resolution: "synckit@npm:0.11.11"
   dependencies:

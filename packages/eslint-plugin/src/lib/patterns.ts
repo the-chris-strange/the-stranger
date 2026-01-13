@@ -33,6 +33,12 @@ export function expandExtension(ext: string) {
 export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
   return patterns.map(pattern => {
     switch (pattern) {
+      case FilePatterns.astro: {
+        return sourceFilePattern('astro')
+      }
+      case FilePatterns.astroScript: {
+        return `**/*.astro/${sourceFilePattern('js', 'ts')}`
+      }
       case FilePatterns.cjs: {
         return sourceFilePattern('cjs', 'cts')
       }
@@ -49,7 +55,7 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
         return sourceFilePattern('jsx', 'tsx')
       }
       case FilePatterns.source: {
-        return sourceFilePattern(expandExtension('js'), expandExtension('ts'))
+        return sourceFilePattern(expandExtension('js'), expandExtension('ts'), 'astro')
       }
       case FilePatterns.test: {
         return testFilePattern('js', 'jsx', 'ts', 'tsx')
@@ -89,6 +95,14 @@ export function testFilePattern(...extensions: (string | string[])[]) {
  * Common file patterns used in ESLint configurations.
  */
 export enum FilePatterns {
+  /**
+   * Astro-specific files ('.astro').
+   */
+  astro = 'astro-files',
+  /**
+   * Scripts inside Astro files, which are parsed as virtual files under the virtual "directory" of the file.
+   */
+  astroScript = 'astro-script-files',
   /**
    * CommonJS files ('.cjs' and '.cts').
    */
