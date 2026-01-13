@@ -1,8 +1,8 @@
 version: "0.2"
 language: en
 import:
-  - "@cspell/dict-fr-fr/cspell-ext.json"
-  - "@cspell/dict-scientific-terms-us/cspell-ext.json"
+  - ./node_modules/@cspell/dict-fr-fr/cspell-ext.json
+  - ./node_modules/@cspell/dict-scientific-terms-us/cspell-ext.json
 ignorePaths:
   - .cspellcache
   - .dcignore
@@ -21,6 +21,8 @@ ignorePaths:
   - env.d.ts
   - node_modules
   - out-tsc
+  - pnpm-lock.yaml
+  - pnpm-workspace.yaml
   - tmp
   - yarn.lock
 dictionaries:

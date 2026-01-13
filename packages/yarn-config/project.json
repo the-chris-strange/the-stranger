@@ -1,19 +1,12 @@
 {
   "name": "yarn-config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/yarn-config/src",
   "projectType": "library",
+  "sourceRoot": "packages/yarn-config/src",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/yarn-config",
-        "main": "packages/yarn-config/src/index.ts",
-        "tsConfig": "packages/yarn-config/tsconfig.lib.json",
-        "assets": ["packages/yarn-config/*.md"]
-      }
+      "executor": "@nx/js:tsc"
     }
   }
 }

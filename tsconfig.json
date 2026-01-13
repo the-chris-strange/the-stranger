@@ -1,6 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
   "references": [
     { "path": "./packages/eslint-config-jest" },
     { "path": "./packages/eslint-config-nx" },

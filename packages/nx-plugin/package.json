@@ -14,7 +14,8 @@
     "jest": "^29.7.0",
     "tsconfig-type": "^1.29.0",
     "tslib": "^2.8.1",
-    "vite": "7.1.9"
+    "vite": "7.1.9",
+    "vitest": "^3.2.4"
   },
   "devDependencies": {
     "@nx/devkit": "21.6.4",

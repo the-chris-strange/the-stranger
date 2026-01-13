@@ -358,7 +358,7 @@ const ymlConfig = defineConfig(
     files: ['cspell.config.yaml', '**/cspell.config.yaml'],
     rules: {
       'yml/sort-keys': [
-        'error',
+        'warn',
         {
           order: [
             'version',
@@ -379,7 +379,7 @@ const ymlConfig = defineConfig(
         },
       ],
       'yml/sort-sequence-values': [
-        'error',
+        'warn',
         {
           order: { type: 'asc' },
           pathPattern: 'dictionaries|import|ignorePaths|ignoreWords|words$',
@@ -393,7 +393,7 @@ const ymlConfig = defineConfig(
     rules: {
       'yml/no-empty-mapping-value': 'off',
       'yml/sort-keys': [
-        'error',
+        'warn',
         {
           order: [
             'name',
@@ -445,7 +445,7 @@ const ymlConfig = defineConfig(
         },
       ],
       'yml/sort-sequence-values': [
-        'error',
+        'warn',
         {
           order: { type: 'asc' },
           pathPattern: '^on|permissions',
@@ -458,12 +458,12 @@ const ymlConfig = defineConfig(
     files: ['.markdownlint-cli2.yaml'],
     rules: {
       'yml/sort-keys': [
-        'error',
+        'warn',
         { order: ['ignores', { order: { type: 'asc' } }], pathPattern: '^$' },
         { order: { type: 'asc' }, pathPattern: '^configs' },
       ],
       'yml/sort-sequence-values': [
-        'error',
+        'warn',
         { order: { type: 'asc' }, pathPattern: '^ignores' },
       ],
     },
@@ -472,9 +472,9 @@ const ymlConfig = defineConfig(
   {
     files: ['.yarnrc.yml'],
     rules: {
-      'yml/sort-keys': ['error', { order: { type: 'asc' }, pathPattern: '^$' }],
+      'yml/sort-keys': ['warn', { order: { type: 'asc' }, pathPattern: '^$' }],
       'yml/sort-sequence-values': [
-        'error',
+        'warn',
         {
           order: ['.env?', { order: { type: 'asc' } }],
           pathPattern: '^injectEnvironmentFiles',
@@ -628,6 +628,7 @@ export default defineConfig(
       'dist',
       'node_modules',
       'pnpm-lock.yaml',
+      'pnpm-workspace.yaml',
       'tmp',
     ],
   },

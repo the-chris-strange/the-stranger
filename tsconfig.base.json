@@ -1,5 +1,15 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@the-stranger/eslint-config-jest": ["./packages/eslint-config-jest/src/index.ts"],
+      "@the-stranger/eslint-config-nx": ["./packages/eslint-config-nx/src/index.ts"],
+      "@the-stranger/eslint-config-toml": ["./packages/eslint-config-toml/src/index.ts"],
+      "@the-stranger/eslint-config-vitest": ["./packages/eslint-config-vitest/src/index.ts"],
+      "@the-stranger/eslint-plugin": ["./packages/eslint-plugin/src/index.ts"],
+      "@the-stranger/nx-plugin": ["./packages/nx-plugin/src/index.ts"],
+      "@the-stranger/prettier-plugin": ["./packages/prettier-plugin/src/index.ts"],
+      "@the-stranger/yarn-config": ["./packages/yarn-config/src/index.ts"]
+    },
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "composite": true,
@@ -10,7 +20,7 @@
     "esModuleInterop": true,
     "exactOptionalPropertyTypes": false,
     "experimentalDecorators": false,
-    "explainFiles": true,
+    "explainFiles": false,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "incremental": true,
@@ -24,16 +34,6 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedSideEffectImports": true,
     "outDir": "out-tsc",
-    "paths": {
-      "@the-stranger/eslint-config-jest": ["./packages/eslint-config-jest/src/index.ts"],
-      "@the-stranger/eslint-config-nx": ["./packages/eslint-config-nx/src/index.ts"],
-      "@the-stranger/eslint-config-toml": ["./packages/eslint-config-toml/src/index.ts"],
-      "@the-stranger/eslint-config-vitest": ["./packages/eslint-config-vitest/src/index.ts"],
-      "@the-stranger/eslint-plugin": ["./packages/eslint-plugin/src/index.ts", "./packages/eslint-plugin/src/utils.ts"],
-      "@the-stranger/nx-plugin": ["./packages/nx-plugin/src/index.ts"],
-      "@the-stranger/prettier-plugin": ["./packages/prettier-plugin/src/index.ts"],
-      "@the-stranger/yarn-config": ["./packages/yarn-config/src/index.ts"]
-    },
     "pretty": true,
     "removeComments": false,
     "resolveJsonModule": true,
