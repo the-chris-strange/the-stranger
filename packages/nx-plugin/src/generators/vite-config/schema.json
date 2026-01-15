@@ -32,12 +32,10 @@
     },
     "includeBuild": {
       "type": "boolean",
-      "default": true,
       "description": "Include build configuration in the generated file."
     },
     "includeTest": {
       "type": "boolean",
-      "default": true,
       "description": "Include configuration for Vitest in the generated file."
     },
     "inSourceTests": {

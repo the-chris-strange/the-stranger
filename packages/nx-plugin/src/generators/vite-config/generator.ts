@@ -23,9 +23,13 @@ import { generateTsc } from './tsconfig'
  * @param options generator options
  */
 export async function viteConfigGenerator(tree: Tree, options: ViteConfigSchema) {
+  if (options.includeBuild === undefined && options.includeTest === undefined) {
+    return
+  }
+
   const project = readProjectConfiguration(tree, options.project)
 
-  if (options.includeBuild === false && options.includeTest === false) {
+  if (!(options.includeBuild || options.includeTest)) {
     const markers = [...markerFiles.vite, ...markerFiles.vitest].map(e =>
       joinPathFragments(project.root, e),
     )

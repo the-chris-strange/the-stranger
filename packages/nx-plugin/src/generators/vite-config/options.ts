@@ -43,8 +43,8 @@ export function normalizeOptions(
   return {
     formats: ['es'],
     globals: false,
-    includeBuild: true,
-    includeTest: true,
+    includeBuild: undefined,
+    includeTest: undefined,
     react: false,
     rollupExternals: [],
     target: [],
@@ -89,8 +89,6 @@ type StrictViteConfigSchema = ExtendRequired<
   ViteConfigSchema,
   | 'formats'
   | 'globals'
-  | 'includeBuild'
-  | 'includeTest'
   | 'react'
   | 'rollupExternals'
   | 'target'
