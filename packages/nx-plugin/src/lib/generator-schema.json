@@ -4,7 +4,7 @@
   "title": "Base generator schema",
   "description": "Base schema for generators included in this plugin",
   "type": "object",
-  "definitions": {
+  "properties": {
     "force": {
       "type": "boolean",
       "description": "Overwrite existing files."

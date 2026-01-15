@@ -4,7 +4,7 @@ import { addDependenciesToProject } from '../../lib/add-dependencies'
 import { ViteConfigSchema } from './schema'
 
 export function addProjectDeps(tree: Tree, options: ViteConfigSchema, pkg: string) {
-  const deps = ['@dotenvx/dotenvx', '@nx/vite', 'nx']
+  const deps = ['@nx/vite', 'nx']
   if (options.includeBuild) {
     deps.push('vite', 'vite-plugin-dts')
   }
