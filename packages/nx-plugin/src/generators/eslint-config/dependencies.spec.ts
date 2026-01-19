@@ -1,6 +1,7 @@
 import { joinPathFragments, ProjectConfiguration, Tree } from '@nx/devkit'
 import {
   afterAll,
+  afterEach,
   beforeAll,
   beforeEach,
   describe,
@@ -25,16 +26,21 @@ describe('addEslintDependencies', () => {
   let tree: Tree
   let spy: MockInstance
 
-  beforeAll(() => {
+  beforeAll(async () => {
     vi.mock('../../lib/add-dependencies.ts')
-  })
 
-  beforeEach(async () => {
-    tree = createTestTree('test')
     spy = vi.spyOn(
       await import('../../lib/add-dependencies.js'),
       'addDependenciesToProject',
     )
+  })
+
+  beforeEach(() => {
+    tree = createTestTree('test')
+  })
+
+  afterEach(() => {
+    spy.mockClear()
   })
 
   afterAll(() => {

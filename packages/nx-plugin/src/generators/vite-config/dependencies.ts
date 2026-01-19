@@ -3,7 +3,7 @@ import { Tree } from '@nx/devkit'
 import { addDependenciesToProject } from '../../lib/add-dependencies'
 import { ViteConfigSchema } from './schema'
 
-export function addProjectDeps(tree: Tree, options: ViteConfigSchema, pkg: string) {
+export function addDependencies(tree: Tree, options: ViteConfigSchema, pkg: string) {
   const deps = ['@nx/vite', 'nx']
   if (options.includeBuild) {
     deps.push('vite', 'vite-plugin-dts')

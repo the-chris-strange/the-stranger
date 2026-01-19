@@ -14,11 +14,11 @@ describe('tsconfig generators', () => {
 
   beforeAll(() => {
     vi.mock('../../lib/add-dependencies.ts')
+
+    tree = createTestTree('test')
   })
 
   beforeEach(() => {
-    tree = createTestTree('test')
-
     options = normalizeOptions(tree, {
       force: true,
       includeBuild: true,

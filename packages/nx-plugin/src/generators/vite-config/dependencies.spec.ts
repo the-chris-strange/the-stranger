@@ -1,6 +1,7 @@
 import { Tree } from '@nx/devkit'
 import {
   afterAll,
+  afterEach,
   beforeAll,
   beforeEach,
   describe,
@@ -12,20 +13,20 @@ import {
 
 import { writeJson } from '../../lib/json'
 import { createTestTree } from '../../test/helpers/create-test-tree'
-import { addProjectDeps } from './dependencies'
+import { addDependencies } from './dependencies'
 import { ViteConfigSchema } from './schema'
 
 describe('vite-config generator package dependencies utility', () => {
   let spy: MockInstance
   let tree: Tree
-  let options: ViteConfigSchema = { project: 'test' }
+  let options: ViteConfigSchema
   const pkg = 'packages/test/package.json'
   const version = '0.0.0'
 
-  beforeAll(() => {
+  beforeAll(async () => {
     vi.mock('../../lib/add-dependencies.ts')
 
-    tree = createTestTree(options.project)
+    tree = createTestTree('test')
 
     writeJson(
       'package.json',
@@ -45,12 +46,6 @@ describe('vite-config generator package dependencies utility', () => {
       },
       tree,
     )
-  })
-
-  beforeEach(async () => {
-    options = { project: 'test' }
-
-    writeJson(pkg, { devDependencies: {}, name: '@ws/test', version }, tree)
 
     spy = vi.spyOn(
       await import('../../lib/add-dependencies.js'),
@@ -58,12 +53,22 @@ describe('vite-config generator package dependencies utility', () => {
     )
   })
 
+  beforeEach(() => {
+    options = { project: 'test', skipFormat: true }
+
+    writeJson(pkg, { devDependencies: {}, name: '@ws/test', version }, tree)
+  })
+
+  afterEach(() => {
+    spy.mockClear()
+  })
+
   afterAll(() => {
     vi.restoreAllMocks()
   })
 
   it("adds [ 'nx', '@nx/vite' ]", () => {
-    addProjectDeps(tree, options, pkg)
+    addDependencies(tree, options, pkg)
 
     const expected = expect.arrayContaining(['nx', '@nx/vite'])
     expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
@@ -77,7 +82,7 @@ describe('vite-config generator package dependencies utility', () => {
     'adds %o when `%s` is %s',
     (expectedPkgs, prop, value: ViteConfigSchema[typeof prop]) => {
       options[prop] = value
-      addProjectDeps(tree, options, pkg)
+      addDependencies(tree, options, pkg)
 
       const expected = expect.arrayContaining(expectedPkgs)
       expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
@@ -87,7 +92,7 @@ describe('vite-config generator package dependencies utility', () => {
   it("adds [ 'vite-plugin-react-swc' ] when `swc` and `react` are true", () => {
     options.react = true
     options.swc = true
-    addProjectDeps(tree, options, pkg)
+    addDependencies(tree, options, pkg)
 
     const expected = expect.arrayContaining(['vite-plugin-react-swc'])
     expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
@@ -96,7 +101,7 @@ describe('vite-config generator package dependencies utility', () => {
   it("doesn't add [ 'vite-plugin-react-swc' ] when `react` is false", () => {
     options.react = false
     options.swc = true
-    addProjectDeps(tree, options, pkg)
+    addDependencies(tree, options, pkg)
 
     const expected = expect.not.arrayContaining(['vite-plugin-react-swc'])
     expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)

@@ -12,6 +12,7 @@ describe('vite config generator', () => {
 
   beforeAll(() => {
     vi.mock('./dependencies.ts')
+    vi.mock('./tsconfig.ts')
   })
 
   beforeEach(() => {
