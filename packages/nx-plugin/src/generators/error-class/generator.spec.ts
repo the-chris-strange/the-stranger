@@ -6,14 +6,16 @@ import { errorClassGenerator } from './generator'
 import { ErrorClassSchema } from './schema'
 
 describe('custom error class generator', () => {
+  let options: ErrorClassSchema
   let tree: Tree
-  const options: ErrorClassSchema = {
-    directory: 'packages/package/src/custom-error',
-    name: 'a-custom-error',
-    skipFormat: true,
-  }
 
   beforeEach(() => {
+    options = {
+      directory: 'packages/package/src/custom-error',
+      name: 'a-custom-error',
+      skipFormat: true,
+    }
+
     tree = createTestTree()
   })
 
