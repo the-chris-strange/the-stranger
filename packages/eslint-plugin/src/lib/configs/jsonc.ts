@@ -63,6 +63,14 @@ export default [
   },
 
   {
+    files: ['executors.json', 'generators.json'],
+    name: namer('jsonc/nx-plugin files'),
+    rules: {
+      'jsonc/sort-keys': ['warn', { order: { type: 'asc' }, pathPattern: '^' }],
+    },
+  },
+
+  {
     files: ['project.json', '**/project.json'],
     name: namer('jsonc/nx project.json'),
     rules: {
