@@ -30,6 +30,11 @@
             "glob": "executors.json",
             "input": "./packages/nx-plugin",
             "output": "."
+          },
+          {
+            "glob": "package.json",
+            "input": "./packages/nx-plugin",
+            "output": "."
           }
         ],
         "main": "packages/nx-plugin/src/index.ts",
