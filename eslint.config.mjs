@@ -552,6 +552,13 @@ const jsonConfig = defineConfig(
   },
 
   {
+    files: ['executors.json', 'generators.json'],
+    rules: {
+      'jsonc/sort-keys': ['warn', { order: { type: 'asc' }, pathPattern: '^' }],
+    },
+  },
+
+  {
     files: ['project.json'],
     rules: {
       'jsonc/sort-array-values': [

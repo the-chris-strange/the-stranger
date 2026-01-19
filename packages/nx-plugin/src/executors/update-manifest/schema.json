@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "version": 2,
+  "title": "UpdateManifest",
+  "description": "Update package.json files in destination to match those in source",
+  "type": "object",
+  "properties": {
+    "destination": {
+      "type": "string",
+      "description": "The destination directory to write the updated manifest file."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Write the source manifest directly to the destination, overwriting it if it exists."
+    },
+    "skipSourceCheck": {
+      "type": "boolean",
+      "description": "Skip checking for the existence of fields in the source before removing them from the destination."
+    },
+    "unset": {
+      "oneOf": [{ "type": "boolean" }, { "type": "array", "items": { "type": "string" } }],
+      "description": "An array of fields to remove from the destination manifest, or a boolean value indicating whether to remove all fields that aren't set in the source file. The default behavior is to remove any fields that were added by the build process (i.e. those that aren't set in the source manifest)."
+    }
+  },
+  "required": []
+}

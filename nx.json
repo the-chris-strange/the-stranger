@@ -101,6 +101,15 @@
         "tsConfig": "{projectRoot}/tsconfig.lib.json"
       },
       "outputs": ["{options.outputPath}"]
+    },
+    "@the-stranger/nx-plugin:update-manifest": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "inputs": ["{projectRoot}/package.json", "{workspaceRoot}/dist/{projectRoot}/package.json"],
+      "options": {
+        "unset": ["main", "module", "types"]
+      },
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}/package.json"]
     }
   }
 }

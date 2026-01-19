@@ -15,8 +15,7 @@
     "packages/**"
   ],
   "scripts": {
-    "build": "nx run-many -t build",
-    "build:clean": "rm -rf ./dist && nx run-many -t build",
+    "build": "nx run-many -t build update-manifest",
     "commit": "commit",
     "commit:lint": "commitlint",
     "format": "nx format",
@@ -77,6 +76,7 @@
     "nx": "21.6.4",
     "prettier": "^3.6.2",
     "prettier-plugin-packagejson": "^2.5.19",
+    "sort-package-json": "3.4.0",
     "toml-eslint-parser": "^0.10.0",
     "tsconfig-type": "^1.29.0",
     "tslib": "^2.8.1",
