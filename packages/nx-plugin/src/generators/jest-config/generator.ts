@@ -12,6 +12,7 @@ import { findExisting } from '../../lib/find-existing'
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { TSConfig } from '../../lib/tsconfig'
+import { addDependencies } from './dependencies'
 import { JestConfigSchema } from './schema'
 
 /**
@@ -52,6 +53,14 @@ export async function jestConfigGenerator(tree: Tree, options: JestConfigSchema)
   generateFiles(tree, path.join(__dirname, 'files'), projectConfig.root, templateData, {
     overwriteStrategy: owStrategy(options.force),
   })
+
+  if (!options.skipDependencies) {
+    addDependencies(
+      tree,
+      options,
+      joinPathFragments(projectConfig.root, 'package.json'),
+    )
+  }
 
   await formatFiles(tree, options)
 }
