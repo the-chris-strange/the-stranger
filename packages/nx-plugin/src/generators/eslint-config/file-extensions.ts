@@ -18,11 +18,8 @@ export function findFileExtension(options: ESLintConfigSchema, baseConfig: strin
   return options.fileExtension
 }
 
-/**
- * Possible file extensions for the eslint.config file.
- */
-export type ConfigFileExtension = 'cjs' | 'mjs' | 'ts'
-
 function isConfigFileExtension(value: unknown): value is ConfigFileExtension {
   return typeof value === 'string' && FILE_EXTENSIONS.includes(value as any)
 }
+
+type ConfigFileExtension = NonNullable<ESLintConfigSchema['fileExtension']>

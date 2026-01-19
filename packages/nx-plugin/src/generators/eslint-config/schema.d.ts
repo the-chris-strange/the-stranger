@@ -67,4 +67,6 @@ export interface ESLintConfigSchema
   fileExtension?: ConfigFileExtension
 }
 
+type ConfigFileExtension = 'cjs' | 'mjs' | 'ts'
+
 type TestRunnerOption = Partial<Pick<LibraryGeneratorSchema, 'unitTestRunner'>>
