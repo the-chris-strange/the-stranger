@@ -3,7 +3,7 @@ import { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema'
 import { GeneratorSchema } from '../../lib/generator-schema'
 import { ViteConfigSchema } from '../vite-config/schema'
 
-export interface TSLibrarySchema extends ExternalOptions {
+export interface LibrarySchema extends GeneratorSchema, NxLibOptions, ViteOptions {
   /**
    * The name of the new library.
    */
@@ -29,8 +29,6 @@ export interface TSLibrarySchema extends ExternalOptions {
    */
   skipTestConfig?: boolean
 }
-
-type ExternalOptions = GeneratorSchema & NxLibOptions & ViteOptions
 
 type NxLibOptions = Pick<
   LibraryGeneratorSchema,

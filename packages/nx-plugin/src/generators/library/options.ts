@@ -1,7 +1,7 @@
 import { ExtendRequired } from '../../lib/type-utils'
-import { TSLibrarySchema } from './schema'
+import { LibrarySchema } from './schema'
 
-export function normalizeOptions(options: TSLibrarySchema): NormalizedSchema {
+export function normalizeOptions(options: LibrarySchema): NormalizedSchema {
   return {
     bundler: 'vite',
     globals: false,
@@ -23,9 +23,9 @@ export interface NormalizedSchema extends StrictTSLibrarySchema {
 }
 
 type StrictTSLibrarySchema = ExtendRequired<
-  TSLibrarySchema,
+  LibrarySchema,
   Exclude<
-    keyof TSLibrarySchema,
+    keyof LibrarySchema,
     'commonjs' | 'directory' | 'force' | 'skipDependencies' | 'skipFormat'
   >
 >

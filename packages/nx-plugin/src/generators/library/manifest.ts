@@ -1,15 +1,11 @@
 import { join } from 'node:path'
 
-import {
-  ProjectConfiguration,
-  readJson,
-  readProjectConfiguration,
-  Tree,
-  writeJson,
-} from '@nx/devkit'
+import { ProjectConfiguration, readProjectConfiguration, Tree } from '@nx/devkit'
 import { PackageJson } from 'nx/src/utils/package-json'
+import sortPackageJson from 'sort-package-json'
 
-import { TSLibrarySchema } from './schema'
+import { readJson, writeJson } from '../../lib/json'
+import { LibrarySchema } from './schema'
 
 /**
  * Update the project's manifest (package.json) with the configured type and exports.
@@ -19,13 +15,13 @@ import { TSLibrarySchema } from './schema'
  */
 export function updateManifest(
   tree: Tree,
-  config: TSLibrarySchema,
+  config: LibrarySchema,
   project?: ProjectConfiguration,
 ) {
   project ??= readProjectConfiguration(tree, config.name)
 
   const manifestPath = join(project.root, 'package.json')
-  const manifest = readJson<PackageJson>(tree, manifestPath)
+  const manifest = readJson<PackageJson>(manifestPath, tree)
 
   if (config.commonjs) {
     manifest.type = 'commonjs'
@@ -43,7 +39,7 @@ export function updateManifest(
     delete manifest.types
   }
 
-  writeJson(tree, manifestPath, manifest)
+  writeJson(manifestPath, sortPackageJson(manifest), tree)
 }
 
 interface PackageJsonExports {

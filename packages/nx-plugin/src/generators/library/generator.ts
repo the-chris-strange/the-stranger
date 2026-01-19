@@ -1,22 +1,22 @@
 import { joinPathFragments, readProjectConfiguration, Tree } from '@nx/devkit'
-import { libraryGenerator } from '@nx/js'
+import { libraryGenerator as nxLibraryGenerator } from '@nx/js'
 
 import { formatFiles } from '../../lib/format-files'
-import { cspellConfigGenerator } from '../cspell-config/generator'
-import { eslintConfigGenerator } from '../eslint-config/generator'
-import { jestConfigGenerator } from '../jest-config/generator'
-import { viteConfigGenerator } from '../vite-config/generator'
-import { addLibDependencies } from './dependencies'
+import cspellConfigGenerator from '../cspell-config/generator'
+import eslintConfigGenerator from '../eslint-config/generator'
+import jestConfigGenerator from '../jest-config/generator'
+import viteConfigGenerator from '../vite-config/generator'
+import { addDependencies } from './dependencies'
 import { updateManifest } from './manifest'
 import { normalizeOptions } from './options'
-import { TSLibrarySchema } from './schema'
+import { LibrarySchema } from './schema'
 
-export async function tsLibraryGenerator(tree: Tree, options: TSLibrarySchema) {
+export async function libraryGenerator(tree: Tree, options: LibrarySchema) {
   const config = normalizeOptions(options)
   const force = config.force !== false
   const project = config.name
 
-  await libraryGenerator(tree, {
+  await nxLibraryGenerator(tree, {
     bundler: config.bundler,
     directory: joinPathFragments('packages', config.name),
     linter: config.skipEslint ? 'none' : 'eslint',
@@ -75,7 +75,7 @@ export async function tsLibraryGenerator(tree: Tree, options: TSLibrarySchema) {
   }
 
   if (!options.skipDependencies) {
-    addLibDependencies(tree, { ...config, directory: projectConfig.root })
+    addDependencies(tree, { ...config, directory: projectConfig.root })
   }
 
   updateManifest(tree, config, projectConfig)
@@ -83,4 +83,4 @@ export async function tsLibraryGenerator(tree: Tree, options: TSLibrarySchema) {
   await formatFiles(tree, options)
 }
 
-export default tsLibraryGenerator
+export default libraryGenerator

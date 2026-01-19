@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "$id": "TSLibrary",
-  "title": "TypeScript library generator",
-  "description": "Generate a TypeScript library for this workspace.",
+  "$id": "Library",
+  "title": "JavaScript/TypeScript library generator",
+  "description": "Generate a JavaScript or TypeScript library for this workspace.",
   "type": "object",
   "properties": {
     "name": {
@@ -18,7 +18,7 @@
       "description": "The bundler to use. Choosing 'none' means this library is not buildable.",
       "type": "string",
       "enum": ["swc", "tsc", "rollup", "vite", "esbuild", "none"],
-      "default": "vite"
+      "default": "tsc"
     },
     "unitTestRunner": {
       "description": "Test runner to use for unit tests.",
@@ -55,7 +55,7 @@
     },
     "rollupExternals": {
       "type": "array",
-      "description": "An array of values to add to the `rollupOptions.external` configuration field.",
+      "description": "An array of values to add to the `rollupOptions.external` configuration field. Ignored if the `bundler` option isn't 'vite'.",
       "items": { "type": "string" }
     },
     "swc": {
