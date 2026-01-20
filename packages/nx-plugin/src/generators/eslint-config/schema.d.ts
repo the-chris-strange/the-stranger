@@ -50,9 +50,7 @@ export interface DependencyCheckOptions {
  * Options for the ESLint configuration generator.
  */
 export interface ESLintConfigSchema
-  extends DependencyCheckOptions,
-    GeneratorSchema,
-    TestRunnerOption {
+  extends DependencyCheckOptions, GeneratorSchema, TestRunnerOption {
   /**
    * The name of the project in which to generate an eslint config.
    */

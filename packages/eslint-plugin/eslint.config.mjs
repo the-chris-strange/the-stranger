@@ -5,7 +5,7 @@ import jsoncParser from 'jsonc-eslint-parser'
 import baseConfig from '../../eslint.config.mjs'
 
 export default defineConfig(
-  eslintPlugin.configs['flat/recommended'],
+  eslintPlugin.configs['recommended'],
 
   {
     files: ['src/lib/configs/*.ts'],

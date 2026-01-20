@@ -8,14 +8,3 @@ declare module 'eslint-plugin-promise' {
   }
   export default { configs, meta, rules }
 }
-
-declare module 'eslint-plugin-eslint-plugin' {
-  import type { Linter, Rule } from 'eslint'
-
-  const meta: { name: string; version: string }
-  const rules: Record<string, Rule.RuleModule>
-  const configs: {
-    'flat/recommended': Linter.Config
-  }
-  export default { configs, meta, rules }
-}

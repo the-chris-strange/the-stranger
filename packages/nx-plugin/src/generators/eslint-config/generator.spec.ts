@@ -26,7 +26,7 @@ describe('eslint config generator', () => {
   it('runs successfully', async () => {
     tree.write('eslint.config.mjs', '')
 
-    expect(async () => await eslintConfigGenerator(tree, options)).not.toThrow()
+    await expect(eslintConfigGenerator(tree, options)).resolves.not.toThrow()
   })
 
   it.each(FILE_EXTENSIONS)('runs successfully with %s extension', async ext => {

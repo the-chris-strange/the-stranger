@@ -14,28 +14,28 @@
     }
   },
   "dependencies": {
-    "prettier-plugin-packagejson": "^2.5.19",
+    "prettier-plugin-packagejson": "^2.5.22",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
+    "@eslint/js": "^9.39.2",
     "@nx/eslint": "21.6.4",
     "@nx/eslint-plugin": "21.6.4",
     "@nx/vite": "21.6.4",
-    "@types/node": "^24.7.1",
-    "@typescript-eslint/parser": "^8.46.0",
+    "@types/node": "^24.10.9",
+    "@typescript-eslint/parser": "^8.53.1",
     "@vitest/coverage-v8": "^3.2.4",
-    "eslint": "^9.37.0",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "jsonc-eslint-parser": "^2.4.1",
+    "jsonc-eslint-parser": "^2.4.2",
     "nx": "21.6.4",
-    "prettier": "^3.6.2",
+    "prettier": "^3.8.0",
     "typescript": "^5.9.3",
-    "vite": "7.1.9",
+    "vite": "7.3.1",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "prettier": "^3.6.2"
+    "prettier": "^3.8.0"
   },
   "engines": {
     "node": "^24"
