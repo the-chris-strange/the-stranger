@@ -15,13 +15,13 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
     },
-    "editor.defaultFormatter": "prettier.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.rulers": [120],
     "editor.wordWrapColumn": 120
   },
   "[markdown]": {
-    "editor.defaultFormatter": "prettier.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.quickSuggestions": {
       "comments": "off",
       "other": "off",
@@ -51,7 +51,7 @@
       "source.fixAll.eslint": "explicit",
       "source.organizeImports": "explicit"
     },
-    "editor.defaultFormatter": "prettier.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "file",
@@ -149,6 +149,7 @@
     "coverage": true,
     "dist": true
   },
+  "snyk.advanced.autoSelectOrganization": true,
   "snyk.features.openSourceSecurity": false,
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.preferences.importModuleSpecifier": "project-relative",
