@@ -58,7 +58,7 @@ export function normalizeOptions(
     projectType,
     tsBuildInfo: joinPathFragments(
       offset,
-      'dist',
+      'out-tsc',
       project.root,
       `${path.basename(names.base.build, '.json')}.tsbuildinfo`,
     ),

@@ -3,7 +3,7 @@ import { LibrarySchema } from './schema'
 
 export function normalizeOptions(options: LibrarySchema): NormalizedSchema {
   return {
-    bundler: 'vite',
+    bundler: 'tsc',
     globals: false,
     project: options.name,
     react: false,

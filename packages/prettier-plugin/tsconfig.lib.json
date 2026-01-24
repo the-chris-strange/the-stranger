@@ -2,7 +2,7 @@
   "extends": ["./tsconfig.json"],
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "tsBuildInfoFile": "../../dist/packages/prettier-plugin/tsconfig.lib.tsbuildinfo",
+    "tsBuildInfoFile": "../../out-tsc/packages/prettier-plugin/tsconfig.lib.tsbuildinfo",
     "types": ["node"]
   },
   "include": ["src/**/*.ts"],
