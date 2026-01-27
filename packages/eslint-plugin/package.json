@@ -2,7 +2,7 @@
   "name": "@the-stranger/eslint-plugin",
   "version": "2.0.1",
   "repository": {
-    "url": "https://github.com/the-chris-strange/the-stranger",
+    "url": "git+https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/eslint-plugin"
   },
   "type": "module",

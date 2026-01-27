@@ -4,7 +4,7 @@
   "private": true,
   "description": "A collection of plugins & reusable configurations for TypeScript, ESLint, Prettier, Vite, NX, Yarn, and more.",
   "repository": {
-    "url": "https://github.com/the-chris-strange/the-stranger"
+    "url": "git+https://github.com/the-chris-strange/the-stranger.git"
   },
   "license": "MIT",
   "author": {

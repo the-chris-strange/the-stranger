@@ -2,7 +2,7 @@
   "name": "@the-stranger/yarn-config",
   "version": "2.0.0",
   "repository": {
-    "url": "https://github.com/the-chris-strange/the-stranger",
+    "url": "git+https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/yarn-config"
   },
   "type": "module",
