@@ -67,10 +67,11 @@
       "fallbackCurrentVersionResolver": "disk",
       "git": {
         "commit": false,
-        "stageChanges": false,
-        "tag": false
+        "stageChanges": true,
+        "tag": true
       },
       "manifestRootsToUpdate": ["{projectRoot}", "{workspaceRoot}/dist/{projectRoot}"],
+      "preVersionCommand": "yarn build",
       "preserveLocalDependencyProtocols": false,
       "specifierSource": "conventional-commits",
       "versionPrefix": "^"
