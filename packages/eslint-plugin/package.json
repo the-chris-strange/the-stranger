@@ -1,6 +1,6 @@
 {
   "name": "@the-stranger/eslint-plugin",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "repository": {
     "url": "git+https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/eslint-plugin"
