@@ -1,6 +1,6 @@
 {
   "name": "@the-stranger/yarn-config",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "repository": {
     "url": "https://github.com/the-chris-strange/the-stranger",
     "directory": "packages/yarn-config"
@@ -28,7 +28,6 @@
     "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-eslint-plugin": "^7.3.0",
     "jsonc-eslint-parser": "^2.4.2",
     "nx": "21.6.4",
     "prettier": "^3.8.0",
