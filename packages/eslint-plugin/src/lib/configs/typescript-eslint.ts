@@ -10,7 +10,7 @@ const config: Linter.Config[] = [
     files: getFilePatterns(FilePatterns.source),
     name: namer('unnecessary ts rules'),
     rules: {
-      // I do what I want ¯\_(ツ)_/¯
+      /** I do what I want ¯\\\_(ツ)\_/¯ */
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
     },
