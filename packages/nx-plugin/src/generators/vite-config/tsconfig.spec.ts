@@ -2,8 +2,8 @@ import { readJson, Tree, writeJson } from '@nx/devkit'
 import { Tsconfig } from 'tsconfig-type'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { addProject } from '../../tests/helpers/add-project'
-import { createTestTree } from '../../tests/helpers/create-test-tree'
+import { addProject } from '../../test/helpers/add-project'
+import { createTestTree } from '../../test/helpers/create-test-tree'
 import { viteConfigGenerator } from './generator'
 import { NormalizedSchema, normalizeOptions } from './options'
 import { generateTsc } from './tsconfig'
@@ -14,11 +14,11 @@ describe('tsconfig generators', () => {
 
   beforeAll(() => {
     vi.mock('../../lib/add-dependencies.ts')
+
+    tree = createTestTree('test')
   })
 
   beforeEach(() => {
-    tree = createTestTree('test')
-
     options = normalizeOptions(tree, {
       force: true,
       includeBuild: true,

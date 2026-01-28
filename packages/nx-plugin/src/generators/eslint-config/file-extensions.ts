@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import { ConfigFileExtension, ESLintConfigSchema } from './schema'
+import { ESLintConfigSchema } from './schema'
 
 /**
  * Possible file extensions for eslint.config, in order of precedence.
@@ -21,3 +21,5 @@ export function findFileExtension(options: ESLintConfigSchema, baseConfig: strin
 function isConfigFileExtension(value: unknown): value is ConfigFileExtension {
   return typeof value === 'string' && FILE_EXTENSIONS.includes(value as any)
 }
+
+type ConfigFileExtension = NonNullable<ESLintConfigSchema['fileExtension']>

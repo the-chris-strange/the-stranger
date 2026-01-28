@@ -10,6 +10,7 @@
       }
     }
   },
+  "nxCloudId": "67eeb7b904dc9617051c453f",
   "parallel": 7,
   "plugins": [
     {
@@ -21,46 +22,105 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
+        "build": {
+          "buildDepsName": "build-deps",
+          "configName": "tsconfig.lib.json",
+          "targetName": "build",
+          "watchDepsName": "watch-deps"
+        },
         "typecheck": {
           "targetName": "typecheck"
-        },
-        "build": {
-          "targetName": "build",
-          "configName": "tsconfig.lib.json",
-          "buildDepsName": "build-deps",
-          "watchDepsName": "watch-deps"
         }
       }
     },
     {
       "plugin": "@nx/vite/plugin",
       "options": {
+        "buildDepsTargetName": "build-deps",
         "buildTargetName": "build",
-        "testTargetName": "test",
-        "serveTargetName": "serve",
         "devTargetName": "dev",
         "previewTargetName": "preview",
         "serveStaticTargetName": "serve-static",
+        "serveTargetName": "serve",
+        "testTargetName": "test",
         "typecheckTargetName": "typecheck",
-        "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
       }
     }
   ],
-  "nxCloudId": "67eeb7b904dc9617051c453f",
+  "release": {
+    "changelog": {
+      "git": {
+        "commit": false,
+        "stageChanges": false,
+        "tag": false
+      },
+      "projectChangelogs": true,
+      "workspaceChangelog": {
+        "createRelease": "github",
+        "file": false
+      }
+    },
+    "projectsRelationship": "independent",
+    "version": {
+      "currentVersionResolver": "git-tag",
+      "fallbackCurrentVersionResolver": "disk",
+      "git": {
+        "commit": false,
+        "stageChanges": true,
+        "tag": true
+      },
+      "manifestRootsToUpdate": ["{projectRoot}", "{workspaceRoot}/dist/{projectRoot}"],
+      "preVersionCommand": "yarn build",
+      "preserveLocalDependencyProtocols": false,
+      "specifierSource": "conventional-commits",
+      "versionPrefix": "^"
+    }
+  },
   "targetDefaults": {
     "@nx/js:tsc": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["default", "^default"]
-    }
-  },
-  "release": {
-    "version": {
-      "conventionalCommits": true,
-      "git": {
-        "commit": false,
-        "tag": true
+      "inputs": ["default", "^default"],
+      "options": {
+        "assets": [
+          "{projectRoot}/*.md",
+          {
+            "glob": "LICENSE",
+            "input": "{workspaceRoot}",
+            "output": ""
+          },
+          {
+            "glob": "**/*.md",
+            "input": "{projectRoot}/docs",
+            "output": "./docs"
+          },
+          {
+            "glob": "package.json",
+            "input": "{projectRoot}",
+            "output": "."
+          }
+        ],
+        "generatePackageJson": false,
+        "main": "{projectRoot}/src/index.ts",
+        "outputPath": "{workspaceRoot}/dist/{projectRoot}",
+        "tsConfig": "{projectRoot}/tsconfig.lib.json"
+      },
+      "outputs": ["{options.outputPath}"]
+    },
+    "@the-stranger/nx-plugin:update-manifest": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "inputs": ["{projectRoot}/package.json", "{workspaceRoot}/dist/{projectRoot}/package.json"],
+      "options": {
+        "unset": ["main", "module", "types"]
+      },
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}/package.json"]
+    },
+    "nx-release-publish": {
+      "dependsOn": ["^nx-release-publish", "build"],
+      "options": {
+        "packageRoot": "{workspaceRoot}/dist/{projectRoot}"
       }
     }
   }

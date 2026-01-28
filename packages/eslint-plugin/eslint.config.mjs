@@ -5,7 +5,7 @@ import jsoncParser from 'jsonc-eslint-parser'
 import baseConfig from '../../eslint.config.mjs'
 
 export default defineConfig(
-  eslintPlugin.configs['flat/recommended'],
+  eslintPlugin.configs['recommended'],
 
   {
     files: ['src/lib/configs/*.ts'],
@@ -30,13 +30,17 @@ export default defineConfig(
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          ignoredDependencies: [
-            // included in the yml plugin's configs, so not directly imported here
-            'yaml-eslint-parser',
-          ],
+          runtimeHelpers: ['tslib', 'yaml-eslint-parser', 'toml-eslint-parser'],
         },
       ],
     },
     languageOptions: { parser: jsoncParser },
+  },
+
+  {
+    files: ['src/**/*.ts'],
+    rules: {
+      'perfectionist/sort-interfaces': ['warn', { type: 'natural' }],
+    },
   },
 )

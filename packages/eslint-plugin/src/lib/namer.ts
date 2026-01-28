@@ -37,12 +37,6 @@ export function objectNamer(config: Config, defaultName?: string): Named<Config>
 }
 
 /**
- * Maybe. Maybe not. Maybe f*** yourself.
- * @template T the thing that might be
- */
-export type Maybe<T> = T | undefined
-
-/**
  * Make the name property of an object required. Preserves JSDoc comments for objects that already have a name property.
  */
 export type Named<T extends object> = Required<T extends N ? Pick<T, 'name'> : N> & T

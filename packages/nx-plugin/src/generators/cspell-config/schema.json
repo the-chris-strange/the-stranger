@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "CSpellConfig",
   "title": "CSpell configuration file generator",
   "description": "Generate a cspell.config.yaml for a project.",

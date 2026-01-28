@@ -1,17 +1,29 @@
 {
+  "version": "2.0.0",
   "tasks": [
     {
-      "args": ["build"],
-      "command": "yarn",
+      "label": "Build",
       "detail": "Build the workspace",
+      "command": "yarn",
+      "args": ["build"],
       "group": {
         "isDefault": true,
         "kind": "build"
       },
       "isBuildCommand": true,
-      "label": "Build",
+      "type": "process"
+    },
+    {
+      "label": "Test",
+      "detail": "Run all unit and e2e tests",
+      "command": "yarn",
+      "args": ["test"],
+      "group": {
+        "isDefault": true,
+        "kind": "test"
+      },
+      "isTestCommand": true,
       "type": "process"
     }
-  ],
-  "version": "2.0.0"
+  ]
 }

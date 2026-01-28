@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "JestConfig",
   "title": "Jest configuration file generator",
   "description": "Generate a jest.config.ts file for a project.",
@@ -21,7 +21,7 @@
     },
     "globals": {
       "type": "boolean",
-      "description": "Allow jest to inject its api's into the testing environment.",
+      "description": "Allow jest to inject its API's into the testing environment.",
       "default": false
     },
     "force": {

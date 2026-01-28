@@ -12,6 +12,9 @@
     "editor.wordWrapColumn": 100
   },
   "[json][jsonc]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.rulers": [120],
@@ -71,11 +74,16 @@
     "editor.rulers": [100],
     "editor.wordWrapColumn": 100
   },
+  "cSpell.enabled": true,
+  "chat.mcp.serverSampling": {
+    "the-stranger/.vscode/mcp.json: nx-mcp": {
+      "allowedModels": ["copilot/auto"]
+    }
+  },
   "code-runner.executorMap": {
     "javascript": "yarn node",
     "typescript": "yarn exec vite-node"
   },
-  "cSpell.enabled": true,
   "editor.autoIndent": "full",
   "editor.unicodeHighlight.allowedCharacters": {},
   "eslint.debug": true,
@@ -85,33 +93,33 @@
   "eslint.probe": [
     "astro",
     "civet",
+    "html",
     "javascript",
     "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "html",
-    "mdx",
-    "vue",
-    "markdown",
     "json",
     "jsonc",
-    "yaml",
-    "toml"
+    "markdown",
+    "mdx",
+    "toml",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "yaml"
   ],
   "eslint.validate": [
     "github-actions-workflow",
     "javascript",
     "javascriptreact",
-    "typescript",
-    "typescriptreact",
     "json",
     "jsonc",
-    "yaml",
-    "toml"
+    "toml",
+    "typescript",
+    "typescriptreact",
+    "yaml"
   ],
   "files.associations": {
-    ".lintstagedrc": "yaml",
     "*.template": "ejs",
+    ".lintstagedrc": "yaml",
     "commit-msg": "shellscript",
     "pre-commit": "shellscript"
   },
@@ -119,7 +127,6 @@
   "npm.exclude": ["coverage/**/*", "dist/**/*", "out-tsc/**/*"],
   "npm.packageManager": "yarn",
   "nxConsole.enableLibraryImports": true,
-  "nxConsole.generateAiAgentRules": true,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,
   "python.analysis.diagnosticSeverityOverrides": {
@@ -135,12 +142,14 @@
   "python.analysis.stubPath": "stubs",
   "python.analysis.typeCheckingMode": "off",
   "search.exclude": {
-    ".reports": true,
     "**/.pnp.*": true,
     "**/.yarn": true,
+    "**/node_modules/**": true,
+    ".reports": true,
     "coverage": true,
     "dist": true
   },
+  "snyk.advanced.autoSelectOrganization": true,
   "snyk.features.openSourceSecurity": false,
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.preferences.importModuleSpecifier": "project-relative",

@@ -43,8 +43,8 @@ export function normalizeOptions(
   return {
     formats: ['es'],
     globals: false,
-    includeBuild: true,
-    includeTest: true,
+    includeBuild: undefined,
+    includeTest: undefined,
     react: false,
     rollupExternals: [],
     target: [],
@@ -58,7 +58,7 @@ export function normalizeOptions(
     projectType,
     tsBuildInfo: joinPathFragments(
       offset,
-      'dist',
+      'out-tsc',
       project.root,
       `${path.basename(names.base.build, '.json')}.tsbuildinfo`,
     ),
@@ -89,8 +89,6 @@ type StrictViteConfigSchema = ExtendRequired<
   ViteConfigSchema,
   | 'formats'
   | 'globals'
-  | 'includeBuild'
-  | 'includeTest'
   | 'react'
   | 'rollupExternals'
   | 'target'

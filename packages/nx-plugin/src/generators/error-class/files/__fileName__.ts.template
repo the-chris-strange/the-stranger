@@ -1,5 +1,5 @@
 /**
- * <%= description %>
+ * <%- description %>
  */
 export class <%= className %> extends <%= extended %> {
   /**
@@ -8,6 +8,7 @@ export class <%= className %> extends <%= extended %> {
    */
   constructor(message?: string) {
     super(message)
+
     this.name = '<%= className %>'
   }
 }

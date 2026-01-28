@@ -20,3 +20,6 @@
 
 # local cache
 /.cache
+
+# pnpm
+pnpm-workspace.yaml

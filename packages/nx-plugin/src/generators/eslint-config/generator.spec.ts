@@ -1,7 +1,7 @@
 import { Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createTestTree } from '../../tests/helpers/create-test-tree'
+import { createTestTree } from '../../test/helpers/create-test-tree'
 import { FILE_EXTENSIONS } from './file-extensions'
 import { eslintConfigGenerator } from './generator'
 import { ESLintConfigSchema } from './schema'
@@ -26,7 +26,7 @@ describe('eslint config generator', () => {
   it('runs successfully', async () => {
     tree.write('eslint.config.mjs', '')
 
-    expect(async () => await eslintConfigGenerator(tree, options)).not.toThrow()
+    await expect(eslintConfigGenerator(tree, options)).resolves.not.toThrow()
   })
 
   it.each(FILE_EXTENSIONS)('runs successfully with %s extension', async ext => {

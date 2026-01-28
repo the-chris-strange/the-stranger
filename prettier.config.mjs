@@ -14,8 +14,6 @@ export default {
   trailingComma: 'all',
   useTabs: false,
 
-  plugins: ['prettier-plugin-packagejson'],
-
   overrides: [
     {
       files: ['*.yml', '*.yaml'],
@@ -31,6 +29,18 @@ export default {
         singleQuote: false,
         printWidth: 120,
         trailingComma: 'none',
+      },
+    },
+    {
+      files: ['package.json'],
+      options: {
+        plugins: ['prettier-plugin-packagejson'],
+      },
+    },
+    {
+      files: ['tsconfig.json', 'tsconfig.*.json'],
+      options: {
+        objectWrap: 'collapse',
       },
     },
     {

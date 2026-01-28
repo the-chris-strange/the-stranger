@@ -1,16 +1,20 @@
 import { formatFiles as nxFormatFiles, Tree } from '@nx/devkit'
-import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, MockInstance, vi } from 'vitest'
 
-import { createTestTree } from '../tests/helpers/create-test-tree'
+import { createTestTree } from '../test/helpers/create-test-tree'
 import { formatFiles } from './format-files'
 
 describe('formatFiles wrapper', () => {
   let tree: Tree
   let spy: MockInstance<typeof nxFormatFiles>
 
-  beforeEach(async () => {
-    tree = createTestTree('test')
+  beforeAll(async () => {
     spy = vi.spyOn(await import('@nx/devkit'), 'formatFiles')
+    tree = createTestTree('test')
+  })
+
+  afterEach(() => {
+    spy.mockClear()
   })
 
   it("doesn't run the formatter if skipFormat is undefined", async () => {

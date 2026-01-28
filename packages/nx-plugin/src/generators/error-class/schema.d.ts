@@ -1,7 +1,7 @@
 import { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
- * Schema for the custom error class generator.
+ * Custom error class generator options.
  */
 export interface ErrorClassSchema extends GeneratorSchema {
   /**

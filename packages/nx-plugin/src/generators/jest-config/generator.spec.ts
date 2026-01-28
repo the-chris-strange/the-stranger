@@ -1,15 +1,19 @@
 import { readJson, Tree, writeJson } from '@nx/devkit'
 import { PackageJson } from 'nx/src/utils/package-json'
 import { Tsconfig } from 'tsconfig-type'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createTestTree } from '../../tests/helpers/create-test-tree'
+import { createTestTree } from '../../test/helpers/create-test-tree'
 import { jestConfigGenerator } from './generator'
 import { JestConfigSchema } from './schema'
 
 describe('jest config generator', () => {
   let tree: Tree
   let options: JestConfigSchema
+
+  beforeAll(() => {
+    vi.mock('./dependencies.ts')
+  })
 
   beforeEach(() => {
     tree = createTestTree('test')
@@ -85,5 +89,15 @@ describe('jest config generator', () => {
       }),
       expect.any(Object),
     )
+  })
+
+  it('does not add dependencies if `skipDependencies` is specified', async () => {
+    options.skipDependencies = true
+
+    const spy = vi.spyOn(await import('./dependencies.js'), 'addDependencies')
+
+    await jestConfigGenerator(tree, options)
+
+    expect(spy).not.toHaveBeenCalled()
   })
 })

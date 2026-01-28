@@ -27,12 +27,10 @@ export interface ViteConfigSchema extends GeneratorSchema {
   globals?: boolean
   /**
    * Include build configuration in the generated file.
-   * @default true
    */
   includeBuild?: boolean
   /**
    * Include configuration for Vitest in the generated file.
-   * @default true
    */
   includeTest?: boolean
   /**

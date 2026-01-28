@@ -3,11 +3,6 @@ import { LibraryGeneratorSchema } from '@nx/devkit'
 import { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
- * Possible file extensions for the eslint.config file.
- */
-export type ConfigFileExtension = 'cjs' | 'mjs' | 'ts'
-
-/**
  * Options to pass to the `@nx/dependency-checks` rule. Behaviors that differ from the default options are documented here. Additionally, these options are intentionally not available when invoking this generator from the command line.
  * @see https://nx.dev/nx-api/eslint-plugin/documents/dependency-checks#options for the default options
  */
@@ -54,7 +49,8 @@ export interface DependencyCheckOptions {
 /**
  * Options for the ESLint configuration generator.
  */
-export interface ESLintConfigSchema extends ExternalOptions {
+export interface ESLintConfigSchema
+  extends DependencyCheckOptions, GeneratorSchema, TestRunnerOption {
   /**
    * The name of the project in which to generate an eslint config.
    */
@@ -69,6 +65,6 @@ export interface ESLintConfigSchema extends ExternalOptions {
   fileExtension?: ConfigFileExtension
 }
 
-type ExternalOptions = DependencyCheckOptions &
-  GeneratorSchema &
-  Partial<Pick<LibraryGeneratorSchema, 'unitTestRunner'>>
+type ConfigFileExtension = 'cjs' | 'mjs' | 'ts'
+
+type TestRunnerOption = Partial<Pick<LibraryGeneratorSchema, 'unitTestRunner'>>

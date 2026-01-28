@@ -7,9 +7,9 @@ export function generateTsc(tree: Tree, options: NormalizedSchema) {
   const { names, outDir, target, tsBuildInfo } = options
   const tscOptions: TSConfigOptions = { overwriteStrategy: options.force !== false }
 
-  const baseConfig = new TSConfig(tree, names.full.base, tscOptions)
-  const buildConfig = new TSConfig(tree, names.full.build, tscOptions)
-  const testConfig = new TSConfig(tree, names.full.test, tscOptions)
+  const baseConfig = new TSConfig(names.full.base, tree, tscOptions)
+  const buildConfig = new TSConfig(names.full.build, tree, tscOptions)
+  const testConfig = new TSConfig(names.full.test, tree, tscOptions)
 
   if (baseConfig.compilerOptions.module) {
     delete baseConfig.compilerOptions.module

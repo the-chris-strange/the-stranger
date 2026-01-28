@@ -1,12 +1,14 @@
 import perfectionist from 'eslint-plugin-perfectionist'
-import { defineConfig } from 'eslint/config'
+
+import type { Linter } from 'eslint'
 
 import { namer, objectNamer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 import { setRuleLevel } from '../severity.js'
 
 const configNatural = setRuleLevel('warn', perfectionist.configs['recommended-natural'])
-export default defineConfig(
+
+export default [
   objectNamer(configNatural, 'perfectionist-recommended-natural'),
 
   {
@@ -131,4 +133,4 @@ export default defineConfig(
       'perfectionist/sort-objects': 'off',
     },
   },
-)
+] as Linter.Config[]

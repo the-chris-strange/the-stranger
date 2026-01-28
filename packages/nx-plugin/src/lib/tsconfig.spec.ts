@@ -1,9 +1,11 @@
+import '../test/matchers/to-match-set'
+
 import { logger, OverwriteStrategy, readJson, Tree, writeJson } from '@nx/devkit'
 import { Tsconfig } from 'tsconfig-type'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createTestTree } from '../tests/helpers/create-test-tree'
-import { TSConfig } from './tsconfig'
+import { createTestTree } from '../test/helpers/create-test-tree'
+import { TSConfig, TSConfigOptions } from './tsconfig'
 
 describe('TSConfig', () => {
   const paths = {
@@ -14,12 +16,13 @@ describe('TSConfig', () => {
     include: '$config.include',
     references: '$config.references',
     tsconfig: 'packages/test/tsconfig.json',
-    types: '$config.compilerOptions.types',
-  }
+    types: '$types',
+  } as const
 
   let config: Tsconfig
   let tsconfig: TSConfig
   let tree: Tree
+  let options: TSConfigOptions
 
   beforeAll(() => {
     tree = createTestTree('test')
@@ -36,27 +39,26 @@ describe('TSConfig', () => {
       include: ['src/**/*.spec.ts'],
       references: [{ path: './tsconfig.spec.json' }, { path: './tsconfig.lib.json' }],
     }
-    writeJson(tree, paths.tsconfig, config)
-    tsconfig = new TSConfig(tree, paths.tsconfig, {
-      overwriteStrategy: OverwriteStrategy.Overwrite,
-    })
+    options = { overwriteStrategy: OverwriteStrategy.Overwrite }
+    tree.write(paths.tsconfig, JSON.stringify(config))
+    tsconfig = new TSConfig(paths.tsconfig, tree, options)
   })
 
   it('can be constructed for a new file', () => {
     expect(() => {
-      new TSConfig(tree, paths.tsconfig)
+      new TSConfig('tsconfig.json', tree)
     }).not.toThrow()
   })
 
   it('can be constructed from an existing file', () => {
     expect(() => {
-      new TSConfig(tree, paths.tsconfig)
+      new TSConfig(paths.tsconfig, tree)
     }).not.toThrow()
   })
 
-  it('sets values for tree, path, and config', () => {
+  it('sets values for tree, path, and options', () => {
     expect(tsconfig).toMatchObject({
-      $config: config,
+      $options: options,
       $path: paths.tsconfig,
       $tree: tree,
     })
@@ -220,40 +222,44 @@ describe('TSConfig', () => {
     it('adds types to the tsconfig file', () => {
       tsconfig.addTypes('type4', 'type5')
       const expected = ['type1', 'type2', 'type3', 'type4', 'type5']
-      expect(tsconfig).toHaveProperty(paths.types, expected)
+      expect(tsconfig[paths.types]).toMatchSet(expected)
     })
 
     it("doesn't add duplicate types", () => {
       tsconfig.addTypes('type1', 'type4')
       const expected = ['type1', 'type2', 'type3', 'type4']
-      expect(tsconfig).toHaveProperty(paths.types, expected)
+      expect(tsconfig[paths.types]).toMatchSet(expected)
     })
 
     it("doesn't add empty values", () => {
+      const spy = vi.spyOn(tsconfig[paths.types], 'add')
       tsconfig.addTypes('', null as any, undefined as any)
-      expect(tsconfig).toHaveProperty(paths.types, ['type1', 'type2', 'type3'])
+      expect(spy).not.toHaveBeenCalled()
     })
 
     it('does nothing if given no arguments', () => {
+      const spy = vi.spyOn(tsconfig[paths.types], 'add')
       tsconfig.addTypes()
-      expect(tsconfig).toHaveProperty(paths.types, config?.compilerOptions?.types)
+      expect(spy).not.toHaveBeenCalled()
     })
   })
 
   describe('.removeTypes', () => {
     it('removes types from the tsconfig file', () => {
       tsconfig.removeTypes('type1', 'type3')
-      expect(tsconfig).toHaveProperty(paths.types, ['type2'])
+      expect(tsconfig[paths.types]).toMatchSet(['type2'])
     })
 
     it("does nothing if given a type that isn't included", () => {
+      const spy = vi.spyOn(tsconfig[paths.types], 'add')
       tsconfig.removeTypes('non-existent')
-      expect(tsconfig).toHaveProperty(paths.types, config?.compilerOptions?.types)
+      expect(spy).not.toHaveBeenCalled()
     })
 
     it('does nothing if given no arguments', () => {
+      const spy = vi.spyOn(tsconfig[paths.types], 'add')
       tsconfig.removeTypes()
-      expect(tsconfig).toHaveProperty(paths.types, config?.compilerOptions?.types)
+      expect(spy).not.toHaveBeenCalled()
     })
   })
 
@@ -272,7 +278,7 @@ describe('TSConfig', () => {
         tree.delete(paths.tsconfig)
       }
 
-      tsconfig = new TSConfig(tree, paths.tsconfig)
+      tsconfig = new TSConfig(paths.tsconfig, tree)
       tsconfig.write()
 
       expect(tree.exists(paths.tsconfig)).toBe(true)
@@ -296,7 +302,7 @@ describe('TSConfig', () => {
 
     it('writes to a different file if provided', () => {
       const path = 'tsconfig.app.json'
-      tsconfig.write(undefined, path)
+      tsconfig.write(path)
 
       expect(readJson<Tsconfig>(tree, path)).toMatchObject(config)
     })
@@ -304,21 +310,21 @@ describe('TSConfig', () => {
     it('writes to a different file tree if provided', () => {
       const newTree = createTestTree('another-test')
       const path = 'packages/another-test/tsconfig.json'
-      tsconfig.write(newTree, path)
+      tsconfig.write(path, newTree)
       expect(readJson<Tsconfig>(newTree, path)).toMatchObject(config)
     })
 
     it('updates path and tree if provided', () => {
       const path = 'tsconfig.lib.json'
       const newTree = createTestTree()
-      tsconfig.write(newTree, path)
+      tsconfig.write(path, newTree)
       expect(tsconfig).toMatchObject({ $path: path, $tree: newTree })
     })
 
     it("throws if it can't overwrite an existing file", () => {
       writeJson(tree, paths.tsconfig, config)
       expect(() => {
-        tsconfig.write(tree, paths.tsconfig, {
+        tsconfig.write(paths.tsconfig, tree, {
           overwriteStrategy: OverwriteStrategy.ThrowIfExisting,
         })
       }).toThrow()
@@ -326,7 +332,7 @@ describe('TSConfig', () => {
 
     it('writes a warning to console if overwrite strategy is KeepExisting', () => {
       const spy = vi.spyOn(logger, 'warn')
-      tsconfig.write(tree, paths.tsconfig, {
+      tsconfig.write(paths.tsconfig, tree, {
         overwriteStrategy: OverwriteStrategy.KeepExisting,
       })
       expect(spy).toHaveBeenCalledExactlyOnceWith(
@@ -337,12 +343,12 @@ describe('TSConfig', () => {
 
   describe('TSConfig.read', () => {
     it('reads a config file from the file system', () => {
-      expect(TSConfig.read(tree, paths.tsconfig)).toBeDefined()
+      expect(TSConfig.read(paths.tsconfig, tree)).toBeDefined()
     })
 
     it('throws if path does not exist', () => {
       tree.delete(paths.tsconfig)
-      expect(() => TSConfig.read(tree, paths.tsconfig)).toThrow()
+      expect(() => TSConfig.read(paths.tsconfig, tree)).toThrow()
     })
   })
 
@@ -366,7 +372,6 @@ describe('TSConfig', () => {
       cfg.compilerOptions!.types!.push(null, 'type3')
       cfg.compilerOptions!.emitBOM = null
       cfg.compilerOptions!.plugins!.push({ name: null }, null)
-
       expect(TSConfig.normalize(cfg)).toStrictEqual(config)
     })
 

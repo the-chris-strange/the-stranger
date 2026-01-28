@@ -24,6 +24,18 @@ export default {
       },
     },
     {
+      files: ['package.json'],
+      options: {
+        plugins: ['prettier-plugin-packagejson'],
+      },
+    },
+    {
+      files: ['tsconfig.json', 'tsconfig.*.json'],
+      options: {
+        objectWrap: 'collapse',
+      },
+    },
+    {
       files: ['*.md'],
       options: {
         printWidth: 120,
@@ -31,7 +43,6 @@ export default {
       },
     },
   ],
-  plugins: ['prettier-plugin-packagejson'],
   printWidth: 88,
   proseWrap: 'preserve',
   quoteProps: 'consistent',
@@ -39,5 +50,6 @@ export default {
   singleQuote: true,
   tabWidth: 2,
   trailingComma: 'all',
+
   useTabs: false,
 } satisfies Config
