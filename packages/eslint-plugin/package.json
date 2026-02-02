@@ -33,6 +33,9 @@
       "import": "./src/lib/configs/vitest.js"
     }
   },
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "types": "./src/types.d.ts",
   "dependencies": {
     "eslint-plugin-jsdoc": "^50.8.0",
     "eslint-plugin-jsonc": "^2.21.0",
