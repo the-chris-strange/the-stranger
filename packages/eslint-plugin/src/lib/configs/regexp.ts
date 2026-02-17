@@ -1,9 +1,16 @@
-import re from 'eslint-plugin-regexp'
+import rePlugin from 'eslint-plugin-regexp'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
-import { objectNamer } from '../namer.js'
+import { namer } from '../namer.js'
+import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-export default [
-  objectNamer(re.configs['flat/recommended'], 're-recommended'),
-] as Linter.Config[]
+export const re = [
+  {
+    extends: [rePlugin.configs['flat/recommended']],
+    files: getFilePatterns(FilePatterns.source),
+    name: namer('re'),
+  },
+] satisfies InfiniteConfigArray
+
+export default re

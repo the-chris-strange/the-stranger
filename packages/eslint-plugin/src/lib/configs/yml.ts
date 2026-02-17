@@ -1,6 +1,6 @@
-import yml from 'eslint-plugin-yml'
+import ymlPlugin from 'eslint-plugin-yml'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 
@@ -34,12 +34,10 @@ const stepKeyOrder = ['id', 'name', 'if', 'run', 'uses', 'with', 'env']
 
 const topLevelAscKeys = ['on', 'permissions', 'defaults'].join('|')
 
-export default [
-  yml.configs['flat/standard'],
-
+export const cspellConfig = [
   {
     files: ['cspell.config.yaml', '**/cspell.config.yaml'],
-    name: namer('cspell-config'),
+    name: namer('sort/cspell-config'),
     rules: {
       'yml/sort-keys': [
         'error',
@@ -71,10 +69,12 @@ export default [
       ],
     },
   },
+] satisfies InfiniteConfigArray
 
+export const githubActions = [
   {
     files: ['.github/workflows/*.yml'],
-    name: namer('github-actions'),
+    name: namer('sort/github-actions'),
     rules: {
       'yml/no-empty-mapping-values': 'off',
       'yml/sort-keys': [
@@ -105,10 +105,12 @@ export default [
       ],
     },
   },
+] satisfies InfiniteConfigArray
 
+export const markdownlintConfig = [
   {
     files: ['.markdownlint-cli2.yaml'],
-    name: namer('markdownlint-config'),
+    name: namer('sort/markdownlint-config'),
     rules: {
       'yml/sort-keys': [
         'error',
@@ -121,10 +123,12 @@ export default [
       ],
     },
   },
+] satisfies InfiniteConfigArray
 
+export const yarnrc = [
   {
     files: ['.yarnrc.yml'],
-    name: namer('yarnrc'),
+    name: namer('sort/yarnrc'),
     rules: {
       'yml/sort-keys': ['error', { order: { type: 'asc' }, pathPattern: '^$' }],
       'yml/sort-sequence-values': [
@@ -136,4 +140,19 @@ export default [
       ],
     },
   },
-] as Linter.Config[]
+] satisfies InfiniteConfigArray
+
+export const yml = [
+  {
+    extends: [ymlPlugin.configs['flat/standard']],
+    files: ['*.yml', '*.yaml'],
+    name: namer('yml/standard'),
+  },
+
+  ...cspellConfig,
+  ...githubActions,
+  ...markdownlintConfig,
+  ...yarnrc,
+] satisfies InfiniteConfigArray
+
+export default yml

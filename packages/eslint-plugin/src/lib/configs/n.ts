@@ -1,20 +1,17 @@
-import n from 'eslint-plugin-n'
+import nPlugin from 'eslint-plugin-n'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-export default [
+export const n = [
   {
+    extends: [nPlugin.configs['flat/recommended']],
     files: getFilePatterns(FilePatterns.source),
     name: namer('n(ode)'),
-    plugins: { n },
     rules: {
       'n/exports-style': ['error', 'module.exports'],
-      'n/hashbang': 'error',
-      'n/no-deprecated-api': 'error',
-      'n/no-process-exit': 'error',
       'n/prefer-global/buffer': ['error', 'always'],
       'n/prefer-global/console': ['error', 'always'],
       'n/prefer-global/process': ['error', 'always'],
@@ -25,4 +22,6 @@ export default [
       'n/prefer-node-protocol': 'error',
     },
   },
-] as Linter.Config[]
+] satisfies InfiniteConfigArray
+
+export default n

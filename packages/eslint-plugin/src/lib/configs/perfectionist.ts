@@ -1,17 +1,19 @@
-import perfectionist from 'eslint-plugin-perfectionist'
+import perfectionistPlugin from 'eslint-plugin-perfectionist'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
-import { namer, objectNamer } from '../namer.js'
+import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 import { setRuleLevel } from '../severity.js'
 
-const configNatural = setRuleLevel('warn', perfectionist.configs['recommended-natural'])
+const configNatural = setRuleLevel(
+  'warn',
+  perfectionistPlugin.configs['recommended-natural'],
+)
 
-export default [
-  objectNamer(configNatural, 'perfectionist-recommended-natural'),
-
+export const perfectionist = [
   {
+    extends: [configNatural],
     files: getFilePatterns(FilePatterns.source),
     name: namer('perfectionist'),
     rules: {
@@ -41,12 +43,6 @@ export default [
           forceNumericSort: true,
         },
       ],
-      'perfectionist/sort-exports': [
-        'warn',
-        {
-          type: 'natural',
-        },
-      ],
       'perfectionist/sort-imports': [
         'warn',
         {
@@ -63,7 +59,6 @@ export default [
             'unknown',
           ],
           newlinesBetween: 'always',
-          type: 'natural',
         },
       ],
       'perfectionist/sort-interfaces': 'off',
@@ -94,13 +89,6 @@ export default [
         'warn',
         {
           groupKind: 'values-first',
-          type: 'natural',
-        },
-      ],
-      'perfectionist/sort-named-imports': [
-        'warn',
-        {
-          type: 'natural',
         },
       ],
       'perfectionist/sort-union-types': [
@@ -128,9 +116,11 @@ export default [
 
   {
     files: ['eslint.config.*', 'prettier.config.*', 'yarn.config.cjs'],
-    name: namer('disable sort for configuration files'),
+    name: namer('disable object sort for configuration files'),
     rules: {
       'perfectionist/sort-objects': 'off',
     },
   },
-] as Linter.Config[]
+] satisfies InfiniteConfigArray
+
+export default perfectionist

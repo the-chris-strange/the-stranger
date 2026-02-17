@@ -1,14 +1,16 @@
-import tseslint from 'typescript-eslint'
+import tseslintPlugin from 'typescript-eslint'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-const config: Linter.Config[] = [
+export const tseslint = [
+  tseslintPlugin.configs['recommended'],
+
   {
     files: getFilePatterns(FilePatterns.source),
-    name: namer('unnecessary ts rules'),
+    name: namer('ts-eslint'),
     rules: {
       /** I do what I want ¯\\\_(ツ)\_/¯ */
       '@typescript-eslint/no-explicit-any': 'off',
@@ -19,14 +21,10 @@ const config: Linter.Config[] = [
   {
     files: getFilePatterns(FilePatterns.test),
     name: namer('disable no-non-null in tests'),
-    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
   },
-]
+] satisfies InfiniteConfigArray
 
-try {
-  await import('@nx/eslint-plugin')
-} catch {
-  config.unshift(...tseslint.configs.recommended)
-}
-
-export default config
+export default tseslint

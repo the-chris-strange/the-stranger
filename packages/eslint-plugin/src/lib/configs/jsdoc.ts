@@ -1,17 +1,15 @@
-import jsdoc from 'eslint-plugin-jsdoc'
+import jsdocPlugin from 'eslint-plugin-jsdoc'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-// tags used by docusaurus to generate docs from jsdoc comments
-export const DOCUSAURUS_TAGS = ['document']
-
-export default [
+export const jsdoc = [
   {
+    files: getFilePatterns(FilePatterns.source),
     name: namer('jsdoc'),
-    plugins: { jsdoc },
+    plugins: { jsdoc: jsdocPlugin },
     rules: {
       'jsdoc/require-jsdoc': 'off',
       'jsdoc/require-returns': [
@@ -31,22 +29,16 @@ export default [
   },
 
   {
-    extends: [jsdoc.configs['flat/recommended-typescript']],
+    extends: [jsdocPlugin.configs['flat/recommended-typescript']],
     files: getFilePatterns(FilePatterns.ts),
     name: namer('jsdoc/typescript'),
   },
 
   {
-    extends: [jsdoc.configs['flat/recommended']],
+    extends: [jsdocPlugin.configs['flat/recommended']],
     files: getFilePatterns(FilePatterns.js),
     name: namer('jsdoc/javascript'),
   },
+] satisfies InfiniteConfigArray
 
-  {
-    files: getFilePatterns(FilePatterns.source),
-    name: namer('jsdoc/docusaurus'),
-    rules: {
-      'jsdoc/check-tag-names': ['warn', { definedTags: DOCUSAURUS_TAGS }],
-    },
-  },
-] as Linter.Config[]
+export default jsdoc

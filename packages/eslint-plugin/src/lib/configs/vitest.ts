@@ -1,14 +1,13 @@
-import vitest from '@vitest/eslint-plugin'
+import vitestPlugin from '@vitest/eslint-plugin'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-export default [
-  vitest.configs['recommended'],
-
+export const vitest = [
   {
+    extends: [vitestPlugin.configs['recommended']],
     files: getFilePatterns(FilePatterns.test),
     name: namer('vitest'),
     rules: {
@@ -17,4 +16,6 @@ export default [
       'vitest/valid-title': ['warn', { disallowedWords: ['should'] }],
     },
   },
-] as Linter.Config[]
+] satisfies InfiniteConfigArray
+
+export default vitest
