@@ -33,6 +33,9 @@ export function expandExtension(ext: string) {
 export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
   return patterns.map(pattern => {
     switch (pattern) {
+      case FilePatterns.all: {
+        return '**/*'
+      }
       case FilePatterns.astro: {
         return sourceFilePattern('astro')
       }
@@ -95,6 +98,10 @@ export function testFilePattern(...extensions: (string | string[])[]) {
  * Common file patterns used in ESLint configurations.
  */
 export enum FilePatterns {
+  /**
+   * All files ('**\/*').
+   */
+  all = 'all-files',
   /**
    * Astro-specific files ('.astro').
    */

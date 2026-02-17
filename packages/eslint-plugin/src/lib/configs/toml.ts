@@ -1,13 +1,12 @@
-import toml from 'eslint-plugin-toml'
+import tomlPlugin from 'eslint-plugin-toml'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 
-export default [
-  toml.configs['flat/recommended'],
-
+export const toml = [
   {
+    extends: [tomlPlugin.configs['flat/recommended']],
     files: ['**/*.toml'],
     name: namer('toml'),
     rules: {
@@ -37,4 +36,6 @@ export default [
       'toml/table-bracket-spacing': 'warn',
     },
   },
-] as Linter.Config[]
+] satisfies InfiniteConfigArray
+
+export default toml

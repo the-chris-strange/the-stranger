@@ -30,7 +30,12 @@ export default defineConfig(
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          runtimeHelpers: ['tslib', 'yaml-eslint-parser', 'toml-eslint-parser'],
+          runtimeHelpers: [
+            'tslib',
+            'yaml-eslint-parser',
+            'toml-eslint-parser',
+            'astro-eslint-parser',
+          ],
         },
       ],
     },

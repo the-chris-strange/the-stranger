@@ -1,17 +1,21 @@
-import type { Linter } from 'eslint'
-
 import { extendConfig } from '../extend-config.js'
+import astro from './astro.js'
+import cypress from './cypress.js'
+import jest from './jest.js'
 import jsdoc from './jsdoc.js'
 import jsonc from './jsonc.js'
 import n from './n.js'
 import perfectionist from './perfectionist.js'
 import promise from './promise.js'
+import react from './react.js'
 import regexp from './regexp.js'
+import toml from './toml.js'
 import ts from './typescript-eslint.js'
 import unicorn from './unicorn.js'
+import vitest from './vitest.js'
 import yml from './yml.js'
 
-const recommendedConfigs = {
+const standardConfigs = {
   jsdoc,
   jsonc,
   n,
@@ -23,22 +27,27 @@ const recommendedConfigs = {
   yml,
 }
 
-interface Configs {
-  base: Linter.Config[]
-  jsdoc: Linter.Config[]
-  jsonc: Linter.Config[]
-  n: Linter.Config[]
-  perfectionist: Linter.Config[]
-  promise: Linter.Config[]
-  recommended: Linter.Config[]
-  regexp: Linter.Config[]
-  ts: Linter.Config[]
-  unicorn: Linter.Config[]
-  yml: Linter.Config[]
-}
+const extendedConfigs = Object.fromEntries(
+  Object.entries(standardConfigs).map(([key, config]) => [key, extendConfig(config)]),
+)
 
-export const configs: Configs = {
-  ...recommendedConfigs,
+export const configs = {
+  ...extendedConfigs,
+  all: extendConfig(
+    ...Object.values(standardConfigs),
+    jest,
+    toml,
+    vitest,
+    astro,
+    cypress,
+    react,
+  ),
+  astro,
   base: extendConfig(),
-  recommended: extendConfig(...Object.values(recommendedConfigs)),
+  cypress,
+  jest,
+  react,
+  standard: extendConfig(vitest, ...Object.values(standardConfigs)),
+  toml,
+  vitest,
 }

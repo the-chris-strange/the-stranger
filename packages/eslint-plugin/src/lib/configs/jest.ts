@@ -1,15 +1,13 @@
-import jest from 'eslint-plugin-jest'
+import jestPlugin from 'eslint-plugin-jest'
 
-import type { Linter } from 'eslint'
+import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
 
-export default [
-  jest.configs['flat/recommended'],
-  jest.configs['flat/style'],
-
+export const jest = [
   {
+    extends: [jestPlugin.configs['flat/recommended'], jestPlugin.configs['flat/style']],
     files: getFilePatterns(FilePatterns.test),
     name: namer('jest'),
     rules: {
@@ -29,4 +27,6 @@ export default [
       'jest/valid-title': ['warn', { disallowedWords: ['should'] }],
     },
   },
-] as Linter.Config[]
+] satisfies InfiniteConfigArray
+
+export default jest
