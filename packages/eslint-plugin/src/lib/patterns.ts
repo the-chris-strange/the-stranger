@@ -55,7 +55,13 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
         return testFilePattern('js', 'jsx')
       }
       case FilePatterns.react: {
-        return sourceFilePattern('jsx', 'tsx')
+        return sourceFilePattern('js', 'ts', 'jsx', 'tsx')
+      }
+      case FilePatterns.reactJs: {
+        return sourceFilePattern('js', 'jsx')
+      }
+      case FilePatterns.reactTs: {
+        return sourceFilePattern('ts', 'tsx')
       }
       case FilePatterns.source: {
         return sourceFilePattern(expandExtension('js'), expandExtension('ts'), 'astro')
@@ -127,9 +133,17 @@ export enum FilePatterns {
    */
   jsTest = 'js-test-files',
   /**
-   * React files ('.jsx' and '.tsx').
+   * JavaScript and TypeScript React files ('.jsx' and '.tsx').
    */
   react = 'react-files',
+  /**
+   * React JavaScript files ('.jsx').
+   */
+  reactJs = 'react-js-files',
+  /**
+   * React TypeScript files ('.tsx').
+   */
+  reactTs = 'react-ts-files',
   /**
    * All JavaScript and TypeScript source files.
    */

@@ -50,13 +50,16 @@ describe('testFilePattern', () => {
 
 describe('getFilePatterns', () => {
   const testCases: [FilePatterns, string[]][] = [
+    [FilePatterns.all, ['**/*']],
     [FilePatterns.astro, ['**/*.astro']],
     [FilePatterns.astroScript, ['**/*.astro/**/*.{js,ts}']],
     [FilePatterns.cjs, ['**/*.{cjs,cts}']],
     [FilePatterns.esm, ['**/*.{mjs,mts}']],
     [FilePatterns.js, ['**/*.{js,cjs,mjs,jsx}']],
     [FilePatterns.jsTest, ['**/*.{spec,test}.{js,jsx}']],
-    [FilePatterns.react, ['**/*.{jsx,tsx}']],
+    [FilePatterns.react, ['**/*.{js,ts,jsx,tsx}']],
+    [FilePatterns.reactJs, ['**/*.{js,jsx}']],
+    [FilePatterns.reactTs, ['**/*.{ts,tsx}']],
     [FilePatterns.source, ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,astro}']],
     [FilePatterns.test, ['**/*.{spec,test}.{js,jsx,ts,tsx}']],
     [FilePatterns.ts, ['**/*.{ts,cts,mts,tsx}']],
