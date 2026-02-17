@@ -8,6 +8,7 @@ import type { ESLint } from 'eslint'
 import type { InfiniteConfigArray } from '../extend-config.js'
 
 import { FilePatterns, getFilePatterns } from '../patterns.js'
+import { languageOptions } from './typescript-eslint.js'
 
 export const react = [
   {
@@ -34,6 +35,20 @@ export const react = [
       '@eslint-react/no-missing-context-display-name': 'warn',
       '@eslint-react/prefer-read-only-props': 'error',
     },
+  },
+
+  {
+    extends: [eslintReact.configs['strict-typescript']],
+    files: getFilePatterns(FilePatterns.reactTs),
+    languageOptions,
+  },
+] satisfies InfiniteConfigArray
+
+export const reactTypeChecked = [
+  {
+    extends: [react, eslintReact.configs['strict-type-checked']],
+    files: getFilePatterns(FilePatterns.reactTs),
+    languageOptions,
   },
 ] satisfies InfiniteConfigArray
 

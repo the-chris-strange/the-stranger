@@ -75,10 +75,13 @@ export default defineConfig({
 - **Perfectionist**: Extends [eslint-plugin-perfectionist]; sorts all the things. Rules in this preset are set to "warn" by default.
 - **Promise**: Recommended rules from [eslint-plugin-promise].
 - **React**: Combines [@eslint-react/eslint-plugin], [eslint-plugin-react-hooks], [eslint-plugin-react-compiler], and [eslint-plugin-jsx-a11y].
+  - **React (type-checked)**: Extends the React preset with [eslint-react]'s strict type-checked config.
 - **Regexp**: Recommended rules from [eslint-plugin-regexp].
 - **Standard**: Curated default preset (Vitest + core linting presets) for most projects.
 - **TOML**: Uses [eslint-plugin-toml] and [toml-eslint-parser] to lint TOML files.
 - **TypeScript (ts)**: Sets up TypeScript linting via [typescript-eslint], disabling a few noisy rules; falls back when Nx is unavailable.
+  - **TypeScript (type-checked)**: Extends the TypeScript preset with rules that require type information.
+  - **TypeScript (type-checked strict)**: Extends the TypeScript preset with stricter rules.
 - **Vitest**: Uses [@vitest/eslint-plugin] to keep test files readable.
 - **Unicorn**: Recommended rules from [eslint-plugin-unicorn] with customizations.
 - **YAML**: Recommended config from [eslint-plugin-yml], plus key and array sorting via [yaml-eslint-parser].
@@ -92,7 +95,7 @@ These presets load only when their peer dependencies are present:
 ## Utilities
 
 - **getFilePatterns**: Generates glob patterns.
-- **setRuleLevel**: Sets the severity of some or all rules in a config; handles nested configs.
+- **setRuleLevel**: Sets the severity of some or all rules in a config or an array of configs.
 
 <!-- Links -->
 

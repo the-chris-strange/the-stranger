@@ -1,4 +1,4 @@
-import { extendConfig } from '../extend-config.js'
+import { extendConfig, type InfiniteConfigArray } from '../extend-config.js'
 import astro from './astro.js'
 import cypress from './cypress.js'
 import jest from './jest.js'
@@ -7,10 +7,10 @@ import jsonc from './jsonc.js'
 import n from './n.js'
 import perfectionist from './perfectionist.js'
 import promise from './promise.js'
-import react from './react.js'
+import react, { reactTypeChecked } from './react.js'
 import regexp from './regexp.js'
 import toml from './toml.js'
-import ts from './typescript-eslint.js'
+import ts, { typeChecked, typeCheckedStrict } from './typescript-eslint.js'
 import unicorn from './unicorn.js'
 import vitest from './vitest.js'
 import yml from './yml.js'
@@ -27,27 +27,24 @@ const standardConfigs = {
   yml,
 }
 
-const extendedConfigs = Object.fromEntries(
-  Object.entries(standardConfigs).map(([key, config]) => [key, extendConfig(config)]),
-)
-
-export const configs = {
-  ...extendedConfigs,
-  all: extendConfig(
-    ...Object.values(standardConfigs),
-    jest,
-    toml,
-    vitest,
-    astro,
-    cypress,
-    react,
-  ),
+const allConfigs = {
+  ...standardConfigs,
   astro,
-  base: extendConfig(),
   cypress,
   jest,
   react,
-  standard: extendConfig(vitest, ...Object.values(standardConfigs)),
+  reactTypeChecked,
   toml,
+  typeChecked,
+  typeCheckedStrict,
   vitest,
 }
+
+export const configs = {
+  ...allConfigs,
+  all: extendConfig(...Object.values(allConfigs)),
+  base: extendConfig(),
+  standard: extendConfig(vitest, ...Object.values(standardConfigs)),
+}
+
+export type Configs = { [K in keyof typeof configs]: InfiniteConfigArray }
