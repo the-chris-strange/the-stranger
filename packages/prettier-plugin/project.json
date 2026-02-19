@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "packages/prettier-plugin/src",
-  "tags": [],
+  "tags": ["npm:public"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc"
