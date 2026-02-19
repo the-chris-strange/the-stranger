@@ -1,9 +1,9 @@
 {
   "executors": {
-    "update-manifest": {
-      "description": "Update package.json files in destination to match those in source",
-      "implementation": "src/executors/update-manifest/executor.ts",
-      "schema": "src/executors/update-manifest/schema.json"
+    "sync-manifest": {
+      "description": "Sync workspace package.json files with the root package.json",
+      "implementation": "src/executors/sync-manifest/executor.ts",
+      "schema": "src/executors/sync-manifest/schema.json"
     }
   }
 }

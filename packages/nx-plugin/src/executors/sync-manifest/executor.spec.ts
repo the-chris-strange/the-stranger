@@ -6,15 +6,16 @@ import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { writeJson } from '../../lib/json'
 import executor from './executor'
-import { UpdateManifestSchema } from './schema'
+import { SyncManifestSchema } from './schema'
 
-describe('UpdateManifest Executor', () => {
+describe('ValidateManifest Executor', () => {
   const cwd = process.cwd()
-  const root = `tmp/executor-tests`
+  const tmp = 'tmp'
+  const root = `${tmp}/executor-tests`
   const projectRoot = `${root}/packages/test`
   const pkgJsonPath = `${cwd}/${projectRoot}/package.json`
   let context: ExecutorContext
-  let options: UpdateManifestSchema
+  let options: SyncManifestSchema
 
   beforeEach(() => {
     context = {
@@ -43,7 +44,7 @@ describe('UpdateManifest Executor', () => {
   })
 
   afterAll(async () => {
-    const cleanupDirs = [`${cwd}/${root}`]
+    const cleanupDirs = [`${cwd}/${tmp}`]
     await Promise.all(
       cleanupDirs.map(async dir => await rm(dir, { force: true, recursive: true })),
     )
