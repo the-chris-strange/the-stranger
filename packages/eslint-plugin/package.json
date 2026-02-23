@@ -7,7 +7,6 @@
   },
   "type": "module",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
       "types": "./src/index.d.ts",
       "import": "./src/index.js"
@@ -19,7 +18,8 @@
     "./nx": {
       "types": "./src/nx.d.ts",
       "import": "./src/nx.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "main": "./src/index.js",
   "module": "./src/index.js",
