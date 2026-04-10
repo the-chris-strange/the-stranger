@@ -1,5 +1,6 @@
 import nx from '@nx/eslint-plugin'
 import vitest from '@vitest/eslint-plugin'
+import prettierConfig from 'eslint-config-prettier'
 import jsdoc from 'eslint-plugin-jsdoc'
 import jsonc from 'eslint-plugin-jsonc'
 import n from 'eslint-plugin-n'
@@ -9,67 +10,143 @@ import re from 'eslint-plugin-regexp'
 import unicorn from 'eslint-plugin-unicorn'
 import yml from 'eslint-plugin-yml'
 import { defineConfig } from 'eslint/config'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
 /**
  * Array of file patterns matching JavaScript (but not TypeScript) files.
  * @example *.js, *.mjs
  */
-const JS_FILES = ['*.{js,mjs,cjs,jsx}', '**/*.{js,mjs,cjs,jsx}']
+export const JS_FILES = ['*.{js,mjs,cjs,jsx}', '**/*.{js,mjs,cjs,jsx}']
 
 /**
  * Array of file patterns matching TypeScript (but not JavaScript) files.
  * @example *.ts, *.tsx
  */
-const TS_FILES = ['*.{ts,mts,cts,tsx}', '**/*.{ts,mts,cts,tsx}']
+export const TS_FILES = ['*.{ts,mts,cts,tsx}', '**/*.{ts,mts,cts,tsx}']
 
 /**
  * Array of file patterns matching test files.
  * @example *.spec.ts, *.test.jsx
  */
-const TEST_FILES = ['**/*.{spec,test}.{js,jsx,ts,tsx}']
+export const TEST_FILES = ['**/*.{spec,test}.{js,jsx,ts,tsx}']
 
 /**
  * Array of file patterns matching all source files.
  */
 export const SOURCE_FILES = [...JS_FILES, ...TS_FILES]
 
-/**
- * Rules for 'eslint-plugin-perfectionist'.
- */
-const perfectionistConfig = defineConfig(
-  perfectionist.configs['recommended-natural'],
+export const disableTypeChecked = defineConfig({
+  name: tseslint.configs.disableTypeChecked.name,
+  rules: tseslint.configs.disableTypeChecked.rules,
+})
+
+const sourceFilesConfig = defineConfig(
+  {
+    plugins: {
+      '@nx': nx,
+    },
+  },
 
   {
+    name: 'general-purpose config for source code',
+    files: SOURCE_FILES,
+    extends: [
+      perfectionist.configs['recommended-natural'],
+      tseslint.configs['recommended'],
+      unicorn.configs['unopinionated'],
+      jsdoc.configs['flat/recommended'],
+      re.configs['flat/recommended'],
+      promise.configs['flat/recommended'],
+    ],
+    plugins: {
+      n,
+      jsdoc,
+    },
+    settings: {
+      jsdoc: {
+        tagNamePreference: {
+          augments: 'extends',
+        },
+      },
+    },
+  },
+
+  {
+    name: 'base config for JavaScript files',
+    files: JS_FILES,
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
+
+  {
+    name: 'base config for TypeScript files',
+    files: TS_FILES,
+    extends: [
+      tseslint.configs['recommendedTypeCheckedOnly'],
+      jsdoc.configs['flat/recommended-typescript'],
+    ],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-deprecated': 'warn',
+      '@typescript-eslint/prefer-return-this-type': 'error',
+      '@typescript-eslint/no-extraneous-class': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
+  },
+
+  {
+    name: 'override rules for all source files',
     files: SOURCE_FILES,
     rules: {
+      'jsdoc/require-jsdoc': 'off',
+      'jsdoc/require-returns': ['warn', { checkGetters: false }],
+
+      'n/exports-style': ['error', 'module.exports'],
+      'n/hashbang': 'error',
+      'n/no-deprecated-api': 'error',
+      'n/no-process-exit': 'error',
+      'n/prefer-node-protocol': 'error',
+      'n/prefer-global/buffer': ['error', 'always'],
+      'n/prefer-global/console': ['error', 'always'],
+      'n/prefer-global/process': ['error', 'always'],
+      'n/prefer-global/text-decoder': ['error', 'never'],
+      'n/prefer-global/text-encoder': ['error', 'never'],
+      'n/prefer-global/url-search-params': ['error', 'never'],
+      'n/prefer-global/url': ['error', 'never'],
+
       'perfectionist/sort-imports': [
         'warn',
         {
-          type: 'natural',
-          newlinesBetween: 'always',
           groups: [
             ['side-effect', 'side-effect-style'],
-            'builtin',
-            'external',
-            'type',
-            'internal-type',
-            'internal',
-            ['parent-type', 'sibling-type', 'index-type'],
-            ['parent', 'sibling', 'index'],
-            'object',
+            'style',
+            'value-builtin',
+            'value-external',
+            'type-import',
+            'type-internal',
+            'value-internal',
+            ['type-parent', 'type-sibling', 'type-index'],
+            ['value-parent', 'value-sibling', 'value-index'],
+            'ts-equals-import',
             'unknown',
           ],
         },
       ],
-      'perfectionist/sort-enums': [
-        'warn',
-        {
-          forceNumericSort: true,
-        },
-      ],
+      'perfectionist/sort-enums': ['error', { type: 'natural', sortByValue: 'never' }],
       'perfectionist/sort-union-types': [
         'warn',
         {
+          type: 'natural',
           ignoreCase: false,
           groups: [
             'conditional',
@@ -87,43 +164,46 @@ const perfectionistConfig = defineConfig(
           ],
         },
       ],
-      'perfectionist/sort-exports': [
-        'warn',
-        {
-          type: 'natural',
-        },
-      ],
-      'perfectionist/sort-named-imports': [
-        'warn',
-        {
-          type: 'natural',
-        },
-      ],
+      'perfectionist/sort-exports': 'warn',
+      'perfectionist/sort-named-imports': 'warn',
       'perfectionist/sort-named-exports': [
         'warn',
-        {
-          type: 'natural',
-          groupKind: 'values-first',
-        },
+        { groups: ['value-export', 'type-export'] },
       ],
       'perfectionist/sort-interfaces': 'off',
       'perfectionist/sort-classes': [
         'warn',
         {
           groups: [
+            'static-property',
+            'property',
+            'protected-static-property',
+            'protected-property',
+            'private-static-property',
+            'private-property',
             'constructor',
             'index-signature',
-            'static-block',
+            'static-accessor-property',
             'accessor-property',
+            ['static-method', 'static-function-property'],
+            ['method', 'function-property'],
+            ['static-get-method', 'static-set-method'],
             ['get-method', 'set-method'],
-            'method',
             'override-method',
-            'static-method',
-            'protected-method',
-            'private-method',
+            'static-block',
+            ['protected-static-method', 'protected-static-function-property'],
+            ['protected-method', 'protected-function-property'],
+            ['private-static-method', 'private-static-function-property'],
+            ['private-method', 'private-function-property'],
+            'protected-static-accessor-property',
             'protected-accessor-property',
+            'private-static-accessor-property',
             'private-accessor-property',
+            ['protected-static-get-method', 'protected-static-set-method'],
+            ['protected-get-method', 'protected-set-method'],
+            ['private-static-get-method', 'private-static-set-method'],
             ['private-get-method', 'private-set-method'],
+            'unknown',
           ],
         },
       ],
@@ -150,33 +230,15 @@ const perfectionistConfig = defineConfig(
           ],
         },
       ],
-    },
-  },
 
-  {
-    files: [
-      'eslint.config.ts',
-      'eslint.config.mjs',
-      'prettier.config.mjs',
-      'yarn.config.cjs',
-    ],
-    rules: {
-      'perfectionist/sort-objects': 'off',
-    },
-  },
-)
+      'promise/no-multiple-resolved': 'warn',
+      'promise/prefer-await-to-callbacks': 'warn',
+      'promise/prefer-await-to-then': 'warn',
+      'promise/spec-only': 'error',
 
-/**
- * Configuration objects for 'eslint-plugin-unicorn'.
- */
-const unicornConfig = defineConfig(
-  unicorn.configs['recommended'],
-
-  {
-    files: SOURCE_FILES,
-    rules: {
       'unicorn/no-array-reverse': 'off',
       'unicorn/no-array-sort': 'off',
+      'unicorn/prevent-abbreviations': 'off',
       'unicorn/custom-error-definition': 'warn',
       'unicorn/no-array-reduce': 'off',
       'unicorn/no-array-callback-reference': 'off',
@@ -190,17 +252,67 @@ const unicornConfig = defineConfig(
           },
         },
       ],
+
+      '@nx/enforce-module-boundaries': [
+        'error',
+        {
+          enforceBuildableLibDependency: true,
+          allow: ['eslint.config.*'],
+          depConstraints: [
+            {
+              sourceTag: 'npm:public',
+              onlyDependOnLibsWithTags: ['npm:public'],
+            },
+          ],
+        },
+      ],
+
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/explicit-member-accessibility': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/parameter-properties': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
 
   {
-    files: ['**/*'],
+    files: TEST_FILES,
+    extends: [vitest.configs['recommended']],
     rules: {
-      'unicorn/prevent-abbreviations': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+
+      'unicorn/no-nested-ternary': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/no-useless-undefined': [
+        'error',
+        { checkArrowFunctionBody: false, checkArguments: false },
+      ],
+      'unicorn/consistent-function-scoping': 'off',
+
+      'vitest/consistent-test-it': ['warn', { fn: 'it' }],
+      'vitest/valid-title': ['warn', { disallowedWords: ['should'] }],
+      'vitest/prefer-hooks-in-order': 'warn',
     },
   },
 
   {
+    name: 'disable object sort for config files',
+    files: [
+      'eslint.config.ts',
+      'eslint.config.mjs',
+      'prettier.config.mjs',
+      'yarn.config.cjs',
+    ],
+    rules: {
+      'perfectionist/sort-objects': 'off',
+    },
+  },
+
+  {
+    name: 'allow CommonJS in explicit cjs modules',
     files: ['**/*.cjs', '**/*.cts'],
     rules: {
       'unicorn/prefer-module': 'off',
@@ -208,6 +320,7 @@ const unicornConfig = defineConfig(
   },
 
   {
+    name: 'allow PascalCase or kebab-case for React files',
     files: ['**/*.tsx', '**/*.jsx'],
     rules: {
       'unicorn/filename-case': [
@@ -222,137 +335,14 @@ const unicornConfig = defineConfig(
     },
   },
 
-  {
-    files: TEST_FILES,
-    rules: {
-      'unicorn/no-nested-ternary': 'off',
-      'unicorn/no-null': 'off',
-      'unicorn/no-useless-undefined': [
-        'error',
-        { checkArrowFunctionBody: false, checkArguments: false },
-      ],
-      'unicorn/consistent-function-scoping': 'off',
-    },
-  },
-)
-
-/**
- * Configuration objects for 'eslint-plugin-jsdoc'.
- */
-const jsdocConfig = defineConfig(
-  { plugins: { jsdoc } },
-
-  {
-    files: TS_FILES,
-    rules: jsdoc.configs['flat/recommended-typescript'].rules,
-  },
-
-  {
-    files: JS_FILES,
-    rules: jsdoc.configs['flat/recommended'].rules,
-  },
-
-  {
-    files: SOURCE_FILES,
-    rules: {
-      'jsdoc/require-jsdoc': 'off',
-      'jsdoc/require-returns': [
-        'error',
-        {
-          checkGetters: false,
-        },
-      ],
-      'jsdoc/check-tag-names': ['warn', { definedTags: ['document'] }],
-    },
-  },
-)
-
-/**
- * Configuration objects for the typescript-eslint plugin.
- */
-const tsEslintConfig = defineConfig(
-  {
-    files: SOURCE_FILES,
-    rules: {
-      // unnecessary; ts language server covers this
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-    },
-  },
-  {
-    files: TEST_FILES,
-    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
-  },
-)
-
-/**
- * Configuration objects for nx.
- */
-const nxConfig = defineConfig(
-  nx.configs['flat/base'],
-  nx.configs['flat/typescript'],
-  nx.configs['flat/javascript'],
-
-  {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-    rules: {
-      '@nx/enforce-module-boundaries': [
-        'error',
-        {
-          enforceBuildableLibDependency: true,
-          allow: [],
-          depConstraints: [
-            {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
-            },
-          ],
-        },
-      ],
-    },
-  },
-)
-
-/**
- * Configuration objects for '@vitest/eslint-plugin'.
- */
-const vitestConfig = defineConfig(
-  vitest.configs['recommended'],
-
-  {
-    files: TEST_FILES,
-    rules: {
-      'vitest/consistent-test-it': ['warn', { fn: 'it' }],
-      'vitest/valid-title': ['warn', { disallowedWords: ['should'] }],
-      'vitest/prefer-hooks-in-order': 'warn',
-    },
-  },
-)
-
-const nConfig = defineConfig(
-  { plugins: { n } },
-
-  {
-    files: SOURCE_FILES,
-    rules: {
-      'n/exports-style': ['error', 'module.exports'],
-      'n/hashbang': 'error',
-      'n/no-deprecated-api': 'error',
-      'n/no-process-exit': 'error',
-      'n/prefer-node-protocol': 'error',
-      'n/prefer-global/buffer': ['error', 'always'],
-      'n/prefer-global/console': ['error', 'always'],
-      'n/prefer-global/process': ['error', 'always'],
-      'n/prefer-global/text-decoder': ['error', 'never'],
-      'n/prefer-global/text-encoder': ['error', 'never'],
-      'n/prefer-global/url-search-params': ['error', 'never'],
-      'n/prefer-global/url': ['error', 'never'],
-    },
-  },
+  prettierConfig,
 )
 
 const ymlConfig = defineConfig(
-  yml.configs['flat/standard'],
+  {
+    files: ['*.{yml,yaml}', '**/*.{yml,yaml}'],
+    extends: [yml.configs['flat/standard']],
+  },
 
   {
     files: ['cspell.config.yaml', '**/cspell.config.yaml'],
@@ -484,21 +474,8 @@ const ymlConfig = defineConfig(
   },
 )
 
-const reConfig = defineConfig(re.configs['flat/recommended'])
-
-const promiseConfig = defineConfig(promise.configs['flat/recommended'], {
-  name: 'Additional rules for asynchronous code',
-  files: SOURCE_FILES,
-  rules: {
-    'promise/no-multiple-resolved': 'warn',
-    'promise/prefer-await-to-callbacks': 'warn',
-    'promise/prefer-await-to-then': 'warn',
-    'promise/spec-only': 'error',
-  },
-})
-
 const jsonConfig = defineConfig(
-  jsonc.configs['flat/base'],
+  jsonc.configs['base'],
 
   {
     files: ['.vscode/settings.json'],
@@ -640,15 +617,7 @@ export default defineConfig(
     ],
   },
 
-  nxConfig,
-  perfectionistConfig,
-  unicornConfig,
-  tsEslintConfig,
-  jsdocConfig,
-  jsonConfig,
-  vitestConfig,
-  nConfig,
+  sourceFilesConfig,
   ymlConfig,
-  reConfig,
-  promiseConfig,
+  jsonConfig,
 )

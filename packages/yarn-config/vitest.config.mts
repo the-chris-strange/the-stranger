@@ -1,23 +1,19 @@
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig(() => ({
-  cacheDir: '../../node_modules/.vite/packages/prettier-plugin',
-
-  plugins: [nxViteTsPaths()],
+  cacheDir: '../../node_modules/.vitest/packages/yarn-config',
 
   root: import.meta.dirname,
 
   test: {
     coverage: {
-      exclude: ['src/test/**'],
       provider: 'v8' as const,
-      reportsDirectory: '../../coverage/packages/prettier-plugin',
+      reportsDirectory: '../../coverage/packages/yarn-config',
     },
     environment: 'node',
     globals: false,
     include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-    name: 'prettier-plugin',
+    name: 'yarn-config',
     passWithNoTests: true,
     typecheck: {
       include: [
