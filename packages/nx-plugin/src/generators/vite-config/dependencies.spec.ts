@@ -33,6 +33,7 @@ describe('vite-config generator package dependencies utility', () => {
       {
         devDependencies: {
           '@nx/vite': version,
+          '@nx/vitest': version,
           '@vitest/coverage-v8': version,
           'nx': version,
           'vite': version,
@@ -67,16 +68,16 @@ describe('vite-config generator package dependencies utility', () => {
     vi.restoreAllMocks()
   })
 
-  it("adds [ 'nx', '@nx/vite' ]", () => {
+  it("adds [ 'nx' ]", () => {
     addDependencies(tree, options, pkg)
 
-    const expected = expect.arrayContaining(['nx', '@nx/vite'])
+    const expected = expect.arrayContaining(['nx'])
     expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
   })
 
   it.each([
-    [['vite', 'vite-plugin-dts'], 'includeBuild' as const, true],
-    [['vitest', '@vitest/coverage-v8'], 'includeTest' as const, true],
+    [['@nx/vite', 'vite', 'vite-plugin-dts'], 'includeBuild' as const, true],
+    [['@nx/vitest', 'vitest', '@vitest/coverage-v8'], 'includeTest' as const, true],
     [['vite-plugin-react'], 'react' as const, true],
   ])(
     'adds %o when `%s` is %s',

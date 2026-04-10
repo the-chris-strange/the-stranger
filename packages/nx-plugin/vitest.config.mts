@@ -1,17 +1,13 @@
-import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin'
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig(() => ({
   cacheDir: '../../node_modules/.vite/packages/nx-plugin',
 
-  plugins: [nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
-
   root: __dirname,
 
   test: {
     coverage: {
-      exclude: ['src/tests/**'],
+      exclude: ['src/test/**'],
       provider: 'v8' as const,
       reportsDirectory: '../../coverage/packages/nx-plugin',
     },

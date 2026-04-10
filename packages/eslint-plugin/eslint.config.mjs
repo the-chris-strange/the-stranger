@@ -1,11 +1,20 @@
 import eslintPlugin from 'eslint-plugin-eslint-plugin'
 import { defineConfig } from 'eslint/config'
-import jsoncParser from 'jsonc-eslint-parser'
+import * as jsoncParser from 'jsonc-eslint-parser'
 
 import baseConfig from '../../eslint.config.mjs'
 
 export default defineConfig(
-  eslintPlugin.configs['recommended'],
+  ...baseConfig,
+
+  {
+    files: ['src/**/*.ts'],
+    extends: [eslintPlugin.configs['recommended']],
+    rules: {
+      'perfectionist/sort-interfaces': 'warn',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+    },
+  },
 
   {
     files: ['src/lib/configs/*.ts'],
@@ -15,8 +24,6 @@ export default defineConfig(
       'eslint-plugin/require-meta-schema': 'error',
     },
   },
-
-  ...baseConfig,
 
   {
     files: ['**/*.json'],
@@ -40,12 +47,5 @@ export default defineConfig(
       ],
     },
     languageOptions: { parser: jsoncParser },
-  },
-
-  {
-    files: ['src/**/*.ts'],
-    rules: {
-      'perfectionist/sort-interfaces': ['warn', { type: 'natural' }],
-    },
   },
 )

@@ -1,7 +1,7 @@
 import { defineConfig } from 'eslint/config'
-import jsoncParser from 'jsonc-eslint-parser'
+import * as jsoncParser from 'jsonc-eslint-parser'
 
-import baseConfig, { SOURCE_FILES } from '../../eslint.config.mjs'
+import baseConfig, { SOURCE_FILES, TEST_FILES } from '../../eslint.config.mjs'
 
 export default defineConfig(
   ...baseConfig,
@@ -67,10 +67,11 @@ export default defineConfig(
   },
 
   {
-    files: ['src/test/**/*.ts'],
+    files: [TEST_FILES, 'src/test/**/*.ts'],
     rules: {
       '@typescript-eslint/no-empty-interface': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
     },
   },
 )
