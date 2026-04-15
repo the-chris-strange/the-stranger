@@ -44,7 +44,8 @@ describe('addEslintDependencies', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it('adds default dependencies if no relevant configs are present', () => {

@@ -19,49 +19,19 @@ export function isEmpty(value: unknown, depth = 3e3): boolean {
     }
   }
 
-  if (isIterable(value)) {
-    return [...iterate(value)].every(e => isEmpty(e, depth - 1))
+  let iterator: Iterable<unknown> | undefined = undefined
+
+  if (Array.isArray(value) || value instanceof Set) {
+    iterator = value[Symbol.iterator]()
+  } else if (value instanceof Map) {
+    iterator = value.values()
+  } else if (value !== null && typeof value === 'object') {
+    iterator = Object.values(value)
+  }
+
+  if (iterator !== undefined) {
+    return [...iterator].every(e => isEmpty(e, depth - 1))
   }
 
   return false
 }
-
-function isIterable<T>(value: unknown): value is IterableLike<T> {
-  return (
-    Array.isArray(value) ||
-    value instanceof Set ||
-    value instanceof Map ||
-    (typeof value === 'object' && value !== null)
-  )
-}
-
-function* iterate<T>(value: IterableLike<T>) {
-  for (const v of toIterable(value)) {
-    yield v
-  }
-}
-
-function toIterable<T>(value: IterableLike<T>) {
-  if (Array.isArray(value) || value instanceof Set) {
-    return value
-  }
-
-  if (value instanceof Map) {
-    return value.values()
-  }
-
-  if (typeof value === 'object' && value !== null) {
-    return Object.values(value)
-  }
-
-  throw new TypeError(`Failed to iterate over object of type ${typeof value}`, {
-    cause: { type: typeof value, value },
-  })
-}
-
-type IterableLike<T> =
-  | Map<any, T>
-  | NodeJS.TypedArray
-  | Set<T>
-  | T[]
-  | { [key: number | string | symbol]: T }

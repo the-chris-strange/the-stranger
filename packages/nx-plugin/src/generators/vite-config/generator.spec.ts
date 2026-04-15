@@ -25,7 +25,8 @@ describe('vite config generator', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it('does not create a config by default', async () => {
@@ -84,6 +85,7 @@ describe('vite config generator', () => {
   it("doesn't generate tsconfigs if skipTsconfigs is true", async () => {
     options.skipTsconfigs = true
     const spy = vi.spyOn(await import('./tsconfig.js'), 'generateTsc')
+    spy.mockReset()
     await viteConfigGenerator(tree, options)
     expect(spy).not.toHaveBeenCalled()
   })

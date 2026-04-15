@@ -2,6 +2,22 @@
   "name": "@the-stranger/root",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
+    "constraints": {
+      "executor": "nx:run-commands",
+      "inputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
+      "outputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
+      "options": {
+        "color": true,
+        "command": "yarn constraints"
+      },
+      "cache": true,
+      "configurations": {
+        "fix": {
+          "command": "yarn constraints --fix"
+        }
+      },
+      "dependsOn": ["yarn-config:build"]
+    },
     "local-registry": {
       "executor": "@nx/js:verdaccio",
       "options": {

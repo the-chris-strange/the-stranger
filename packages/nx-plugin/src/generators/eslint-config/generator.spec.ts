@@ -2,8 +2,7 @@ import { Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createTestTree } from '../../test/helpers/create-test-tree'
-import { FILE_EXTENSIONS } from './file-extensions'
-import { eslintConfigGenerator } from './generator'
+import { eslintConfigGenerator, FILE_EXTENSIONS } from './generator'
 import { ESLintConfigSchema } from './schema'
 
 describe('eslint config generator', () => {
@@ -20,7 +19,8 @@ describe('eslint config generator', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it('runs successfully', async () => {

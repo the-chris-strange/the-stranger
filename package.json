@@ -15,7 +15,7 @@
     "packages/**"
   ],
   "scripts": {
-    "build": "nx run-many -t build update-manifest",
+    "build": "nx run-many -t build",
     "commit": "commit",
     "commit:lint": "commitlint",
     "format": "nx format",

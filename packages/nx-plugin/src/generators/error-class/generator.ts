@@ -2,16 +2,16 @@ import path from 'node:path'
 
 import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit'
 
-import { addPeriod } from '../../lib/add-period'
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { ErrorClassSchema } from './schema'
 
 export async function errorClassGenerator(tree: Tree, options: ErrorClassSchema) {
   const extended = options.extend ?? 'Error'
+  const { description = `Emit a custom ${extended}.` } = options
   const data = {
     ...names(options.name),
-    description: addPeriod(options.description ?? `Emit a custom ${extended}.`),
+    description: description.endsWith('.') ? description : `${description}.`,
     extended,
   }
 

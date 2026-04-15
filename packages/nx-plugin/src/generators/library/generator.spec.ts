@@ -58,7 +58,8 @@ describe('library generator', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it('runs the vite config generator if bundler is "vite"', async () => {

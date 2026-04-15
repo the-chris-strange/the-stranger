@@ -27,25 +27,14 @@ export function updateManifest(
     manifest.type = 'commonjs'
   } else {
     manifest.type = 'module'
-    const mainExport: PackageJsonExports = {
-      import: manifest.main ?? './src/index.js',
-      types: manifest.types ?? './src/index.d.ts',
-    }
     manifest.exports = {
-      '.': mainExport,
+      '.': {
+        import: manifest.main ?? './src/index.js',
+        types: manifest.types ?? './src/index.d.ts',
+      },
       './package.json': './package.json',
     }
-    delete manifest.main
-    delete manifest.types
   }
 
   writeJson(manifestPath, sortPackageJson(manifest), tree)
-}
-
-interface PackageJsonExports {
-  types?: string
-  require?: string
-  import?: string
-  development?: string
-  default?: string
 }

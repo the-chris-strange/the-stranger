@@ -77,6 +77,7 @@ describe('jest config generator', () => {
   it('identifies an existing jest preset if one exists', async () => {
     tree.write('jest.preset.cjs', '')
     const spy = vi.spyOn(await import('@nx/devkit'), 'generateFiles')
+    spy.mockReset()
 
     await jestConfigGenerator(tree, options)
 
@@ -95,6 +96,7 @@ describe('jest config generator', () => {
     options.skipDependencies = true
 
     const spy = vi.spyOn(await import('./dependencies.js'), 'addDependencies')
+    spy.mockReset()
 
     await jestConfigGenerator(tree, options)
 

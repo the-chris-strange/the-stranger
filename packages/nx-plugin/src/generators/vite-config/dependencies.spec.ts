@@ -65,7 +65,8 @@ describe('vite-config generator package dependencies utility', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it("adds [ 'nx' ]", () => {

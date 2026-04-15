@@ -59,7 +59,8 @@ describe('jest-config generator dependency utility', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it("adds [ 'nx', '@nx/jest', 'jest', 'ts-jest' ]", () => {

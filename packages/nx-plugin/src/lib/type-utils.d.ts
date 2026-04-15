@@ -57,20 +57,9 @@ export type ExtendRequired<
 /**
  * Maybe. Maybe not. Maybe f*** yourself.
  * @template Maybe the thing that might be
- * @template MaybeNot the thing that will be if Maybe is not
+ * @template MaybeNot the thing that will be if {@link Maybe} is not
  */
 export type Maybe<Maybe, MaybeNot = undefined> = Maybe | MaybeNot
-
-/**
- * Create a function type with the same parameters and return type as {@link T}. Maybe.
- * @template T the function from which a value might be returned
- */
-export type MaybeFunc<T extends (...args: any) => any> =
-  T extends <TGeneric extends infer Constraint>(...args: infer P) => infer R
-    ? <TGeneric extends Constraint>(...args: P) => Maybe<R>
-    : T extends (...args: infer P) => infer R
-      ? (...args: P) => Maybe<R>
-      : never
 
 /**
  * Make a type that includes only selected properties ({@link K}) of {@link T}, all of which are non-nullable.

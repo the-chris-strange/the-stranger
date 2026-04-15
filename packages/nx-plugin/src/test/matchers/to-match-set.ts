@@ -29,5 +29,3 @@ expect.extend({
     }
   },
 })
-
-type ExpectationResult = ReturnType<Parameters<typeof expect.extend>[0][string]>

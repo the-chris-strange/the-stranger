@@ -93,7 +93,8 @@ describe('tsconfig generators', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   const readConfig = (path: string) =>
