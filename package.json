@@ -4,7 +4,8 @@
   "private": true,
   "description": "A collection of plugins & reusable configurations for TypeScript, ESLint, Prettier, Vite, NX, Yarn, and more.",
   "repository": {
-    "url": "git+https://github.com/the-chris-strange/the-stranger.git"
+    "type": "git",
+    "url": "https://github.com/the-chris-strange/the-stranger.git"
   },
   "license": "MIT",
   "author": {
@@ -16,6 +17,7 @@
   ],
   "scripts": {
     "build": "nx run-many -t build",
+    "ci": "nx run-many -t lint test build typecheck",
     "commit": "commit",
     "commit:lint": "commitlint",
     "format": "nx format",
@@ -56,7 +58,6 @@
     "@vitest/ui": "4.1.3",
     "@yarnpkg/types": "4.0.1",
     "astro-eslint-parser": "^1.4.0",
-    "change-case": "^5.4.4",
     "cspell": "^9.8.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",

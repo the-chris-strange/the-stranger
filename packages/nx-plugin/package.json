@@ -2,7 +2,8 @@
   "name": "@the-stranger/nx-plugin",
   "version": "2.0.1",
   "repository": {
-    "url": "git+https://github.com/the-chris-strange/the-stranger.git",
+    "type": "git",
+    "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/nx-plugin"
   },
   "type": "commonjs",
