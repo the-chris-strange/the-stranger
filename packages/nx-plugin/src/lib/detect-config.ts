@@ -1,6 +1,6 @@
 import { joinPathFragments, Tree } from '@nx/devkit'
 
-import markerFiles from './config-marker-files'
+import { markerFiles } from './config-marker-files'
 import { findExisting } from './find-existing'
 
 /**

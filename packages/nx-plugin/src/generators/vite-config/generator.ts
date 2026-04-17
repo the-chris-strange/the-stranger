@@ -8,7 +8,7 @@ import {
   Tree,
 } from '@nx/devkit'
 
-import markerFiles from '../../lib/config-marker-files'
+import { markerFiles } from '../../lib/config-marker-files'
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { removeAll } from '../../lib/remove-all'

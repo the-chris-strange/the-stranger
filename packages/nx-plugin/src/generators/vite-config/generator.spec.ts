@@ -1,7 +1,7 @@
 import { Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import configMarkerFiles from '../../lib/config-marker-files'
+import { markerFiles } from '../../lib/config-marker-files'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { viteConfigGenerator } from './generator'
 import { ViteConfigSchema } from './schema'
@@ -37,13 +37,11 @@ describe('vite config generator', () => {
   it('removes vite config files if both includeBuild and includeTest are false', async () => {
     options.includeBuild = false
     options.includeTest = false
-    for (const f of configMarkerFiles.vitest) {
+    for (const f of markerFiles.vitest) {
       tree.write(`packages/test/${f}`, '')
     }
     await viteConfigGenerator(tree, options)
-    expect(configMarkerFiles.vitest.some(e => tree.exists(`packages/test/${e}`))).toBe(
-      false,
-    )
+    expect(markerFiles.vitest.some(e => tree.exists(`packages/test/${e}`))).toBe(false)
   })
 
   it('sets import path for `defineConfig` if including test config', async () => {
