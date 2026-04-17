@@ -14,6 +14,7 @@ export function setRepository(yarn: Yarn, ws: Workspace) {
   const directory = ws.cwd.replace(/^\.\//, '')
   const repo = getRepository(yarn)
   if (repo) {
+    ws.set('repository.type', repo.type)
     ws.set('repository.url', repo.url)
     ws.set('repository.directory', directory)
   } else {
@@ -24,6 +25,7 @@ export function setRepository(yarn: Yarn, ws: Workspace) {
 export interface Repository {
   url: string
   directory?: string
+  type?: string
 }
 
 type Workspace = yarn.Constraints.Workspace
