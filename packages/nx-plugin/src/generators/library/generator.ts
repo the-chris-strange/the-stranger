@@ -11,6 +11,11 @@ import { updateManifest } from './manifest'
 import { normalizeOptions } from './options'
 import { LibrarySchema } from './schema'
 
+/**
+ * Generate a new library in the `packages` directory with the given name, along with ESLint and CSpell configurations and a test configuration for the specified test runner.
+ * @param tree the NX virtual file system
+ * @param options configuration options
+ */
 export async function libraryGenerator(tree: Tree, options: LibrarySchema) {
   const config = normalizeOptions(options)
   const force = config.force !== false

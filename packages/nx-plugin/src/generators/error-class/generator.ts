@@ -6,6 +6,11 @@ import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { ErrorClassSchema } from './schema'
 
+/**
+ * Generate a custom error class.
+ * @param tree the NX virtual file system
+ * @param options configuration options
+ */
 export async function errorClassGenerator(tree: Tree, options: ErrorClassSchema) {
   const extended = options.extend ?? 'Error'
   const { description = `Emit a custom ${extended}.` } = options

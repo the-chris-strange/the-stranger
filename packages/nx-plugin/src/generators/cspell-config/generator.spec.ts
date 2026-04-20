@@ -3,11 +3,11 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { cspellConfigGenerator } from './generator'
-import { CspellConfigSchema } from './schema'
+import { CSpellConfigSchema } from './schema'
 
-describe('cspell-config generator', () => {
+describe('cspell config generator', () => {
   let tree: Tree
-  let options: CspellConfigSchema
+  let options: CSpellConfigSchema
 
   beforeEach(() => {
     tree = createTestTree('tests', 'more-tests', 'another-test')
