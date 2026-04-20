@@ -1,7 +1,8 @@
-import { Tree } from '@nx/devkit'
+import type { Tree } from '@nx/devkit'
+
+import type { ViteConfigSchema } from './schema'
 
 import { addDependenciesToProject } from '../../lib/add-dependencies'
-import { ViteConfigSchema } from './schema'
 
 export function addDependencies(tree: Tree, options: ViteConfigSchema, pkg: string) {
   const deps = ['nx']

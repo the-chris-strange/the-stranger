@@ -5,8 +5,10 @@ import {
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  Tree,
+  type Tree,
 } from '@nx/devkit'
+
+import type { DependencyCheckOptions, ESLintConfigSchema } from './schema'
 
 import { detectConfig } from '../../lib/detect-config'
 import { findExisting } from '../../lib/find-existing'
@@ -14,7 +16,6 @@ import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { removeAll } from '../../lib/remove-all'
 import { addEslintDependencies } from './dependencies'
-import { DependencyCheckOptions, ESLintConfigSchema } from './schema'
 
 /**
  * Possible file extensions for eslint.config, in order of precedence.

@@ -1,4 +1,3 @@
-import { Tree } from '@nx/devkit'
 import {
   afterAll,
   afterEach,
@@ -7,13 +6,16 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
+  type MockInstance,
   vi,
 } from 'vitest'
 
+import type { Tree } from '@nx/devkit'
+
+import type { LibrarySchema } from './schema'
+
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import libraryGenerator from './generator'
-import { LibrarySchema } from './schema'
 
 describe('library generator', () => {
   let tree: Tree

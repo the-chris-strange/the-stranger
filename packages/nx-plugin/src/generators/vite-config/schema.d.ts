@@ -1,6 +1,6 @@
-import { LibraryFormats } from 'vite'
+import type { LibraryFormats } from 'vite'
 
-import { GeneratorSchema } from '../../lib/generator-schema'
+import type { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
  * Options for the Vite/Vitest configuration generator.

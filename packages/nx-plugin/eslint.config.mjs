@@ -48,25 +48,6 @@ export default defineConfig(
   },
 
   {
-    files: ['src/**/*schema.d.ts'],
-    rules: {
-      'perfectionist/sort-interfaces': [
-        'warn',
-        {
-          groups: [
-            'index-signature',
-            'required-property',
-            'optional-property',
-            'method',
-            'unknown',
-          ],
-          type: 'natural',
-        },
-      ],
-    },
-  },
-
-  {
     files: [TEST_FILES, 'src/test/**/*.ts'],
     rules: {
       '@typescript-eslint/no-empty-interface': 'off',

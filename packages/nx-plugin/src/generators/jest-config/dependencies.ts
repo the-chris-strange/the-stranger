@@ -1,7 +1,8 @@
-import { Tree } from '@nx/devkit'
+import type { Tree } from '@nx/devkit'
+
+import type { JestConfigSchema } from './schema'
 
 import { addDependenciesToProject } from '../../lib/add-dependencies'
-import { JestConfigSchema } from './schema'
 
 export function addDependencies(tree: Tree, options: JestConfigSchema, pkg: string) {
   const deps = ['nx', '@nx/jest', 'jest', 'ts-jest']

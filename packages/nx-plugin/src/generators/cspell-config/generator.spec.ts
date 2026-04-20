@@ -1,9 +1,11 @@
-import { Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it } from 'vitest'
+
+import type { Tree } from '@nx/devkit'
+
+import type { CSpellConfigSchema } from './schema'
 
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { cspellConfigGenerator } from './generator'
-import { CSpellConfigSchema } from './schema'
 
 describe('cspell config generator', () => {
   let tree: Tree

@@ -1,4 +1,4 @@
-import { GeneratorSchema } from '../../lib/generator-schema'
+import type { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
  * CSpell configuration file generator options.

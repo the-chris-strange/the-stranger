@@ -5,12 +5,13 @@ import {
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  Tree,
+  type Tree,
 } from '@nx/devkit'
+
+import type { CSpellConfigSchema } from './schema'
 
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
-import { CSpellConfigSchema } from './schema'
 
 /**
  * Generate a [CSpell](https://cspell.org/) configuration file for a project.

@@ -3,13 +3,13 @@ import path from 'node:path'
 import {
   joinPathFragments,
   offsetFromRoot,
-  ProjectType,
+  type ProjectType,
   readProjectConfiguration,
-  Tree,
+  type Tree,
 } from '@nx/devkit'
 
-import { ExtendRequired } from '../../lib/type-utils'
-import { ViteConfigSchema } from './schema'
+import type { ExtendRequired } from '../../lib/type-utils'
+import type { ViteConfigSchema } from './schema'
 
 export function normalizeOptions(
   tree: Tree,
@@ -66,11 +66,11 @@ export function normalizeOptions(
 }
 
 export interface NormalizedSchema extends StrictViteConfigSchema {
-  outDir: string
-  tsBuildInfo: string
-  names: Names
   baseExtends: string
+  names: Names
+  outDir: string
   projectType: ProjectType
+  tsBuildInfo: string
 }
 
 interface ConfigNames {

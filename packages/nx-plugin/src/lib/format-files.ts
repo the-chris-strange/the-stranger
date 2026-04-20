@@ -1,6 +1,6 @@
-import { formatFiles as nxFormatFiles, Tree } from '@nx/devkit'
+import { formatFiles as nxFormatFiles, type Tree } from '@nx/devkit'
 
-import { GeneratorSchema } from './generator-schema'
+import type { GeneratorSchema } from './generator-schema'
 
 /**
  * If the `skipFormat` option is false, format files generated in the tree; otherwise, no-op.

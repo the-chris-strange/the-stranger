@@ -5,15 +5,16 @@ import {
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  Tree,
+  type Tree,
 } from '@nx/devkit'
+
+import type { JestConfigSchema } from './schema'
 
 import { findExisting } from '../../lib/find-existing'
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { TSConfig } from '../../lib/tsconfig'
 import { addDependencies } from './dependencies'
-import { JestConfigSchema } from './schema'
 
 /**
  * Generate a jest configuration file for a project.

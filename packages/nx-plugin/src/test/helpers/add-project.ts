@@ -1,4 +1,8 @@
-import { addProjectConfiguration, ProjectConfiguration, Tree } from '@nx/devkit'
+import {
+  addProjectConfiguration,
+  type ProjectConfiguration,
+  type Tree,
+} from '@nx/devkit'
 
 /**
  * Add a project to the virtual file system for use in tests.

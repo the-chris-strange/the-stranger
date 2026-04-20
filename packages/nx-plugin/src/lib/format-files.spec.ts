@@ -1,5 +1,13 @@
-import { formatFiles as nxFormatFiles, Tree } from '@nx/devkit'
-import { afterEach, beforeAll, describe, expect, it, MockInstance, vi } from 'vitest'
+import { type formatFiles as nxFormatFiles, type Tree } from '@nx/devkit'
+import {
+  afterEach,
+  beforeAll,
+  describe,
+  expect,
+  it,
+  type MockInstance,
+  vi,
+} from 'vitest'
 
 import { createTestTree } from '../test/helpers/create-test-tree'
 import { formatFiles } from './format-files'

@@ -1,9 +1,11 @@
-import { Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it } from 'vitest'
+
+import type { Tree } from '@nx/devkit'
+
+import type { ErrorClassSchema } from './schema'
 
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { errorClassGenerator } from './generator'
-import { ErrorClassSchema } from './schema'
 
 describe('custom error class generator', () => {
   let options: ErrorClassSchema

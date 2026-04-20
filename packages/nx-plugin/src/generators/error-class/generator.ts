@@ -1,10 +1,11 @@
 import path from 'node:path'
 
-import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit'
+import { generateFiles, joinPathFragments, names, type Tree } from '@nx/devkit'
+
+import type { ErrorClassSchema } from './schema'
 
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
-import { ErrorClassSchema } from './schema'
 
 /**
  * Generate a custom error class.

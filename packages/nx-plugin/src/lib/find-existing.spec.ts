@@ -1,5 +1,6 @@
-import { Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it } from 'vitest'
+
+import type { Tree } from '@nx/devkit'
 
 import { createTestTree } from '../test/helpers/create-test-tree'
 import { findExisting } from './find-existing'

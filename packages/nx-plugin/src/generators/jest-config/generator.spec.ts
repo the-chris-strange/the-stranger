@@ -1,11 +1,13 @@
-import { readJson, Tree, writeJson } from '@nx/devkit'
-import { PackageJson } from 'nx/src/utils/package-json'
-import { Tsconfig } from 'tsconfig-type'
+import { readJson, type Tree, writeJson } from '@nx/devkit'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { PackageJson } from 'nx/src/utils/package-json'
+import type { Tsconfig } from 'tsconfig-type'
+
+import type { JestConfigSchema } from './schema'
 
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { jestConfigGenerator } from './generator'
-import { JestConfigSchema } from './schema'
 
 describe('jest config generator', () => {
   let tree: Tree

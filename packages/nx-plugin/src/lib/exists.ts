@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs'
 
-import { Tree } from '@nx/devkit'
+import type { Tree } from '@nx/devkit'
 
 /**
  * Check if a file exists, either in the NX virtual filesystem {@link Tree}, or in the actual file system.

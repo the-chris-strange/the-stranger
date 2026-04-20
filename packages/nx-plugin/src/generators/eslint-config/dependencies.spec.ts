@@ -1,4 +1,4 @@
-import { joinPathFragments, ProjectConfiguration, Tree } from '@nx/devkit'
+import { joinPathFragments, type ProjectConfiguration, type Tree } from '@nx/devkit'
 import {
   afterAll,
   afterEach,
@@ -7,7 +7,7 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
+  type MockInstance,
   vi,
 } from 'vitest'
 
