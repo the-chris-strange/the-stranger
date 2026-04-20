@@ -7,6 +7,10 @@
     "directory": "packages/nx-plugin"
   },
   "type": "commonjs",
+  "exports": {
+    ".": "./src/index.js",
+    "./generators": "./src/generators.js"
+  },
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
