@@ -5,14 +5,8 @@ import baseConfig, { disableTypeChecked } from '../../eslint.config.mjs'
 
 export default defineConfig(
   ...baseConfig,
-  disableTypeChecked,
 
-  {
-    files: ['**/*.ts'],
-    rules: {
-      'perfectionist/sort-interfaces': ['error'],
-    },
-  },
+  disableTypeChecked,
 
   {
     files: ['**/*.json'],
@@ -27,7 +21,6 @@ export default defineConfig(
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          ignoredDependencies: ['prettier-plugin-packagejson'],
         },
       ],
     },

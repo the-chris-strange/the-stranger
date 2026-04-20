@@ -49,6 +49,17 @@ const sourceFilesConfig = defineConfig(
   },
 
   {
+    name: 'base config for JavaScript files',
+    files: JS_FILES,
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
+
+  {
     name: 'general-purpose config for source code',
     files: SOURCE_FILES,
     extends: [
@@ -68,17 +79,6 @@ const sourceFilesConfig = defineConfig(
         tagNamePreference: {
           augments: 'extends',
         },
-      },
-    },
-  },
-
-  {
-    name: 'base config for JavaScript files',
-    files: JS_FILES,
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
       },
     },
   },
@@ -124,6 +124,28 @@ const sourceFilesConfig = defineConfig(
       'n/prefer-global/url-search-params': ['error', 'never'],
       'n/prefer-global/url': ['error', 'never'],
 
+      'perfectionist/sort-exports': 'warn',
+      'perfectionist/sort-named-imports': 'warn',
+      'perfectionist/sort-intersection-types': 'warn',
+      'perfectionist/sort-objects': 'warn',
+      'perfectionist/sort-object-types': 'warn',
+      'perfectionist/sort-interfaces': [
+        'warn',
+        {
+          groups: [
+            'unknown',
+            'index-signature',
+            'required-property',
+            'required-multiline-property',
+            'optional-property',
+            'optional-multiline-property',
+            'required-method',
+            'optional-method',
+            'required-multiline-method',
+            'optional-multiline-method',
+          ],
+        },
+      ],
       'perfectionist/sort-imports': [
         'warn',
         {
@@ -142,7 +164,7 @@ const sourceFilesConfig = defineConfig(
           ],
         },
       ],
-      'perfectionist/sort-enums': ['error', { type: 'natural', sortByValue: 'never' }],
+      'perfectionist/sort-enums': ['warn', { type: 'natural', sortByValue: 'never' }],
       'perfectionist/sort-union-types': [
         'warn',
         {
@@ -164,13 +186,10 @@ const sourceFilesConfig = defineConfig(
           ],
         },
       ],
-      'perfectionist/sort-exports': 'warn',
-      'perfectionist/sort-named-imports': 'warn',
       'perfectionist/sort-named-exports': [
         'warn',
         { groups: ['value-export', 'type-export'] },
       ],
-      'perfectionist/sort-interfaces': 'off',
       'perfectionist/sort-classes': [
         'warn',
         {
@@ -300,12 +319,7 @@ const sourceFilesConfig = defineConfig(
 
   {
     name: 'disable object sort for config files',
-    files: [
-      'eslint.config.ts',
-      'eslint.config.mjs',
-      'prettier.config.mjs',
-      'yarn.config.cjs',
-    ],
+    files: ['eslint.config.*', 'prettier.config.mjs', 'yarn.config.cjs'],
     rules: {
       'perfectionist/sort-objects': 'off',
     },
