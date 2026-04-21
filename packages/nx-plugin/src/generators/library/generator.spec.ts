@@ -1,4 +1,3 @@
-import { Tree } from '@nx/devkit'
 import {
   afterAll,
   afterEach,
@@ -7,13 +6,16 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
+  type MockInstance,
   vi,
 } from 'vitest'
 
+import type { Tree } from '@nx/devkit'
+
+import type { LibrarySchema } from './schema'
+
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import libraryGenerator from './generator'
-import { LibrarySchema } from './schema'
 
 describe('library generator', () => {
   let tree: Tree
@@ -32,14 +34,22 @@ describe('library generator', () => {
     vi.mock('../jest-config/generator.ts')
     vi.mock('../eslint-config/generator.ts')
 
-    // @ts-expect-error ts compiler expects named import instead of default
-    viteConfigSpy = vi.spyOn(await import('../vite-config/generator.js'), 'default')
-    // @ts-expect-error ts compiler expects named import instead of default
-    cspellConfigSpy = vi.spyOn(await import('../cspell-config/generator.js'), 'default')
-    // @ts-expect-error ts compiler expects named import instead of default
-    jestConfigSpy = vi.spyOn(await import('../jest-config/generator.js'), 'default')
-    // @ts-expect-error ts compiler expects named import instead of default
-    eslintConfigSpy = vi.spyOn(await import('../eslint-config/generator.js'), 'default')
+    viteConfigSpy = vi.spyOn(
+      await import('../vite-config/generator.js'),
+      'viteConfigGenerator',
+    )
+    cspellConfigSpy = vi.spyOn(
+      await import('../cspell-config/generator.js'),
+      'cspellConfigGenerator',
+    )
+    jestConfigSpy = vi.spyOn(
+      await import('../jest-config/generator.js'),
+      'jestConfigGenerator',
+    )
+    eslintConfigSpy = vi.spyOn(
+      await import('../eslint-config/generator.js'),
+      'eslintConfigGenerator',
+    )
   })
 
   beforeEach(() => {

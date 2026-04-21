@@ -1,11 +1,17 @@
 import { join } from 'node:path'
 
-import { ProjectConfiguration, readProjectConfiguration, Tree } from '@nx/devkit'
-import { PackageJson } from 'nx/src/utils/package-json'
+import {
+  type ProjectConfiguration,
+  readProjectConfiguration,
+  type Tree,
+} from '@nx/devkit'
 import sortPackageJson from 'sort-package-json'
 
+import type { PackageJson } from 'nx/src/utils/package-json'
+
+import type { LibrarySchema } from './schema'
+
 import { readJson, writeJson } from '../../lib/json'
-import { LibrarySchema } from './schema'
 
 /**
  * Update the project's manifest (package.json) with the configured type and exports.

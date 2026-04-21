@@ -1,7 +1,7 @@
-import { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema'
+import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema'
 
-import { GeneratorSchema } from '../../lib/generator-schema'
-import { ViteConfigSchema } from '../vite-config/schema'
+import type { GeneratorSchema } from '../../lib/generator-schema'
+import type { ViteConfigSchema } from '../vite-config/schema'
 
 export interface LibrarySchema extends GeneratorSchema, NxLibOptions, ViteOptions {
   /**

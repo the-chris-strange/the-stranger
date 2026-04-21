@@ -1,7 +1,8 @@
-import { Tree } from '@nx/devkit'
+import type { Tree } from '@nx/devkit'
 
-import { TSConfig, TSConfigOptions } from '../../lib/tsconfig'
-import { NormalizedSchema } from './options'
+import type { NormalizedSchema } from './options'
+
+import { TSConfig, type TSConfigOptions } from '../../lib/tsconfig'
 
 export function generateTsc(tree: Tree, options: NormalizedSchema) {
   const { names, outDir, target, tsBuildInfo } = options

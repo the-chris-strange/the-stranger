@@ -1,9 +1,11 @@
-import { Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { Tree } from '@nx/devkit'
+
+import type { ESLintConfigSchema } from './schema'
 
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { eslintConfigGenerator, FILE_EXTENSIONS } from './generator'
-import { ESLintConfigSchema } from './schema'
 
 describe('eslint config generator', () => {
   let tree: Tree

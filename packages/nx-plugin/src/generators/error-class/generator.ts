@@ -1,11 +1,17 @@
 import path from 'node:path'
 
-import { generateFiles, joinPathFragments, names, Tree } from '@nx/devkit'
+import { generateFiles, joinPathFragments, names, type Tree } from '@nx/devkit'
+
+import type { ErrorClassSchema } from './schema'
 
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
-import { ErrorClassSchema } from './schema'
 
+/**
+ * Generate a custom error class.
+ * @param tree the NX virtual file system
+ * @param options configuration options
+ */
 export async function errorClassGenerator(tree: Tree, options: ErrorClassSchema) {
   const extended = options.extend ?? 'Error'
   const { description = `Emit a custom ${extended}.` } = options

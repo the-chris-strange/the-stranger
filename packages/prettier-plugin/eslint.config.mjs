@@ -5,14 +5,8 @@ import baseConfig, { disableTypeChecked } from '../../eslint.config.mjs'
 
 export default defineConfig(
   ...baseConfig,
-  disableTypeChecked,
 
-  {
-    files: ['**/*.ts'],
-    rules: {
-      'perfectionist/sort-interfaces': ['error'],
-    },
-  },
+  disableTypeChecked,
 
   {
     files: ['**/*.json'],

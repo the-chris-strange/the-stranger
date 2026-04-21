@@ -1,11 +1,12 @@
-import { readJson, Tree, writeJson } from '@nx/devkit'
-import { Tsconfig } from 'tsconfig-type'
+import { readJson, type Tree, writeJson } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { Tsconfig } from 'tsconfig-type'
 
 import { addProject } from '../../test/helpers/add-project'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { viteConfigGenerator } from './generator'
-import { NormalizedSchema, normalizeOptions } from './options'
+import { type NormalizedSchema, normalizeOptions } from './options'
 import { generateTsc } from './tsconfig'
 
 describe('tsconfig generators', () => {

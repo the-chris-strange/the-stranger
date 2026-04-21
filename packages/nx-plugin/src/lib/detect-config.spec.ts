@@ -1,4 +1,4 @@
-import { joinPathFragments, Tree } from '@nx/devkit'
+import { joinPathFragments, type Tree } from '@nx/devkit'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createTestTree } from '../test/helpers/create-test-tree'

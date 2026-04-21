@@ -5,14 +5,20 @@ import {
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  Tree,
+  type Tree,
 } from '@nx/devkit'
+
+import type { CSpellConfigSchema } from './schema'
 
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
-import { CspellConfigSchema } from './schema'
 
-export async function cspellConfigGenerator(tree: Tree, options: CspellConfigSchema) {
+/**
+ * Generate a [CSpell](https://cspell.org/) configuration file for a project.
+ * @param tree the NX virtual file system
+ * @param options configuration options
+ */
+export async function cspellConfigGenerator(tree: Tree, options: CSpellConfigSchema) {
   const files = path.join(__dirname, 'files')
 
   const overwriteStrategy = owStrategy(options?.force ?? false)

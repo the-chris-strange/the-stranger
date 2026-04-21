@@ -5,6 +5,7 @@ import baseConfig, { disableTypeChecked } from '../../eslint.config.mjs'
 
 export default defineConfig(
   ...baseConfig,
+
   disableTypeChecked,
 
   {

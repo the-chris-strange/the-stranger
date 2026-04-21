@@ -1,16 +1,22 @@
-import { joinPathFragments, readProjectConfiguration, Tree } from '@nx/devkit'
+import { joinPathFragments, readProjectConfiguration, type Tree } from '@nx/devkit'
 import { libraryGenerator as nxLibraryGenerator } from '@nx/js'
 
+import type { LibrarySchema } from './schema'
+
 import { formatFiles } from '../../lib/format-files'
-import cspellConfigGenerator from '../cspell-config/generator'
-import eslintConfigGenerator from '../eslint-config/generator'
-import jestConfigGenerator from '../jest-config/generator'
-import viteConfigGenerator from '../vite-config/generator'
+import { cspellConfigGenerator } from '../cspell-config/generator'
+import { eslintConfigGenerator } from '../eslint-config/generator'
+import { jestConfigGenerator } from '../jest-config/generator'
+import { viteConfigGenerator } from '../vite-config/generator'
 import { addDependencies } from './dependencies'
 import { updateManifest } from './manifest'
 import { normalizeOptions } from './options'
-import { LibrarySchema } from './schema'
 
+/**
+ * Generate a new library in the `packages` directory with the given name, along with ESLint and CSpell configurations and a test configuration for the specified test runner.
+ * @param tree the NX virtual file system
+ * @param options configuration options
+ */
 export async function libraryGenerator(tree: Tree, options: LibrarySchema) {
   const config = normalizeOptions(options)
   const force = config.force !== false

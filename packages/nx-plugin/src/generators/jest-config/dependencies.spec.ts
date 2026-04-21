@@ -1,4 +1,3 @@
-import { Tree } from '@nx/devkit'
 import {
   afterAll,
   afterEach,
@@ -7,14 +6,17 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
+  type MockInstance,
   vi,
 } from 'vitest'
+
+import type { Tree } from '@nx/devkit'
+
+import type { JestConfigSchema } from './schema'
 
 import { writeJson } from '../../lib/json'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { addDependencies } from './dependencies'
-import { JestConfigSchema } from './schema'
 
 describe('jest-config generator dependency utility', () => {
   let spy: MockInstance

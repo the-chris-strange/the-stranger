@@ -1,6 +1,14 @@
-import { logger, OverwriteStrategy, Tree, writeJson, writeJsonFile } from '@nx/devkit'
+import {
+  logger,
+  OverwriteStrategy,
+  type Tree,
+  writeJson,
+  writeJsonFile,
+} from '@nx/devkit'
 
 import type { Tsconfig } from 'tsconfig-type'
+
+import type { ExtendRequired, PickNonNullable } from './type-utils'
 
 import { FileNotFoundError } from './errors/file-not-found'
 import { exists } from './exists'
@@ -8,7 +16,6 @@ import { isEmpty } from './is-empty'
 import { maybeReadJson } from './json'
 import { owStrategy } from './overwrite-strategy'
 import { toArray } from './to-array'
-import { ExtendRequired, PickNonNullable } from './type-utils'
 
 /**
  * Encapsulate operations on a `tsconfig.json` file.
@@ -300,13 +307,13 @@ export function isProjectReference(value?: unknown): value is TSConfigReference 
 
 export interface TSConfigOptions {
   /**
-   * Specify how to handle existing files.
-   */
-  overwriteStrategy?: boolean | OverwriteStrategy
-  /**
    * Select top-level properties that should be included in the tsconfig.json, even if they're empty.
    */
   includeProperties?: (keyof Tsconfig)[]
+  /**
+   * Specify how to handle existing files.
+   */
+  overwriteStrategy?: boolean | OverwriteStrategy
 }
 
 export type TSConfigReference = TSConfigType['references'][number]

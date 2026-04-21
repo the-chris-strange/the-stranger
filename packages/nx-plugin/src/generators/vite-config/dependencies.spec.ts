@@ -1,4 +1,3 @@
-import { Tree } from '@nx/devkit'
 import {
   afterAll,
   afterEach,
@@ -7,14 +6,17 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
+  type MockInstance,
   vi,
 } from 'vitest'
+
+import type { Tree } from '@nx/devkit'
+
+import type { ViteConfigSchema } from './schema'
 
 import { writeJson } from '../../lib/json'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { addDependencies } from './dependencies'
-import { ViteConfigSchema } from './schema'
 
 describe('vite-config generator package dependencies utility', () => {
   let spy: MockInstance
