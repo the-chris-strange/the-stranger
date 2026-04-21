@@ -10,10 +10,6 @@ export default defineConfig(
   {
     files: ['src/**/*.ts'],
     extends: [eslintPlugin.configs['recommended']],
-    rules: {
-      'perfectionist/sort-interfaces': 'warn',
-      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
-    },
   },
 
   {

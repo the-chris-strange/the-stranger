@@ -1,5 +1,6 @@
 /**
  * Normalize an array of file extensions and combine them into a comma-separated string.
+ * @internal
  * @param extensions file extensions to concatenate
  * @returns the comma-separated string
  */
@@ -15,6 +16,7 @@ export function combineExtensions(...extensions: (string | string[])[]) {
 
 /**
  * Expand a file extension into an array of file extensions that match typical Node.js module types.
+ * @internal
  * @example
  * expandExtension('js') // -> ['js', 'cjs', 'mjs', 'jsx']
  * @param ext the base file extension
@@ -34,7 +36,7 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
   return patterns.map(pattern => {
     switch (pattern) {
       case FilePatterns.all: {
-        return '**/*'
+        return '**/**'
       }
       case FilePatterns.astro: {
         return sourceFilePattern('astro')
@@ -45,14 +47,14 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
       case FilePatterns.cjs: {
         return sourceFilePattern('cjs', 'cts')
       }
+      case FilePatterns.cypress: {
+        return `**/*.cy.${combineExtensions('js', 'ts')}`
+      }
       case FilePatterns.esm: {
         return sourceFilePattern('mjs', 'mts')
       }
       case FilePatterns.js: {
         return sourceFilePattern(expandExtension('js'))
-      }
-      case FilePatterns.jsTest: {
-        return testFilePattern('js', 'jsx')
       }
       case FilePatterns.react: {
         return sourceFilePattern('js', 'ts', 'jsx', 'tsx')
@@ -69,11 +71,14 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
       case FilePatterns.test: {
         return testFilePattern('js', 'jsx', 'ts', 'tsx')
       }
+      case FilePatterns.testJs: {
+        return testFilePattern('js', 'jsx')
+      }
+      case FilePatterns.testTs: {
+        return testFilePattern('ts', 'tsx')
+      }
       case FilePatterns.ts: {
         return sourceFilePattern(expandExtension('ts'))
-      }
-      case FilePatterns.tsTest: {
-        return testFilePattern('ts', 'tsx')
       }
       default: {
         return sourceFilePattern(pattern)
@@ -84,6 +89,7 @@ export function getFilePatterns(...patterns: (string | FilePatterns)[]) {
 
 /**
  * Get a glob pattern that recursively matches files with the specified extensions.
+ * @internal
  * @param extensions file extensions to match
  * @returns a glob pattern that matches any of the file extensions
  */
@@ -93,6 +99,7 @@ export function sourceFilePattern(...extensions: (string | string[])[]) {
 
 /**
  * Create a glob pattern that recursively matches test files with the specified extensions.
+ * @internal
  * @param extensions file extensions to match
  * @returns a glob pattern that matches test files with any of the file extensions
  */
@@ -105,68 +112,73 @@ export function testFilePattern(...extensions: (string | string[])[]) {
  */
 export enum FilePatterns {
   /**
-   * All files ('**\/*').
+   * All files ('\*\*\/\*\*').
    */
-  all = 'all-files',
+  all,
   /**
    * Astro-specific files ('.astro').
    */
-  astro = 'astro-files',
+  astro,
   /**
-   * Scripts inside Astro files, which are parsed as virtual files under the virtual "directory" of the file.
+   * Scripts inside Astro files, which are parsed as virtual files under the virtual "directory" of the '.astro' file.
    */
-  astroScript = 'astro-script-files',
+  astroScript,
   /**
    * CommonJS files ('.cjs' and '.cts').
    */
-  cjs = 'cjs-files',
+  cjs,
+  /**
+   * Cypress E2E & component test files ('.cy.*').
+   */
+  cypress,
   /**
    * ESM files ('.mjs' and '.mts').
    */
-  esm = 'esm-files',
+  esm,
   /**
    * JavaScript files.
    */
-  js = 'js-files',
-  /**
-   * JavaScript test files.
-   */
-  jsTest = 'js-test-files',
+  js,
   /**
    * JavaScript and TypeScript React files ('.jsx' and '.tsx').
    */
-  react = 'react-files',
+  react,
   /**
    * React JavaScript files ('.jsx').
    */
-  reactJs = 'react-js-files',
+  reactJs,
   /**
    * React TypeScript files ('.tsx').
    */
-  reactTs = 'react-ts-files',
+  reactTs,
   /**
    * All JavaScript and TypeScript source files.
    */
-  source = 'source-files',
+  source,
   /**
    * All JavaScript and TypeScript test files.
    */
-  test = 'test-files',
+  test,
   /**
-   * TypeScript files.
+   * JavaScript test files.
    */
-  ts = 'ts-files',
+  testJs,
   /**
    * TypeScript test files.
    */
-  tsTest = 'ts-test-files',
+  testTs,
+  /**
+   * TypeScript files.
+   */
+  ts,
 }
 
 /**
  * Normalize a file extension by removing leading dot or glob wildcards.
+ * @internal
  * @param value the file extension to normalize
  * @returns the normalized file extension
  */
 function normalizeExtPattern(value: string) {
-  return value.replace(/^\./, '').replace(/^[*?]+(\/[*?]+\.?)?/, '')
+  return value.replace(/^\./, '').replace(/^[*?]+(?:\/[*?]+\.?)?/, '')
 }

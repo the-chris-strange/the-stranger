@@ -4,6 +4,7 @@ import pkg from '../../package.json' with { type: 'json' }
 
 /**
  * Prepend the workspace's namespace or full name to a string. Useful for naming eslint configuration objects.
+ * @internal
  * @param value the value to add to the name
  * @returns prefixed value
  */
@@ -17,6 +18,7 @@ export function namer(value?: string) {
 
 /**
  * Set the `name` property of an ESLint config.
+ * @internal
  * @param config the object
  * @param defaultName override the default behavior of this function
  * @returns the named config(s)
@@ -38,6 +40,7 @@ export function objectNamer(config: Config, defaultName?: string): Named<Config>
 
 /**
  * Make the name property of an object required. Preserves JSDoc comments for objects that already have a name property.
+ * @internal
  */
 export type Named<T extends object> = Required<T extends N ? Pick<T, 'name'> : N> & T
 

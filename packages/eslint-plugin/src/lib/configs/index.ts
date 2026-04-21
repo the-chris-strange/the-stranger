@@ -1,50 +1,84 @@
-import { extendConfig, type InfiniteConfigArray } from '../extend-config.js'
-import astro from './astro.js'
-import cypress from './cypress.js'
-import jest from './jest.js'
-import jsdoc from './jsdoc.js'
-import jsonc from './jsonc.js'
-import n from './n.js'
-import perfectionist from './perfectionist.js'
-import promise from './promise.js'
-import react, { reactTypeChecked } from './react.js'
-import regexp from './regexp.js'
-import toml from './toml.js'
-import ts, { typeChecked, typeCheckedStrict } from './typescript-eslint.js'
-import unicorn from './unicorn.js'
-import vitest from './vitest.js'
-import yml from './yml.js'
+import { type ConfigOptions, configure, type Options } from '../configure.js'
+import { disableTypeCheckedConfig } from './static/disable-type-checked.js'
 
-const standardConfigs = {
-  jsdoc,
-  jsonc,
-  n,
-  perfectionist,
-  promise,
-  regexp,
-  ts,
-  unicorn,
-  yml,
+function disableExcept<K extends keyof ConfigOptions>(config: Options, ...keys: K[]) {
+  return configure(disableOptionsExcept(config, ...keys))
 }
 
-const allConfigs = {
-  ...standardConfigs,
-  astro,
-  cypress,
-  jest,
-  react,
-  reactTypeChecked,
-  toml,
-  typeChecked,
-  typeCheckedStrict,
-  vitest,
+function disableOptionsExcept<K extends keyof ConfigOptions>(
+  config: Options,
+  ...keys: K[]
+) {
+  const configKeys = [
+    'json',
+    'source',
+    'nx',
+    'tests',
+    'toml',
+    'yaml',
+  ] satisfies (keyof ConfigOptions)[]
+  const keySet = new Set<string>(keys)
+  for (const key of configKeys) {
+    if (keySet.has(key)) {
+      config[key] ??= true
+    } else {
+      config[key] = false
+    }
+  }
+  return config
 }
+
+const recommendedSourceOptions = {
+  js: true,
+  jsdoc: true,
+  regexp: true,
+  sort: true,
+  ts: true,
+} satisfies Options['source']
+
+const recommendedOptions = {
+  json: true,
+  nx: true,
+  source: recommendedSourceOptions,
+  tests: { unitTestRunner: 'vitest' },
+  yaml: true,
+} satisfies Options
 
 export const configs = {
-  ...allConfigs,
-  all: extendConfig(...Object.values(allConfigs)),
-  base: extendConfig(),
-  standard: extendConfig(vitest, ...Object.values(standardConfigs)),
-}
-
-export type Configs = { [K in keyof typeof configs]: InfiniteConfigArray }
+  'disableTypeChecked': disableTypeCheckedConfig,
+  'json': disableExcept({}, 'json'),
+  'recommended': configure(recommendedOptions),
+  'recommended/astro': configure({
+    ...recommendedOptions,
+    source: {
+      ...recommendedSourceOptions,
+      react: { astro: true, typeChecked: true, typescript: true },
+    },
+  }),
+  'recommended/no-type-checked': configure({
+    ...recommendedOptions,
+    source: { ...recommendedSourceOptions, ts: { strict: false, typeChecked: false } },
+  }),
+  'recommended/react': configure({
+    ...recommendedOptions,
+    source: {
+      ...recommendedSourceOptions,
+      react: { astro: false, typeChecked: true, typescript: true },
+    },
+  }),
+  'recommended/strict': configure({
+    ...recommendedOptions,
+    source: { ts: { strict: true, typeChecked: true } },
+  }),
+  'standard': configure(),
+  'standard/no-type-checked': configure({
+    source: { ts: { strict: false, typeChecked: false } },
+  }),
+  'standard/strict': configure({
+    source: { ts: { strict: true, typeChecked: true } },
+  }),
+  'tests/jest': disableExcept({ tests: { unitTestRunner: 'jest' } }, 'tests'),
+  'tests/vitest': disableExcept({ tests: { unitTestRunner: 'vitest' } }, 'tests'),
+  'toml': disableExcept({}, 'toml'),
+  'yaml': disableExcept({}, 'yaml'),
+} as const

@@ -1,7 +1,6 @@
-import nxPlugin from '@nx/eslint-plugin'
-import jsoncParser from 'jsonc-eslint-parser'
+import * as jsoncParser from 'jsonc-eslint-parser'
 
-import type { ConfigWithExtends, InfiniteConfigArray } from '../extend-config.js'
+import type { ConfigWithExtends } from '../extend-config.js'
 
 import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
@@ -32,6 +31,7 @@ export function dependencyChecks(options?: DependencyCheckOptions): ConfigWithEx
 export function moduleBoundaries(options?: ModuleBoundaryOptions): ConfigWithExtends {
   return {
     files: getFilePatterns(FilePatterns.js, FilePatterns.ts, FilePatterns.react),
+    name: namer('nx/module-boundaries'),
     rules: {
       '@nx/enforce-module-boundaries': ['error', options ?? {}],
     },
@@ -121,21 +121,6 @@ export interface ModuleBoundaryOptions {
   ignoredCircularDependencies?: [string, string][]
 }
 
-function extendNxConfigs(...configs: ConfigWithExtends[]): InfiniteConfigArray {
-  return [
-    nxPlugin.configs['flat/base'],
-    {
-      extends: [nxPlugin.configs['flat/javascript'] as ConfigWithExtends[]],
-      files: getFilePatterns(FilePatterns.js),
-    },
-    {
-      extends: [nxPlugin.configs['flat/typescript'] as ConfigWithExtends[]],
-      files: getFilePatterns(FilePatterns.ts),
-    },
-    configs,
-  ]
-}
-
 interface ModuleBoundariesDepConstraint {
   /**
    * External imports that are explicitly allowed for this constraint.
@@ -162,14 +147,3 @@ interface ModuleBoundariesDepConstraint {
    */
   sourceTag?: string
 }
-
-export const nx = extendNxConfigs(
-  moduleBoundaries({
-    depConstraints: [
-      { onlyDependOnLibsWithTags: ['npm:public'], sourceTag: 'npm:public' },
-    ],
-    enforceBuildableLibDependency: true,
-  }),
-)
-
-export default nx

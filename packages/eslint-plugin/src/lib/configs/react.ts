@@ -1,55 +1,82 @@
-import eslintReact from '@eslint-react/eslint-plugin'
-import jsxAlly from 'eslint-plugin-jsx-a11y'
-import reactCompiler from 'eslint-plugin-react-compiler'
+import eslintReactPlugin from '@eslint-react/eslint-plugin'
+import astroPlugin from 'eslint-plugin-astro'
+import jsxAllyPlugin from 'eslint-plugin-jsx-a11y'
 import reactHooks from 'eslint-plugin-react-hooks'
 
 import type { ESLint } from 'eslint'
 
-import type { InfiniteConfigArray } from '../extend-config.js'
+import type { ConfigOptions } from '../configure.js'
+import type { ConfigWithExtends } from '../extend-config.js'
 
+import { namer } from '../namer.js'
 import { FilePatterns, getFilePatterns } from '../patterns.js'
-import { languageOptions } from './typescript-eslint.js'
+import { languageOptions } from './language-options.js'
+import { reactRules } from './rulesets/react.js'
 
-export const react = [
-  {
-    extends: [
-      jsxAlly.flatConfigs['recommended'],
-      reactHooks.configs.flat['recommended'],
-      reactCompiler.configs['recommended'],
-      eslintReact.configs['strict'],
-    ],
-    files: getFilePatterns(FilePatterns.react),
-    plugins: {
-      '@eslint-react': eslintReact,
-      'jsx-a11y': jsxAlly,
-      'react-compiler': reactCompiler,
-      'react-hooks': reactHooks as ESLint.Plugin,
+export function configureReact({ react }: ConfigOptions['source']) {
+  const configs: ConfigWithExtends[] = [
+    {
+      extends: [
+        jsxAllyPlugin.flatConfigs['recommended'],
+        reactHooks.configs.flat['recommended'],
+        eslintReactPlugin.configs['strict'],
+      ],
+      files: getFilePatterns(FilePatterns.react),
+      name: namer('react/base'),
+      plugins: {
+        '@eslint-react': eslintReactPlugin,
+        'jsx-a11y': jsxAllyPlugin,
+        'react-hooks': reactHooks as ESLint.Plugin,
+      },
     },
-    rules: {
-      '@eslint-react/jsx-shorthand-boolean': 'warn',
-      '@eslint-react/jsx-shorthand-fragment': 'warn',
-      '@eslint-react/naming-convention/component-name': 'warn',
-      '@eslint-react/naming-convention/context-name': 'warn',
-      '@eslint-react/no-duplicate-key': 'error',
-      '@eslint-react/no-missing-component-display-name': 'warn',
-      '@eslint-react/no-missing-context-display-name': 'warn',
-      '@eslint-react/prefer-read-only-props': 'error',
+  ]
+
+  if (react.typescript) {
+    configs.push({
+      extends: [
+        eslintReactPlugin.configs[
+          react.typeChecked ? 'strict-type-checked' : 'strict-typescript'
+        ],
+      ],
+      files: getFilePatterns(FilePatterns.reactTs),
+      languageOptions,
+      name: namer('react/typescript'),
+    })
+  }
+
+  if (react.astro) {
+    configs.push({
+      extends: [
+        astroPlugin.configs['flat/recommended'],
+        astroPlugin.configs['flat/jsx-a11y-strict'],
+      ],
+      files: getFilePatterns(FilePatterns.astro, FilePatterns.astroScript),
+      name: namer('react/astro'),
+    })
+  }
+
+  configs.push(
+    {
+      files: getFilePatterns(FilePatterns.react),
+      name: namer('react/file-casing'),
+      rules: {
+        'unicorn/filename-case': [
+          'error',
+          {
+            cases: {
+              kebabCase: true,
+              pascalCase: true,
+            },
+          },
+        ],
+      },
     },
-  },
 
-  {
-    extends: [eslintReact.configs['strict-typescript']],
-    files: getFilePatterns(FilePatterns.reactTs),
-    languageOptions,
-  },
-] satisfies InfiniteConfigArray
+    {
+      name: namer('react/rules'),
+      rules: reactRules,
+    },
+  )
 
-export const reactTypeChecked = [
-  {
-    extends: [react, eslintReact.configs['strict-type-checked']],
-    files: getFilePatterns(FilePatterns.reactTs),
-    languageOptions,
-  },
-] satisfies InfiniteConfigArray
-
-export default react
+  return configs
+}

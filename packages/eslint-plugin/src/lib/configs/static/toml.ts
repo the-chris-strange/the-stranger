@@ -1,10 +1,10 @@
 import tomlPlugin from 'eslint-plugin-toml'
 
-import type { InfiniteConfigArray } from '../extend-config.js'
+import type { ConfigWithExtends } from '../../extend-config.js'
 
-import { namer } from '../namer.js'
+import { namer } from '../../namer.js'
 
-export const toml = [
+export const tomlConfig: ConfigWithExtends[] = [
   {
     extends: [tomlPlugin.configs['flat/recommended']],
     files: ['**/*.toml'],
@@ -36,6 +36,4 @@ export const toml = [
       'toml/table-bracket-spacing': 'warn',
     },
   },
-] satisfies InfiniteConfigArray
-
-export default toml
+]
