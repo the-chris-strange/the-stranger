@@ -5,6 +5,5 @@ name = "codex"
 [setup]
 script = '''
 cd "$CODEX_WORKTREE_PATH"
-yarn
-
+yarn install
 '''
