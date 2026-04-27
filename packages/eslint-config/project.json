@@ -1,0 +1,25 @@
+{
+  "name": "eslint-config",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/eslint-config/src",
+  "tags": ["npm:public"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "inputs": ["default", "^default", { "externalDependencies": ["typescript"] }],
+      "outputs": [
+        "{workspaceRoot}/out-tsc/packages/eslint-config",
+        "{workspaceRoot}/out-tsc/packages/eslint-config/tsconfig.lib.tsbuildinfo"
+      ],
+      "options": {
+        "command": "tsc -b --force --emitDeclarationOnly tsconfig.lib.json",
+        "cwd": "packages/eslint-config"
+      },
+      "cache": true
+    }
+  }
+}

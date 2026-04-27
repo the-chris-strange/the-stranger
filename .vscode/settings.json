@@ -126,8 +126,6 @@
   "js/ts.tsdk.path": "./node_modules/typescript/lib",
   "js/ts.tsdk.promptToUseWorkspaceVersion": true,
   "markiscodecoverage.searchCriteria": "coverage/packages/*/lcov.info",
-  "npm.exclude": ["coverage/**/*", "dist/**/*", "out-tsc/**/*"],
-  "npm.packageManager": "yarn",
   "nxConsole.enableLibraryImports": true,
   "python.analysis.autoFormatStrings": true,
   "python.analysis.autoImportCompletions": true,

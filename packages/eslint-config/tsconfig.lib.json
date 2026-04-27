@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declarationMap": false,
     "outDir": "../../out-tsc",
-    "tsBuildInfoFile": "../../out-tsc/packages/yarn-config/tsconfig.lib.tsbuildinfo",
+    "tsBuildInfoFile": "../../out-tsc/packages/eslint-config/tsconfig.lib.tsbuildinfo",
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
@@ -22,5 +22,6 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/test/**/*.ts"
-  ]
+  ],
+  "references": [{ "path": "../eslint-utils/tsconfig.lib.json" }]
 }

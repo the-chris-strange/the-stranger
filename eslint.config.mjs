@@ -125,7 +125,6 @@ const sourceFilesConfig = defineConfig(
       'n/prefer-global/url': ['error', 'never'],
 
       'perfectionist/sort-exports': 'warn',
-      'perfectionist/sort-named-imports': 'warn',
       'perfectionist/sort-intersection-types': 'warn',
       'perfectionist/sort-objects': 'warn',
       'perfectionist/sort-object-types': 'warn',
@@ -163,6 +162,10 @@ const sourceFilesConfig = defineConfig(
             'unknown',
           ],
         },
+      ],
+      'perfectionist/sort-named-imports': [
+        'warn',
+        { groups: ['type-import', 'value-import', 'unknown'] },
       ],
       'perfectionist/sort-enums': ['warn', { type: 'natural', sortByValue: 'never' }],
       'perfectionist/sort-union-types': [
@@ -276,11 +279,15 @@ const sourceFilesConfig = defineConfig(
         'error',
         {
           enforceBuildableLibDependency: true,
-          allow: ['eslint.config.*'],
+          allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
           depConstraints: [
             {
-              sourceTag: 'npm:public',
-              onlyDependOnLibsWithTags: ['npm:public'],
+              sourceTag: '*',
+              onlyDependOnLibsWithTags: ['*'],
+            },
+            {
+              sourceTag: 'npm:private',
+              onlyDependOnLibsWithTags: ['npm:private'],
             },
           ],
         },
@@ -334,6 +341,7 @@ const sourceFilesConfig = defineConfig(
     files: ['**/*.cjs', '**/*.cts'],
     rules: {
       'unicorn/prefer-module': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
 
@@ -541,6 +549,18 @@ const jsonConfig = defineConfig(
         'warn',
         { order: { type: 'asc' }, pathPattern: '^plugins.+options' },
         { order: ['plugin', 'options'], pathPattern: '^plugins' },
+        {
+          order: [
+            'cache',
+            'dependsOn',
+            'executor',
+            'inputs',
+            'outputs',
+            'options',
+            { order: { type: 'asc' } },
+          ],
+          pathPattern: '^targetDefaults.+',
+        },
         { order: { type: 'asc' }, pathPattern: '^' },
       ],
     },
@@ -564,13 +584,15 @@ const jsonConfig = defineConfig(
         'warn',
         {
           order: [
+            'cache',
+            'dependsOn',
             'executor',
             'inputs',
             'outputs',
             'options',
             { order: { type: 'asc' } },
           ],
-          pathPattern: 'targets.+',
+          pathPattern: '^targets.+',
         },
         {
           order: [

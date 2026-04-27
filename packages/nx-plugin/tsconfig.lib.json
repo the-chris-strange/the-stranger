@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": false,
-    "outDir": "../../dist/out-tsc",
+    "outDir": "../../out-tsc",
     "tsBuildInfoFile": "../../out-tsc/packages/nx-plugin/tsconfig.lib.tsbuildinfo",
     "types": ["node"]
   },

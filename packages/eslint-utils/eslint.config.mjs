@@ -1,28 +1,13 @@
-import eslintPlugin from 'eslint-plugin-eslint-plugin'
-import { defineConfig } from 'eslint/config'
 import * as jsoncParser from 'jsonc-eslint-parser'
 
 import baseConfig from '../../eslint.config.mjs'
 
-export default defineConfig(
+export default [
   ...baseConfig,
 
   {
-    files: ['src/**/*.ts'],
-    extends: [eslintPlugin.configs['recommended']],
-  },
-
-  {
-    files: ['src/lib/configs/*.ts'],
-    rules: {
-      'eslint-plugin/require-meta-docs-description': 'error',
-      'eslint-plugin/require-meta-docs-url': 'error',
-      'eslint-plugin/require-meta-schema': 'error',
-    },
-  },
-
-  {
     files: ['**/*.json'],
+    languageOptions: { parser: jsoncParser },
     rules: {
       '@nx/dependency-checks': [
         'error',
@@ -37,6 +22,5 @@ export default defineConfig(
         },
       ],
     },
-    languageOptions: { parser: jsoncParser },
   },
-)
+]

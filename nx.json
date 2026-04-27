@@ -86,6 +86,7 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["default", "^default"],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "assets": [
           "{projectRoot}/*.md",
@@ -109,13 +110,22 @@
         "main": "{projectRoot}/src/index.ts",
         "outputPath": "{workspaceRoot}/dist/{projectRoot}",
         "tsConfig": "{projectRoot}/tsconfig.lib.json"
-      },
-      "outputs": ["{options.outputPath}"]
+      }
     },
     "nx-release-publish": {
       "dependsOn": ["^nx-release-publish", "build"],
       "options": {
         "packageRoot": "{workspaceRoot}/dist/{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": ["default", "^default", { "externalDependencies": ["typescript"] }],
+      "outputs": ["{workspaceRoot}/out-tsc/{projectRoot}"],
+      "options": {
+        "command": "tsc -b --force --emitDeclarationOnly tsconfig.lib.json",
+        "cwd": "{projectRoot}"
       }
     }
   }

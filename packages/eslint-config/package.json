@@ -1,10 +1,10 @@
 {
-  "name": "@the-stranger/eslint-plugin",
-  "version": "2.0.2",
+  "name": "@the-stranger/eslint-config",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/the-chris-strange/the-stranger.git",
-    "directory": "packages/eslint-plugin"
+    "directory": "packages/eslint-config"
   },
   "type": "module",
   "exports": {
@@ -12,19 +12,41 @@
       "types": "./src/index.d.ts",
       "import": "./src/index.js"
     },
-    "./utils": {
-      "types": "./src/utils.d.ts",
-      "import": "./src/utils.js"
+    "./nx": {
+      "types": "./src/nx.d.ts",
+      "import": "./src/nx.js"
     },
     "./package.json": "./package.json"
   },
   "main": "./src/index.js",
   "module": "./src/index.js",
-  "types": "./src/types.d.ts",
+  "types": "./src/index.d.ts",
   "dependencies": {
-    "@the-stranger/eslint-config": "workspace:^",
+    "@eslint-react/eslint-plugin": "^2.13.0",
     "@the-stranger/eslint-utils": "workspace:^",
-    "tslib": "^2.8.1"
+    "@vitest/eslint-plugin": "^1.6.16",
+    "astro-eslint-parser": "^1.4.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "eslint-plugin-cypress": "^6.3.1",
+    "eslint-plugin-jest": "^29.15.2",
+    "eslint-plugin-jsdoc": "^62.9.0",
+    "eslint-plugin-jsonc": "^3.1.2",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-n": "^17.24.0",
+    "eslint-plugin-perfectionist": "^5.9.0",
+    "eslint-plugin-playwright": "^2.10.2",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-regexp": "^3.1.0",
+    "eslint-plugin-toml": "^1.3.1",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "eslint-plugin-yml": "^3.3.1",
+    "globals": "^17.5.0",
+    "jsonc-eslint-parser": "^3.1.0",
+    "toml-eslint-parser": "^1.0.3",
+    "tslib": "^2.8.1",
+    "typescript-eslint": "^8.58.2",
+    "yaml-eslint-parser": "^2.0.0"
   },
   "devDependencies": {
     "@nx/eslint": "22.5.2",
@@ -46,6 +68,7 @@
     "vitest": "4.1.4"
   },
   "peerDependencies": {
+    "@nx/eslint-plugin": ">=21 <23",
     "eslint": "^9"
   },
   "peerDependenciesMeta": {

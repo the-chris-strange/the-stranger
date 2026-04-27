@@ -5095,15 +5095,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@the-stranger/eslint-plugin@workspace:packages/eslint-plugin":
+"@the-stranger/eslint-config@workspace:^, @the-stranger/eslint-config@workspace:packages/eslint-config":
   version: 0.0.0-use.local
-  resolution: "@the-stranger/eslint-plugin@workspace:packages/eslint-plugin"
+  resolution: "@the-stranger/eslint-config@workspace:packages/eslint-config"
   dependencies:
     "@eslint-react/eslint-plugin": "npm:^2.13.0"
     "@nx/eslint": "npm:22.5.2"
     "@nx/eslint-plugin": "npm:22.5.2"
     "@nx/vite": "npm:22.5.2"
     "@nx/vitest": "npm:22.5.2"
+    "@the-stranger/eslint-utils": "workspace:^"
     "@types/eslint-plugin-jsx-a11y": "npm:^6.10.1"
     "@types/node": "npm:^24.12.2"
     "@typescript-eslint/parser": "npm:^8.58.2"
@@ -5146,6 +5147,65 @@ __metadata:
   peerDependenciesMeta:
     "@nx/eslint-plugin":
       optional: true
+  languageName: unknown
+  linkType: soft
+
+"@the-stranger/eslint-plugin@workspace:packages/eslint-plugin":
+  version: 0.0.0-use.local
+  resolution: "@the-stranger/eslint-plugin@workspace:packages/eslint-plugin"
+  dependencies:
+    "@nx/eslint": "npm:22.5.2"
+    "@nx/eslint-plugin": "npm:22.5.2"
+    "@nx/vite": "npm:22.5.2"
+    "@nx/vitest": "npm:22.5.2"
+    "@the-stranger/eslint-config": "workspace:^"
+    "@the-stranger/eslint-utils": "workspace:^"
+    "@types/eslint-plugin-jsx-a11y": "npm:^6.10.1"
+    "@types/node": "npm:^24.12.2"
+    "@typescript-eslint/parser": "npm:^8.58.2"
+    "@vitest/coverage-v8": "npm:4.1.4"
+    eslint: "npm:^9.39.4"
+    eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-eslint-plugin: "npm:^7.3.2"
+    nx: "npm:22.5.2"
+    prettier: "npm:^3.8.3"
+    prettier-plugin-packagejson: "npm:^3.0.2"
+    tslib: "npm:^2.8.1"
+    typescript: "npm:^5.9.3"
+    vite: "npm:7.3.2"
+    vitest: "npm:4.1.4"
+  peerDependencies:
+    eslint: ^9
+  peerDependenciesMeta:
+    "@nx/eslint-plugin":
+      optional: true
+  languageName: unknown
+  linkType: soft
+
+"@the-stranger/eslint-utils@workspace:^, @the-stranger/eslint-utils@workspace:packages/eslint-utils":
+  version: 0.0.0-use.local
+  resolution: "@the-stranger/eslint-utils@workspace:packages/eslint-utils"
+  dependencies:
+    "@nx/eslint": "npm:22.5.2"
+    "@nx/eslint-plugin": "npm:22.5.2"
+    "@nx/vite": "npm:22.5.2"
+    "@nx/vitest": "npm:22.5.2"
+    "@types/eslint-plugin-jsx-a11y": "npm:^6.10.1"
+    "@types/node": "npm:^24.12.2"
+    "@typescript-eslint/parser": "npm:^8.58.2"
+    "@vitest/coverage-v8": "npm:4.1.4"
+    eslint: "npm:^9.39.4"
+    eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-eslint-plugin: "npm:^7.3.2"
+    nx: "npm:22.5.2"
+    prettier: "npm:^3.8.3"
+    prettier-plugin-packagejson: "npm:^3.0.2"
+    tslib: "npm:^2.8.1"
+    typescript: "npm:^5.9.3"
+    vite: "npm:7.3.2"
+    vitest: "npm:4.1.4"
+  peerDependencies:
+    eslint: ^9
   languageName: unknown
   linkType: soft
 
@@ -5207,7 +5267,7 @@ __metadata:
     vite: "npm:7.3.2"
     vitest: "npm:4.1.4"
   peerDependencies:
-    prettier: ^3.8.0
+    prettier: ^3
   languageName: unknown
   linkType: soft
 
