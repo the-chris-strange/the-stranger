@@ -1,9 +1,11 @@
+import '../types.js'
+
 import nxPlugin from '@nx/eslint-plugin'
 import {
   type ConfigWithExtends,
+  type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
-  type InfiniteConfigArray,
   setSeverity,
 } from '@the-stranger/eslint-utils'
 import jsdocPlugin from 'eslint-plugin-jsdoc'
@@ -16,7 +18,7 @@ import tseslintPlugin from 'typescript-eslint'
 
 import type { ESLint } from 'eslint'
 
-import type { ConfigOptions } from './config-options.js'
+import type { ConfigOptions } from './configure.js'
 
 import { configureJs } from './javascript.js'
 import { namer } from './namer.js'

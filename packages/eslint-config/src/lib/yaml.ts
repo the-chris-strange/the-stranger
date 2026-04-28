@@ -2,7 +2,7 @@ import ymlPlugin from 'eslint-plugin-yml'
 
 import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
-import type { ConfigOptions } from './config-options.js'
+import type { ConfigOptions } from './configure.js'
 
 import {
   cspellYamlSortConfig,

@@ -10,7 +10,7 @@ import reactHooks from 'eslint-plugin-react-hooks'
 
 import type { ESLint } from 'eslint'
 
-import type { ConfigOptions } from './config-options.js'
+import type { ConfigOptions } from './configure.js'
 
 import { languageOptions } from './configs/language-options.js'
 import { namer } from './namer.js'

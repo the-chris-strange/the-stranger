@@ -1,15 +1,15 @@
 import {
   type ConfigWithExtends,
+  type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
-  type InfiniteConfigArray,
 } from '@the-stranger/eslint-utils'
 import vitestPlugin from '@vitest/eslint-plugin'
 import cypressPlugin from 'eslint-plugin-cypress'
 import jestPlugin from 'eslint-plugin-jest'
 import playwrightPlugin from 'eslint-plugin-playwright'
 
-import type { ConfigOptions } from './config-options.js'
+import type { ConfigOptions } from './configure.js'
 
 import { namer } from './namer.js'
 
