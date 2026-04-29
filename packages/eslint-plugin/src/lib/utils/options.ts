@@ -1,7 +1,7 @@
 import {
   type ConfigOptions,
-  configure,
   type Options,
+  configure,
 } from '@the-stranger/eslint-config'
 
 export function disableExcept<K extends keyof ConfigOptions>(
@@ -24,7 +24,7 @@ export function disableOptionsExcept<K extends keyof ConfigOptions>(
     'yaml',
   ] satisfies (keyof ConfigOptions)[]
 
-  const keySet = new Set<string>(keys)
+  const keySet = new Set(keys as string[])
 
   for (const key of configKeys) {
     if (keySet.has(key)) {

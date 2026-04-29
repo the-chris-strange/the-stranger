@@ -2,7 +2,7 @@ import tseslint from 'typescript-eslint'
 
 import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
-import { namer } from '../namer.js'
+import { namer } from './namer.js'
 
 export const disableTypeCheckedConfig = [
   {

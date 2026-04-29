@@ -1,9 +1,6 @@
-import {
-  type Options,
-  configure,
-  disableTypeCheckedConfig,
-} from '@the-stranger/eslint-config'
+import { type Options, configure } from '@the-stranger/eslint-config'
 
+import { disableTypeCheckedConfig } from './disable-type-checked.js'
 import { disableExcept } from './utils/options.js'
 
 const recommendedSourceOptions = {
