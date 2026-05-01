@@ -150,6 +150,7 @@ function resolveYamlOptions({ yaml }: Options): ConfigOptions['yaml'] {
   return {
     sort: {
       cspellConfig: getValue('cspellConfig'),
+      dependabotConfig: getValue('dependabotConfig'),
       githubActions: getValue('githubActions'),
       markdownlintConfig: getValue('markdownlintConfig'),
       yarnrc: getValue('yarnrc'),
@@ -208,6 +209,7 @@ interface TypescriptOptions {
 
 interface YamlSortOptions {
   cspellConfig: boolean
+  dependabotConfig: boolean
   githubActions: boolean
   markdownlintConfig: boolean
   yarnrc: boolean

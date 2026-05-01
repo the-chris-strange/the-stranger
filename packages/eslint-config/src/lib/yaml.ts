@@ -6,6 +6,7 @@ import type { ConfigOptions } from './configure.js'
 
 import {
   cspellYamlSortConfig,
+  dependabotYamlSortConfig,
   githubActionsYamlSortConfig,
   markdownlintYamlSortConfig,
   yarnrcYamlSortConfig,
@@ -19,6 +20,7 @@ export function configureYaml({ yaml }: ConfigOptions) {
 
   const configs = [
     ['cspellConfig', cspellYamlSortConfig],
+    ['dependabotConfig', dependabotYamlSortConfig],
     ['githubActions', githubActionsYamlSortConfig],
     ['markdownlintConfig', markdownlintYamlSortConfig],
     ['yarnrc', yarnrcYamlSortConfig],

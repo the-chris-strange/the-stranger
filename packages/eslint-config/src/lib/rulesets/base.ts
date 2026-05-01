@@ -15,7 +15,7 @@ export const baseRules = {
   'jsdoc/require-returns': ['warn', { checkGetters: false }],
 
   'n/exports-style': ['error', 'module.exports'],
-  'n/hashbang': 'error',
+  'n/hashbang': ['error', { ignoreUnpublished: true }],
   'n/no-deprecated-api': 'error',
   'n/no-process-exit': 'error',
   'n/prefer-global/buffer': ['error', 'always'],
@@ -38,6 +38,7 @@ export const baseRules = {
   'unicorn/no-array-reduce': 'off',
   'unicorn/no-array-reverse': 'off',
   'unicorn/no-array-sort': 'off',
+  'unicorn/no-process-exit': 'off',
   'unicorn/numeric-separators-style': ['warn', { number: { minimumDigits: 12 } }],
   'unicorn/prefer-math-trunc': 'off',
   'unicorn/prevent-abbreviations': 'off',
