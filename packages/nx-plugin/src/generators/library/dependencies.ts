@@ -1,4 +1,4 @@
-import { joinPathFragments, type Tree } from '@nx/devkit'
+import { type Tree, joinPathFragments } from '@nx/devkit'
 
 import type { NormalizedSchema } from './options'
 

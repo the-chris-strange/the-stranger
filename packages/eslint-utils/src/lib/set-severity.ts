@@ -3,7 +3,7 @@ import type { Linter } from 'eslint'
 import type { InfiniteConfigArray } from './types.js'
 
 import { RuleLevels } from './rule-levels.js'
-import { ruleMatcher, type RuleMatcher } from './rule-matcher.js'
+import { type RuleMatcher, ruleMatcher } from './rule-matcher.js'
 
 /**
  * Set the severity of rules in an ESLint configuration. If {@link ruleSelector} is specified, only matching rules are changed. Rules that are already disabled are left alone by default; use the {@link force} option to override.

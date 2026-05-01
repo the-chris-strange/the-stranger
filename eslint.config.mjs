@@ -112,7 +112,7 @@ const sourceFilesConfig = defineConfig(
       'jsdoc/require-returns': ['warn', { checkGetters: false }],
 
       'n/exports-style': ['error', 'module.exports'],
-      'n/hashbang': 'error',
+      'n/hashbang': ['error', { ignoreUnpublished: true }],
       'n/no-deprecated-api': 'error',
       'n/no-process-exit': 'error',
       'n/prefer-node-protocol': 'error',
@@ -128,6 +128,7 @@ const sourceFilesConfig = defineConfig(
       'perfectionist/sort-intersection-types': 'warn',
       'perfectionist/sort-objects': 'warn',
       'perfectionist/sort-object-types': 'warn',
+      'perfectionist/sort-sets': 'warn',
       'perfectionist/sort-interfaces': [
         'warn',
         {
@@ -167,11 +168,10 @@ const sourceFilesConfig = defineConfig(
         'warn',
         { groups: ['type-import', 'value-import', 'unknown'] },
       ],
-      'perfectionist/sort-enums': ['warn', { type: 'natural', sortByValue: 'never' }],
+      'perfectionist/sort-enums': ['warn', { sortByValue: 'never' }],
       'perfectionist/sort-union-types': [
         'warn',
         {
-          type: 'natural',
           ignoreCase: false,
           groups: [
             'conditional',
@@ -263,6 +263,7 @@ const sourceFilesConfig = defineConfig(
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/custom-error-definition': 'warn',
       'unicorn/no-array-reduce': 'off',
+      'unicorn/no-process-exit': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/prefer-math-trunc': 'off',
       'unicorn/import-style': 'off',
@@ -284,10 +285,6 @@ const sourceFilesConfig = defineConfig(
             {
               sourceTag: '*',
               onlyDependOnLibsWithTags: ['*'],
-            },
-            {
-              sourceTag: 'npm:private',
-              onlyDependOnLibsWithTags: ['npm:private'],
             },
           ],
         },
@@ -361,6 +358,14 @@ const sourceFilesConfig = defineConfig(
     },
   },
 
+  {
+    files: ['**/skills/**/*.{js,mjs,cjs,ts,mts,cts}'],
+    rules: {
+      'n/hashbang': 'off',
+      'n/no-process-exit': 'off',
+    },
+  },
+
   prettierConfig,
 )
 
@@ -400,6 +405,20 @@ const ymlConfig = defineConfig(
           order: { type: 'asc' },
           pathPattern: 'dictionaries|import|ignorePaths|ignoreWords|words$',
         },
+      ],
+    },
+  },
+
+  {
+    files: ['.github/dependabot.yml'],
+    rules: {
+      'yml/sort-keys': [
+        'warn',
+        {
+          order: ['package-ecosystem', { order: { type: 'asc' } }],
+          pathPattern: String.raw`^updates`,
+        },
+        { order: ['version', 'updates'], pathPattern: '^$' },
       ],
     },
   },
@@ -654,6 +673,7 @@ export default defineConfig(
       'pnpm-lock.yaml',
       'pnpm-workspace.yaml',
       'tmp',
+      'out-tsc',
     ],
   },
 

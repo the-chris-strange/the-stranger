@@ -1,4 +1,4 @@
-import { joinPathFragments, type ProjectConfiguration, type Tree } from '@nx/devkit'
+import { type ProjectConfiguration, type Tree, joinPathFragments } from '@nx/devkit'
 
 import { addDependenciesToProject } from '../../lib/add-dependencies'
 import { detectConfig } from '../../lib/detect-config'

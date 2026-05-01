@@ -1,6 +1,6 @@
 import path from 'node:path'
 
-import { generateFiles, joinPathFragments, names, type Tree } from '@nx/devkit'
+import { type Tree, generateFiles, joinPathFragments, names } from '@nx/devkit'
 
 import type { ErrorClassSchema } from './schema'
 

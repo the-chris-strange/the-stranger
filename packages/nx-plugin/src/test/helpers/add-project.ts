@@ -1,7 +1,7 @@
 import {
-  addProjectConfiguration,
   type ProjectConfiguration,
   type Tree,
+  addProjectConfiguration,
 } from '@nx/devkit'
 
 /**

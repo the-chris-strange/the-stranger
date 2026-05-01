@@ -1,4 +1,4 @@
-import { readJson, type Tree, writeJson } from '@nx/devkit'
+import { type Tree, readJson, writeJson } from '@nx/devkit'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { PackageJson } from 'nx/src/utils/package-json'

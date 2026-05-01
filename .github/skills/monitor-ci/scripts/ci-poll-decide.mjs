@@ -23,26 +23,26 @@
 
 const args = process.argv.slice(2)
 const ciInfoJson = args[0]
-const pollCount = parseInt(args[1], 10) || 0
+const pollCount = Number.parseInt(args[1], 10) || 0
 const verbosity = args[2] || 'medium'
-
-function getFlag(name) {
-  return args.includes(name)
-}
 
 function getArg(name) {
   const idx = args.indexOf(name)
   return idx !== -1 && idx + 1 < args.length ? args[idx + 1] : null
 }
 
+function getFlag(name) {
+  return args.includes(name)
+}
+
 const waitMode = getFlag('--wait-mode')
 const prevCipeUrl = getArg('--prev-cipe-url')
 const expectedSha = getArg('--expected-sha')
 const prevStatus = getArg('--prev-status')
-const timeoutSeconds = parseInt(getArg('--timeout') || '0', 10)
-const newCipeTimeoutSeconds = parseInt(getArg('--new-cipe-timeout') || '0', 10)
-const envRerunCount = parseInt(getArg('--env-rerun-count') || '0', 10)
-const inputNoProgressCount = parseInt(getArg('--no-progress-count') || '0', 10)
+const timeoutSeconds = Number.parseInt(getArg('--timeout') || '0', 10)
+const newCipeTimeoutSeconds = Number.parseInt(getArg('--new-cipe-timeout') || '0', 10)
+const envRerunCount = Number.parseInt(getArg('--env-rerun-count') || '0', 10)
+const inputNoProgressCount = Number.parseInt(getArg('--no-progress-count') || '0', 10)
 const prevCipeStatus = getArg('--prev-cipe-status')
 const prevShStatus = getArg('--prev-sh-status')
 const prevVerificationStatus = getArg('--prev-verification-status')
@@ -58,34 +58,39 @@ try {
     JSON.stringify({
       action: 'done',
       code: 'error',
+      envRerunCount,
       message: 'Failed to parse ci_information JSON',
       noProgressCount: inputNoProgressCount + 1,
-      envRerunCount,
     }),
   )
   process.exit(0)
 }
 
 const {
-  cipeStatus,
-  selfHealingStatus,
-  verificationStatus,
-  selfHealingEnabled,
-  selfHealingSkippedReason,
-  failureClassification: rawFailureClassification,
-  failedTaskIds = [],
-  verifiedTaskIds = [],
-  couldAutoApplyTasks,
   autoApplySkipped,
   autoApplySkipReason,
-  userAction,
+  cipeStatus,
   cipeUrl,
   commitSha,
+  couldAutoApplyTasks,
+  failedTaskIds = [],
+  failureClassification: rawFailureClassification,
+  selfHealingEnabled,
+  selfHealingSkippedReason,
+  selfHealingStatus,
+  userAction,
+  verificationStatus,
+  verifiedTaskIds = [],
 } = ci
 
 const failureClassification = rawFailureClassification?.toLowerCase() ?? null
 
 // --- Helpers ---
+
+function backoff(count) {
+  const delays = [60, 90, 120, 180]
+  return delays[Math.min(count, delays.length - 1)]
+}
 
 function categorizeTasks() {
   const verifiedSet = new Set(verifiedTaskIds)
@@ -104,73 +109,6 @@ function categorizeTasks() {
   })
   return { category: 'needs_local_verify', verifiableTaskIds: verifiable }
 }
-
-function backoff(count) {
-  const delays = [60, 90, 120, 180]
-  return delays[Math.min(count, delays.length - 1)]
-}
-
-function hasStateChanged() {
-  if (prevCipeStatus && cipeStatus !== prevCipeStatus) return true
-  if (prevShStatus && selfHealingStatus !== prevShStatus) return true
-  if (prevVerificationStatus && verificationStatus !== prevVerificationStatus)
-    return true
-  if (prevFailureClassification && failureClassification !== prevFailureClassification)
-    return true
-  return false
-}
-
-function isTimedOut() {
-  if (timeoutSeconds <= 0) return false
-  const avgDelay = pollCount === 0 ? 0 : backoff(Math.floor(pollCount / 2))
-  return pollCount * avgDelay >= timeoutSeconds
-}
-
-function isWaitTimedOut() {
-  if (newCipeTimeoutSeconds <= 0) return false
-  return pollCount * 30 >= newCipeTimeoutSeconds
-}
-
-function isNewCipe() {
-  return (
-    (prevCipeUrl && cipeUrl && cipeUrl !== prevCipeUrl) ||
-    (expectedSha && commitSha && commitSha === expectedSha)
-  )
-}
-
-// ============================================================
-// classify() — pure decision tree
-//
-// Returns: { action: 'poll'|'wait'|'done', code: string, extra? }
-//
-// Decision priority (top wins):
-//   WAIT MODE:
-//     1. new CI Attempt detected         → poll  (new_cipe_detected)
-//     2. wait timed out                  → done  (no_new_cipe)
-//     3. still waiting                   → wait  (waiting_for_cipe)
-//   NORMAL MODE:
-//     4. polling timeout                 → done  (polling_timeout)
-//     5. circuit breaker (13 polls)      → done  (circuit_breaker)
-//     6. CI succeeded                    → done  (ci_success)
-//     7. CI canceled                     → done  (cipe_canceled)
-//     8. CI timed out                    → done  (cipe_timed_out)
-//     9. CI failed, no tasks recorded    → done  (cipe_no_tasks)
-//    10. environment failure             → done  (environment_rerun_cap | environment_issue)
-//    11. self-healing throttled          → done  (self_healing_throttled)
-//    12. CI in progress / not started    → poll  (ci_running)
-//    13. self-healing in progress        → poll  (sh_running)
-//    14. flaky task auto-rerun           → poll  (flaky_rerun)
-//    15. fix auto-applied                → poll  (fix_auto_applied)
-//    16. auto-apply: skipped             → done  (fix_auto_apply_skipped)
-//    17. auto-apply: verification pending→ poll  (verification_pending)
-//    18. auto-apply: verified            → done  (fix_auto_applying)
-//    19. fix: verification failed/none   → done  (fix_needs_review)
-//    20. fix: all/e2e verified           → done  (fix_apply_ready)
-//    21. fix: needs local verify         → done  (fix_needs_local_verify)
-//    22. self-healing failed             → done  (fix_failed)
-//    23. no fix available                → done  (no_fix)
-//    24. fallback                        → poll  (fallback)
-// ============================================================
 
 function classify() {
   // --- Wait mode ---
@@ -274,92 +212,137 @@ function classify() {
   return { action: 'poll', code: 'fallback' }
 }
 
+function hasStateChanged() {
+  if (prevCipeStatus && cipeStatus !== prevCipeStatus) return true
+  if (prevShStatus && selfHealingStatus !== prevShStatus) return true
+  if (prevVerificationStatus && verificationStatus !== prevVerificationStatus)
+    return true
+  if (prevFailureClassification && failureClassification !== prevFailureClassification)
+    return true
+  return false
+}
+
+function isNewCipe() {
+  return (
+    (prevCipeUrl && cipeUrl && cipeUrl !== prevCipeUrl) ||
+    (expectedSha && commitSha && commitSha === expectedSha)
+  )
+}
+
+function isTimedOut() {
+  if (timeoutSeconds <= 0) return false
+  const avgDelay = pollCount === 0 ? 0 : backoff(Math.floor(pollCount / 2))
+  return pollCount * avgDelay >= timeoutSeconds
+}
+
+// ============================================================
+// classify() — pure decision tree
+//
+// Returns: { action: 'poll'|'wait'|'done', code: string, extra? }
+//
+// Decision priority (top wins):
+//   WAIT MODE:
+//     1. new CI Attempt detected         → poll  (new_cipe_detected)
+//     2. wait timed out                  → done  (no_new_cipe)
+//     3. still waiting                   → wait  (waiting_for_cipe)
+//   NORMAL MODE:
+//     4. polling timeout                 → done  (polling_timeout)
+//     5. circuit breaker (13 polls)      → done  (circuit_breaker)
+//     6. CI succeeded                    → done  (ci_success)
+//     7. CI canceled                     → done  (cipe_canceled)
+//     8. CI timed out                    → done  (cipe_timed_out)
+//     9. CI failed, no tasks recorded    → done  (cipe_no_tasks)
+//    10. environment failure             → done  (environment_rerun_cap | environment_issue)
+//    11. self-healing throttled          → done  (self_healing_throttled)
+//    12. CI in progress / not started    → poll  (ci_running)
+//    13. self-healing in progress        → poll  (sh_running)
+//    14. flaky task auto-rerun           → poll  (flaky_rerun)
+//    15. fix auto-applied                → poll  (fix_auto_applied)
+//    16. auto-apply: skipped             → done  (fix_auto_apply_skipped)
+//    17. auto-apply: verification pending→ poll  (verification_pending)
+//    18. auto-apply: verified            → done  (fix_auto_applying)
+//    19. fix: verification failed/none   → done  (fix_needs_review)
+//    20. fix: all/e2e verified           → done  (fix_apply_ready)
+//    21. fix: needs local verify         → done  (fix_needs_local_verify)
+//    22. self-healing failed             → done  (fix_failed)
+//    23. no fix available                → done  (no_fix)
+//    24. fallback                        → poll  (fallback)
+// ============================================================
+
+function isWaitTimedOut() {
+  if (newCipeTimeoutSeconds <= 0) return false
+  return pollCount * 30 >= newCipeTimeoutSeconds
+}
+
 // ============================================================
 // buildOutput() — maps classification to full JSON output
 // ============================================================
 
 // Message templates keyed by status or key
 const messages = {
-  // wait mode
-  new_cipe_detected: () => `New CI Attempt detected! CI: ${cipeStatus || 'N/A'}`,
-  no_new_cipe: () => 'New CI Attempt timeout exceeded. No new CI Attempt detected.',
-  waiting_for_cipe: () => 'Waiting for new CI Attempt...',
-
-  // guards
-  polling_timeout: () => 'Polling timeout exceeded.',
-  circuit_breaker: () => 'No progress after 13 consecutive polls. Stopping.',
-
+  // polling
+  ci_running: () => `CI: ${cipeStatus}`,
   // terminal
   ci_success: () => 'CI passed successfully!',
   cipe_canceled: () => 'CI Attempt was canceled.',
-  cipe_timed_out: () => 'CI Attempt timed out.',
-  cipe_no_tasks: () => 'CI failed but no Nx tasks were recorded.',
 
+  cipe_no_tasks: () => 'CI failed but no Nx tasks were recorded.',
+  cipe_timed_out: () => 'CI Attempt timed out.',
+
+  circuit_breaker: () => 'No progress after 13 consecutive polls. Stopping.',
+  environment_issue: () => 'CI: FAILED | Classification: ENVIRONMENT_STATE',
   // environment
   environment_rerun_cap: () => 'Environment rerun cap (2) exceeded. Bailing.',
-  environment_issue: () => 'CI: FAILED | Classification: ENVIRONMENT_STATE',
+  // fallback
+  fallback: () =>
+    `CI: ${cipeStatus || 'N/A'} | Self-healing: ${
+      selfHealingStatus || 'N/A'
+    } | Verification: ${verificationStatus || 'N/A'}`,
 
-  // throttled
-  self_healing_throttled: () =>
-    'Self-healing throttled \u2014 too many unapplied fixes.',
-
-  // polling
-  ci_running: () => `CI: ${cipeStatus}`,
-  sh_running: () => `CI: ${cipeStatus} | Self-healing: ${selfHealingStatus}`,
-  flaky_rerun: () => 'CI: FAILED | Classification: FLAKY_TASK (auto-rerun in progress)',
+  fix_apply_ready: () => 'Fix available and verified. Ready to apply.',
   fix_auto_applied: () => 'CI: FAILED | Fix auto-applied, new CI Attempt spawning',
-  verification_pending: () =>
-    `CI: FAILED | Self-healing: COMPLETED | Verification: ${verificationStatus}`,
 
-  // actionable
-  fix_auto_applying: () => 'Fix verified! Auto-applying...',
   fix_auto_apply_skipped: extra =>
     `Fix verified but auto-apply was skipped. ${
       extra?.autoApplySkipReason
         ? `Reason: ${extra.autoApplySkipReason}`
         : 'Offer to apply manually.'
     }`,
-  fix_needs_review: () =>
-    `Fix available but needs review. Verification: ${verificationStatus || 'N/A'}`,
-  fix_apply_ready: () => 'Fix available and verified. Ready to apply.',
+
+  // actionable
+  fix_auto_applying: () => 'Fix verified! Auto-applying...',
+  fix_failed: () => 'Self-healing failed to generate a fix.',
   fix_needs_local_verify: extra =>
     `Fix available. ${extra.verifiableTaskIds.length} task(s) need local verification.`,
-  fix_failed: () => 'Self-healing failed to generate a fix.',
-  no_fix: () => 'CI failed, no fix available.',
+  fix_needs_review: () =>
+    `Fix available but needs review. Verification: ${verificationStatus || 'N/A'}`,
+  flaky_rerun: () => 'CI: FAILED | Classification: FLAKY_TASK (auto-rerun in progress)',
 
-  // fallback
-  fallback: () =>
-    `CI: ${cipeStatus || 'N/A'} | Self-healing: ${
-      selfHealingStatus || 'N/A'
-    } | Verification: ${verificationStatus || 'N/A'}`,
+  // wait mode
+  new_cipe_detected: () => `New CI Attempt detected! CI: ${cipeStatus || 'N/A'}`,
+  no_fix: () => 'CI failed, no fix available.',
+  no_new_cipe: () => 'New CI Attempt timeout exceeded. No new CI Attempt detected.',
+  // guards
+  polling_timeout: () => 'Polling timeout exceeded.',
+  // throttled
+  self_healing_throttled: () =>
+    'Self-healing throttled \u2014 too many unapplied fixes.',
+  sh_running: () => `CI: ${cipeStatus} | Self-healing: ${selfHealingStatus}`,
+  verification_pending: () =>
+    `CI: FAILED | Self-healing: COMPLETED | Verification: ${verificationStatus}`,
+
+  waiting_for_cipe: () => 'Waiting for new CI Attempt...',
 }
 
 // Codes where noProgressCount resets to 0 (genuine progress occurred)
 const resetProgressCodes = new Set([
   'ci_success',
-  'fix_auto_applying',
-  'fix_auto_apply_skipped',
-  'fix_needs_review',
   'fix_apply_ready',
+  'fix_auto_apply_skipped',
+  'fix_auto_applying',
   'fix_needs_local_verify',
+  'fix_needs_review',
 ])
-
-function formatMessage(msg) {
-  if (verbosity === 'minimal') {
-    const currentStatus = `${cipeStatus}|${selfHealingStatus}|${verificationStatus}`
-    if (currentStatus === (prevStatus || '')) return null
-    return msg
-  }
-  if (verbosity === 'verbose') {
-    return [
-      `Poll #${pollCount + 1} | CI: ${cipeStatus || 'N/A'} | Self-healing: ${
-        selfHealingStatus || 'N/A'
-      } | Verification: ${verificationStatus || 'N/A'}`,
-      msg,
-    ].join('\n')
-  }
-  return `Poll #${pollCount + 1} | ${msg}`
-}
 
 function buildOutput(decision) {
   const { action, code, extra } = decision
@@ -374,9 +357,9 @@ function buildOutput(decision) {
   const result = {
     action,
     code,
+    envRerunCount,
     message,
     noProgressCount: resetProgressCodes.has(code) ? 0 : noProgressCount,
-    envRerunCount,
   }
 
   // Add delay
@@ -393,6 +376,23 @@ function buildOutput(decision) {
   if (extra?.autoApplySkipReason) result.autoApplySkipReason = extra.autoApplySkipReason
 
   console.log(JSON.stringify(result))
+}
+
+function formatMessage(msg) {
+  if (verbosity === 'minimal') {
+    const currentStatus = `${cipeStatus}|${selfHealingStatus}|${verificationStatus}`
+    if (currentStatus === (prevStatus || '')) return null
+    return msg
+  }
+  if (verbosity === 'verbose') {
+    return [
+      `Poll #${pollCount + 1} | CI: ${cipeStatus || 'N/A'} | Self-healing: ${
+        selfHealingStatus || 'N/A'
+      } | Verification: ${verificationStatus || 'N/A'}`,
+      msg,
+    ].join('\n')
+  }
+  return `Poll #${pollCount + 1} | ${msg}`
 }
 
 // --- Run ---

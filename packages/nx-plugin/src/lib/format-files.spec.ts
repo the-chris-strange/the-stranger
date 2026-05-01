@@ -1,11 +1,11 @@
 import { type formatFiles as nxFormatFiles, type Tree } from '@nx/devkit'
 import {
+  type MockInstance,
   afterEach,
   beforeAll,
   describe,
   expect,
   it,
-  type MockInstance,
   vi,
 } from 'vitest'
 

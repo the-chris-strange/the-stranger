@@ -39,6 +39,7 @@ dictionaries:
   - softwareTerms
   - web-services
 ignoreWords:
+  - cipe
   - dcignore
   - nxignore
 words:

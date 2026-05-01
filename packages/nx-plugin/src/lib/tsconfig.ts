@@ -1,7 +1,7 @@
 import {
+  type Tree,
   logger,
   OverwriteStrategy,
-  type Tree,
   writeJson,
   writeJsonFile,
 } from '@nx/devkit'

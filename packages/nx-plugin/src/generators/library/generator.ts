@@ -1,4 +1,4 @@
-import { joinPathFragments, readProjectConfiguration, type Tree } from '@nx/devkit'
+import { type Tree, joinPathFragments, readProjectConfiguration } from '@nx/devkit'
 import { libraryGenerator as nxLibraryGenerator } from '@nx/js'
 
 import type { LibrarySchema } from './schema'

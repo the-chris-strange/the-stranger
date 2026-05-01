@@ -1,4 +1,5 @@
 import {
+  type MockInstance,
   afterAll,
   afterEach,
   beforeAll,
@@ -6,7 +7,6 @@ import {
   describe,
   expect,
   it,
-  type MockInstance,
   vi,
 } from 'vitest'
 

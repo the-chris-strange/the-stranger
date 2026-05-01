@@ -17,29 +17,39 @@
 const args = process.argv.slice(2)
 const command = args[0]
 
-function getFlag(name) {
-  return args.includes(name)
-}
+function cycleCheck() {
+  const status = getArg('--code')
+  const wasAgentTriggered = getFlag('--agent-triggered')
+  let cycleCount = Number.parseInt(getArg('--cycle-count') || '0', 10)
+  const maxCycles = Number.parseInt(getArg('--max-cycles') || '10', 10)
+  let envRerunCount = Number.parseInt(getArg('--env-rerun-count') || '0', 10)
 
-function getArg(name) {
-  const idx = args.indexOf(name)
-  return idx !== -1 && idx + 1 < args.length ? args[idx + 1] : null
-}
+  // Cycle classification: if previous cycle was agent-triggered, count it
+  if (wasAgentTriggered) cycleCount++
 
-function output(result) {
-  console.log(JSON.stringify(result))
-}
+  // Reset env_rerun_count on non-environment status
+  if (status !== 'environment_issue') envRerunCount = 0
 
-// --- gate ---
-// Check if an action is allowed and return incremented counter.
-// Called before any local fix attempt or environment rerun.
+  // Approaching limit gate
+  const approachingLimit = cycleCount >= maxCycles - 2
+
+  output({
+    agentTriggered: false,
+    approachingLimit,
+    cycleCount,
+    envRerunCount,
+    message: approachingLimit
+      ? `Approaching cycle limit (${cycleCount}/${maxCycles})`
+      : null,
+  })
+}
 
 function gate() {
   const gateType = getArg('--gate-type')
 
   if (gateType === 'local-fix') {
-    const count = parseInt(getArg('--local-verify-count') || '0', 10)
-    const max = parseInt(getArg('--local-verify-attempts') || '3', 10)
+    const count = Number.parseInt(getArg('--local-verify-count') || '0', 10)
+    const max = Number.parseInt(getArg('--local-verify-attempts') || '3', 10)
     if (count >= max) {
       return output({
         allowed: false,
@@ -55,7 +65,7 @@ function gate() {
   }
 
   if (gateType === 'env-rerun') {
-    const count = parseInt(getArg('--env-rerun-count') || '0', 10)
+    const count = Number.parseInt(getArg('--env-rerun-count') || '0', 10)
     if (count >= 2) {
       return output({
         allowed: false,
@@ -73,9 +83,30 @@ function gate() {
   output({ allowed: false, message: `Unknown gate type: ${gateType}` })
 }
 
+function getArg(name) {
+  const idx = args.indexOf(name)
+  return idx !== -1 && idx + 1 < args.length ? args[idx + 1] : null
+}
+
+// --- gate ---
+// Check if an action is allowed and return incremented counter.
+// Called before any local fix attempt or environment rerun.
+
+function getFlag(name) {
+  return args.includes(name)
+}
+
 // --- post-action ---
 // Compute next state after an action is taken.
 // Returns wait mode params and whether the action was agent-triggered.
+
+function output(result) {
+  console.log(JSON.stringify(result))
+}
+
+// --- cycle-check ---
+// Cycle classification + counter resets when a new "done" code is received.
+// Called at the start of handling each actionable code.
 
 function postAction() {
   const action = getArg('--action')
@@ -104,56 +135,25 @@ function postAction() {
   const agentTriggered = action !== 'fix-auto-applying'
 
   output({
-    waitMode: true,
-    pollCount: 0,
-    lastCipeUrl: trackByCipeUrl ? cipeUrl : null,
-    expectedCommitSha: trackByCommitSha ? commitSha : null,
     agentTriggered,
-  })
-}
-
-// --- cycle-check ---
-// Cycle classification + counter resets when a new "done" code is received.
-// Called at the start of handling each actionable code.
-
-function cycleCheck() {
-  const status = getArg('--code')
-  const wasAgentTriggered = getFlag('--agent-triggered')
-  let cycleCount = parseInt(getArg('--cycle-count') || '0', 10)
-  const maxCycles = parseInt(getArg('--max-cycles') || '10', 10)
-  let envRerunCount = parseInt(getArg('--env-rerun-count') || '0', 10)
-
-  // Cycle classification: if previous cycle was agent-triggered, count it
-  if (wasAgentTriggered) cycleCount++
-
-  // Reset env_rerun_count on non-environment status
-  if (status !== 'environment_issue') envRerunCount = 0
-
-  // Approaching limit gate
-  const approachingLimit = cycleCount >= maxCycles - 2
-
-  output({
-    cycleCount,
-    agentTriggered: false,
-    envRerunCount,
-    approachingLimit,
-    message: approachingLimit
-      ? `Approaching cycle limit (${cycleCount}/${maxCycles})`
-      : null,
+    expectedCommitSha: trackByCommitSha ? commitSha : null,
+    lastCipeUrl: trackByCipeUrl ? cipeUrl : null,
+    pollCount: 0,
+    waitMode: true,
   })
 }
 
 // --- Dispatch ---
 
 switch (command) {
+  case 'cycle-check':
+    cycleCheck()
+    break
   case 'gate':
     gate()
     break
   case 'post-action':
     postAction()
-    break
-  case 'cycle-check':
-    cycleCheck()
     break
   default:
     output({ error: `Unknown command: ${command}` })

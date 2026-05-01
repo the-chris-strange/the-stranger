@@ -1,4 +1,4 @@
-import { Yarn as yarn } from '@yarnpkg/types'
+import type { Yarn as yarn } from '@yarnpkg/types'
 
 /**
  * Require that any dependency of a project is also a dependency of the root workspace.

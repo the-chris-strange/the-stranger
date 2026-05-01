@@ -1,4 +1,4 @@
-import { Yarn as yarn } from '@yarnpkg/types'
+import type { Yarn as yarn } from '@yarnpkg/types'
 
 export function getRepository(yarn: Yarn): Repository | undefined {
   const repo = yarn.workspace({ cwd: '.' })?.manifest?.['repository']

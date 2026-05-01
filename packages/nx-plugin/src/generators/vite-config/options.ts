@@ -1,11 +1,11 @@
 import path from 'node:path'
 
 import {
+  type ProjectType,
+  type Tree,
   joinPathFragments,
   offsetFromRoot,
-  type ProjectType,
   readProjectConfiguration,
-  type Tree,
 } from '@nx/devkit'
 
 import type { ExtendRequired } from '../../lib/type-utils'

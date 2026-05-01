@@ -1,9 +1,9 @@
 import {
   type JsonParseOptions,
   type JsonSerializeOptions,
+  type Tree,
   readJsonFile,
   readJson as readJsonFromTree,
-  type Tree,
   writeJsonFile,
   writeJson as writeJsonToTree,
 } from '@nx/devkit'

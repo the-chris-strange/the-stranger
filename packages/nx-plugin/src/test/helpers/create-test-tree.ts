@@ -1,6 +1,6 @@
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
 
-import { addProject, type ProjectConfig } from './add-project'
+import { type ProjectConfig, addProject } from './add-project'
 
 /**
  * Create a virtual file structure to use in tests.

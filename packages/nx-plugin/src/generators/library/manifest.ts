@@ -2,8 +2,8 @@ import { join } from 'node:path'
 
 import {
   type ProjectConfiguration,
-  readProjectConfiguration,
   type Tree,
+  readProjectConfiguration,
 } from '@nx/devkit'
 import sortPackageJson from 'sort-package-json'
 

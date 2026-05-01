@@ -1,12 +1,12 @@
 import '../test/matchers/to-match-set'
 
-import { logger, OverwriteStrategy, readJson, type Tree, writeJson } from '@nx/devkit'
+import { type Tree, logger, OverwriteStrategy, readJson, writeJson } from '@nx/devkit'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Tsconfig } from 'tsconfig-type'
 
 import { createTestTree } from '../test/helpers/create-test-tree'
-import { TSConfig, type TSConfigOptions } from './tsconfig'
+import { type TSConfigOptions, TSConfig } from './tsconfig'
 
 describe('TSConfig', () => {
   const paths = {

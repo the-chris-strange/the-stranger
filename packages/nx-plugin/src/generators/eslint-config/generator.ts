@@ -1,11 +1,11 @@
 import path from 'node:path'
 
 import {
+  type Tree,
   generateFiles,
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  type Tree,
 } from '@nx/devkit'
 
 import type { DependencyCheckOptions, ESLintConfigSchema } from './schema'

@@ -1,4 +1,4 @@
-import { formatFiles as nxFormatFiles, type Tree } from '@nx/devkit'
+import { type Tree, formatFiles as nxFormatFiles } from '@nx/devkit'
 
 import type { GeneratorSchema } from './generator-schema'
 
