@@ -3,6 +3,8 @@
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
     "constraints": {
+      "cache": true,
+      "dependsOn": ["yarn-config:build"],
       "executor": "nx:run-commands",
       "inputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
       "outputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
@@ -10,13 +12,37 @@
         "color": true,
         "command": "yarn constraints"
       },
-      "cache": true,
       "configurations": {
         "fix": {
           "command": "yarn constraints --fix"
         }
-      },
-      "dependsOn": ["yarn-config:build"]
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/eslint.config.{js,mjs,cjs,ts,mts,cts}",
+        "{workspaceRoot}/*",
+        "{workspaceRoot}/.agents/**/*",
+        "!{workspaceRoot}/.agents/**/*.md",
+        "{workspaceRoot}/.codex/**/*",
+        "!{workspaceRoot}/.codex/**/*.md",
+        "{workspaceRoot}/.github/**/*",
+        "!{workspaceRoot}/.github/**/*.md",
+        "{workspaceRoot}/.vscode/**/*.json",
+        "{workspaceRoot}/.verdaccio/**/*",
+        "{workspaceRoot}/.markdownlint-cli2.yaml",
+        "!{workspaceRoot}/.vscode/mcp.json",
+        "!{workspaceRoot}/packages/",
+        "!{workspaceRoot}/**/*.md",
+        "!{workspaceRoot}/**/LICENSE",
+        "!{workspaceRoot}/yarn.lock",
+        { "externalDependencies": ["eslint"] }
+      ],
+      "options": {
+        "command": "eslint .",
+        "ignore-pattern": "{packages,tools}/**/*"
+      }
     },
     "local-registry": {
       "executor": "@nx/js:verdaccio",

@@ -29,7 +29,6 @@
   "devDependencies": {
     "@nx/eslint": "22.5.2",
     "@nx/eslint-plugin": "22.5.2",
-    "@nx/vite": "22.5.2",
     "@nx/vitest": "22.5.2",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/node": "^24.12.2",

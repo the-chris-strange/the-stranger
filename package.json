@@ -25,7 +25,8 @@
     "lint": "nx run-many -t lint",
     "nx": "nx",
     "prepack": "nx run-many -t build",
-    "test": "nx run-many -t test"
+    "test": "nx run-many -t test",
+    "typecheck": "nx run-many -t typecheck"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
@@ -42,7 +43,6 @@
     "@nx/eslint-plugin": "22.5.2",
     "@nx/js": "22.5.2",
     "@nx/plugin": "22.5.2",
-    "@nx/vite": "22.5.2",
     "@nx/vitest": "22.5.2",
     "@nx/web": "22.5.2",
     "@nx/workspace": "22.5.2",

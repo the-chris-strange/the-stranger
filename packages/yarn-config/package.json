@@ -6,17 +6,15 @@
     "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/yarn-config"
   },
-  "type": "module",
+  "type": "commonjs",
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
-      "import": "./src/index.js",
       "default": "./src/index.js"
     },
     "./package.json": "./package.json"
   },
   "main": "./src/index.js",
-  "module": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
     "@yarnpkg/types": "4.0.1",
@@ -25,7 +23,6 @@
   "devDependencies": {
     "@nx/eslint": "22.5.2",
     "@nx/eslint-plugin": "22.5.2",
-    "@nx/vite": "22.5.2",
     "@nx/vitest": "22.5.2",
     "@types/node": "^24.12.2",
     "@typescript-eslint/parser": "^8.58.2",

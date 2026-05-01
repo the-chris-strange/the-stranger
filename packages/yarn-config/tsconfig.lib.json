@@ -2,10 +2,10 @@
   "extends": ["./tsconfig.json"],
   "compilerOptions": {
     "declarationMap": false,
-    "outDir": "../../out-tsc",
+    "outDir": "../../dist",
     "tsBuildInfoFile": "../../out-tsc/packages/yarn-config/tsconfig.lib.tsbuildinfo",
     "types": ["node"],
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": false
   },
   "include": ["src/**/*.ts"],
   "exclude": [

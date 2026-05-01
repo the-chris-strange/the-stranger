@@ -4,9 +4,5 @@
   "projectType": "library",
   "sourceRoot": "packages/eslint-plugin/src",
   "tags": ["npm:public"],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc"
-    }
-  }
+  "targets": {}
 }

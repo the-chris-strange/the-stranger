@@ -8,8 +8,14 @@
   },
   "type": "commonjs",
   "exports": {
-    ".": "./src/index.js",
-    "./generators": "./src/generators.js"
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./generators": {
+      "types": "./src/generators.d.ts",
+      "default": "./src/generators.js"
+    }
   },
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
@@ -28,7 +34,6 @@
     "@nx/eslint": "22.5.2",
     "@nx/eslint-plugin": "22.5.2",
     "@nx/plugin": "22.5.2",
-    "@nx/vite": "22.5.2",
     "@nx/vitest": "22.5.2",
     "@swc-node/register": "1.11.1",
     "@swc/cli": "0.8.1",

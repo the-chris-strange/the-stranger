@@ -24,7 +24,6 @@
   "devDependencies": {
     "@nx/eslint": "22.5.2",
     "@nx/eslint-plugin": "22.5.2",
-    "@nx/vite": "22.5.2",
     "@nx/vitest": "22.5.2",
     "@types/node": "^24.12.2",
     "@typescript-eslint/parser": "^8.58.2",

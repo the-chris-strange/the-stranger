@@ -12,6 +12,11 @@
         "assets": [
           "packages/nx-plugin/*.md",
           {
+            "glob": "**/*.md",
+            "input": "./packages/nx-plugin/docs",
+            "output": "./docs"
+          },
+          {
             "glob": "**/!(*.ts)",
             "input": "./packages/nx-plugin/src",
             "output": "./src"
