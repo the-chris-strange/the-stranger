@@ -57,7 +57,23 @@ export const sortRules = {
       ],
     },
   ],
-  'perfectionist/sort-interfaces': 'off',
+  'perfectionist/sort-interfaces': [
+    'warn',
+    {
+      groups: [
+        'unknown',
+        'index-signature',
+        'required-property',
+        'required-multiline-property',
+        'optional-property',
+        'optional-multiline-property',
+        'required-method',
+        'optional-method',
+        'required-multiline-method',
+        'optional-multiline-method',
+      ],
+    },
+  ],
   'perfectionist/sort-modules': [
     'warn',
     {
@@ -107,7 +123,6 @@ export const sortRules = {
         'unknown',
       ],
       ignoreCase: false,
-      type: 'natural',
     },
   ],
 } satisfies Rules

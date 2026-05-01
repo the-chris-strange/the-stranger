@@ -4,19 +4,33 @@ import { disableTypeCheckedConfig } from './disable-type-checked.js'
 import { disableExcept } from './utils/options.js'
 
 const recommendedSourceOptions = {
+  agentSkills: true,
   js: true,
   jsdoc: true,
+  node: true,
+  promise: true,
+  react: false,
   regexp: true,
   sort: true,
-  ts: true,
+  ts: { strict: false, typeChecked: true },
+  unicorn: true,
+} satisfies Options['source']
+
+const recommendedReactOptions = {
+  ...recommendedSourceOptions,
+  react: {
+    astro: true,
+    typeChecked: true,
+    typescript: true,
+  },
 } satisfies Options['source']
 
 const recommendedOptions = {
-  json: true,
+  json: { sort: true },
   nx: true,
   source: recommendedSourceOptions,
   tests: { unitTestRunner: 'vitest' },
-  yaml: true,
+  yaml: { sort: true },
 } satisfies Options
 
 export const configs = {
@@ -36,10 +50,7 @@ export const configs = {
   }),
   'recommended/react': configure({
     ...recommendedOptions,
-    source: {
-      ...recommendedSourceOptions,
-      react: { astro: false, typeChecked: true, typescript: true },
-    },
+    source: recommendedReactOptions,
   }),
   'recommended/strict': configure({
     ...recommendedOptions,

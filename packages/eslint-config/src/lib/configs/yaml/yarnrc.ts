@@ -2,7 +2,7 @@ import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
 import { namer } from '../../namer.js'
 
-export const yarnrcYamlSortConfig: ConfigWithExtends[] = [
+export const yarnrcYamlSortConfig = [
   {
     files: ['.yarnrc.yml'],
     name: namer('sort/yarnrc'),
@@ -17,4 +17,4 @@ export const yarnrcYamlSortConfig: ConfigWithExtends[] = [
       ],
     },
   },
-]
+] satisfies ConfigWithExtends[]

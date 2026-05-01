@@ -1,3 +1,4 @@
+import nxPlugin from '@nx/eslint-plugin'
 import {
   type ConfigWithExtends,
   FilePatterns,
@@ -5,7 +6,37 @@ import {
 } from '@the-stranger/eslint-utils'
 import * as jsoncParser from 'jsonc-eslint-parser'
 
+import type { ESLint } from 'eslint'
+
+import type { ConfigOptions } from './configure.js'
+
 import { namer } from './namer.js'
+
+export function configureNx(nx: ConfigOptions['nx']): ConfigWithExtends[] {
+  if (nx === false || nx === undefined) {
+    return []
+  }
+
+  const config: ConfigWithExtends = {
+    plugins: { '@nx': nxPlugin as unknown as ESLint.Plugin },
+  }
+
+  if (Array.isArray(nx)) {
+    return [config, ...nx]
+  }
+  return [
+    config,
+    moduleBoundaries({
+      allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
+      depConstraints: [
+        {
+          onlyDependOnLibsWithTags: ['*'],
+          sourceTag: '*',
+        },
+      ],
+    }),
+  ]
+}
 
 /**
  * Create a config object that enables the `@nx/dependency-checks` rule with the specified options.

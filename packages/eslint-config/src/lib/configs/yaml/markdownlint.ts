@@ -2,7 +2,7 @@ import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
 import { namer } from '../../namer.js'
 
-export const markdownlintYamlSortConfig: ConfigWithExtends[] = [
+export const markdownlintYamlSortConfig = [
   {
     files: ['.markdownlint-cli2.yaml'],
     name: namer('sort/markdownlint-config'),
@@ -18,4 +18,4 @@ export const markdownlintYamlSortConfig: ConfigWithExtends[] = [
       ],
     },
   },
-]
+] satisfies ConfigWithExtends[]

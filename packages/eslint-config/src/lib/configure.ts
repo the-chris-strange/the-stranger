@@ -118,6 +118,7 @@ function resolveSourceCodeOptions(options: Options): SourceCodeOptions {
   }
 
   return {
+    agentSkills: getValue('agentSkills'),
     js: resolveJsOptions(options),
     jsdoc: getValue('jsdoc'),
     node: getValue('node'),
@@ -185,6 +186,7 @@ interface ReactOptions {
 type SortOptions<T extends object> = { sort: T }
 
 interface SourceCodeOptions {
+  agentSkills: boolean
   js: JavascriptOptions
   jsdoc: boolean
   node: boolean

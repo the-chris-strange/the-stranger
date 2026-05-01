@@ -4,7 +4,7 @@ import { namer } from '../../namer.js'
 
 const topLevelAscKeys = ['on', 'permissions', 'defaults'].join('|')
 
-export const githubActionsYamlSortConfig: ConfigWithExtends[] = [
+export const githubActionsYamlSortConfig = [
   {
     files: ['.github/workflows/*.yml'],
     name: namer('sort/github-actions'),
@@ -71,4 +71,4 @@ export const githubActionsYamlSortConfig: ConfigWithExtends[] = [
       ],
     },
   },
-]
+] satisfies ConfigWithExtends[]

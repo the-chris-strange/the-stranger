@@ -2,7 +2,7 @@ import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
 import { namer } from '../../namer.js'
 
-export const cspellYamlSortConfig: ConfigWithExtends[] = [
+export const cspellYamlSortConfig = [
   {
     files: ['cspell.config.yaml', '**/cspell.config.yaml'],
     name: namer('sort/cspell-config'),
@@ -37,4 +37,4 @@ export const cspellYamlSortConfig: ConfigWithExtends[] = [
       ],
     },
   },
-]
+] satisfies ConfigWithExtends[]
