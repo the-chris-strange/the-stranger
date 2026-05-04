@@ -34,12 +34,9 @@ export const baseRules = {
 
   'unicorn/custom-error-definition': 'warn',
   'unicorn/import-style': 'off',
-  'unicorn/no-array-callback-reference': 'off',
-  'unicorn/no-array-reduce': 'off',
   'unicorn/no-array-reverse': 'off',
   'unicorn/no-array-sort': 'off',
   'unicorn/no-process-exit': 'off',
   'unicorn/numeric-separators-style': ['warn', { number: { minimumDigits: 12 } }],
   'unicorn/prefer-math-trunc': 'off',
-  'unicorn/prevent-abbreviations': 'off',
 } satisfies Rules
