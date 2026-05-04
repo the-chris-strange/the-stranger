@@ -1,3 +1,5 @@
+import '../types.js'
+
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
