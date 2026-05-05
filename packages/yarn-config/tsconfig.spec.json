@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": { "types": ["vitest/importMeta", "node", "vitest"] },
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
+    "types": ["vitest/importMeta", "node", "vitest"]
+  },
   "include": [
     "vite.config.ts",
     "vite.config.mts",

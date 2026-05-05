@@ -1,12 +1,16 @@
 {
-  "name": "@the-stranger/root",
+  "name": "root",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
     "constraints": {
       "cache": true,
       "dependsOn": ["yarn-config:build"],
       "executor": "nx:run-commands",
-      "inputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
+      "inputs": [
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/packages/*/package.json",
+        { "dependentTasksOutputFiles": "**/*.{js,cjs}" }
+      ],
       "outputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
       "options": {
         "color": true,
@@ -21,20 +25,18 @@
     "lint": {
       "executor": "nx:run-commands",
       "inputs": [
-        "{workspaceRoot}/eslint.config.{js,mjs,cjs,ts,mts,cts}",
-        "{workspaceRoot}/*",
-        "{workspaceRoot}/.agents/**/*",
-        "!{workspaceRoot}/.agents/**/*.md",
-        "{workspaceRoot}/.codex/**/*",
-        "!{workspaceRoot}/.codex/**/*.md",
-        "{workspaceRoot}/.github/**/*",
-        "!{workspaceRoot}/.github/**/*.md",
-        "{workspaceRoot}/.vscode/**/*.json",
-        "{workspaceRoot}/.verdaccio/**/*",
-        "{workspaceRoot}/.markdownlint-cli2.yaml",
+        "eslintConfigs",
+        "{workspaceRoot}/**/*",
+        "{workspaceRoot}/.*",
+        "{workspaceRoot}/.*/**/*",
+        "!{workspaceRoot}/.husky/**/*",
+        "!{workspaceRoot}/.codexignore",
+        "!{workspaceRoot}/.dcignore",
+        "!{workspaceRoot}/.gitattributes",
+        "!{workspaceRoot}/.prettierignore",
         "!{workspaceRoot}/.vscode/mcp.json",
-        "!{workspaceRoot}/packages/",
-        "!{workspaceRoot}/**/*.md",
+        "!{workspaceRoot}/.yarnrc.yml",
+        "!{workspaceRoot}/packages/**/*",
         "!{workspaceRoot}/**/LICENSE",
         "!{workspaceRoot}/yarn.lock",
         { "externalDependencies": ["eslint"] }
@@ -49,7 +51,7 @@
       "options": {
         "config": ".verdaccio/config.yml",
         "port": 4873,
-        "storage": "tmp/local-registry/storage"
+        "storage": "node_modules/.local-registry/storage"
       }
     }
   }

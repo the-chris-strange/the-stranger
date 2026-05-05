@@ -18,6 +18,8 @@ import { writeJson } from '../../lib/json'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { addDependencies } from './dependencies'
 
+vi.mock(import('../../lib/add-dependencies.ts'))
+
 describe('jest-config generator dependency utility', () => {
   let spy: MockInstance
   let tree: Tree
@@ -26,8 +28,6 @@ describe('jest-config generator dependency utility', () => {
   const version = '0.0.0'
 
   beforeAll(async () => {
-    vi.mock('../../lib/add-dependencies.ts')
-
     tree = createTestTree(options.project)
 
     writeJson(

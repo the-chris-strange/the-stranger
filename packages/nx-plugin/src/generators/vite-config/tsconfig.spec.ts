@@ -9,13 +9,13 @@ import { viteConfigGenerator } from './generator'
 import { type NormalizedSchema, normalizeOptions } from './options'
 import { generateTsc } from './tsconfig'
 
+vi.mock(import('../../lib/add-dependencies.ts'))
+
 describe('tsconfig generators', () => {
   let tree: Tree
   let options: NormalizedSchema
 
   beforeAll(() => {
-    vi.mock('../../lib/add-dependencies.ts')
-
     tree = createTestTree('test')
   })
 

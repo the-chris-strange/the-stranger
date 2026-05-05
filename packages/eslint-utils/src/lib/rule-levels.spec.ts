@@ -54,7 +54,7 @@ describe('RuleLevels', () => {
   describe('setLevel', () => {
     it('preserves rule options', () => {
       const levels = new RuleLevels(1)
-      expect(levels.setLevel(['error', { optionA: true }])).toEqual([
+      expect(levels.setLevel(['error', { optionA: true }])).toStrictEqual([
         'warn',
         { optionA: true },
       ])

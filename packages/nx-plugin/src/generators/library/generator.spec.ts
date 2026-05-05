@@ -17,6 +17,14 @@ import type { LibrarySchema } from './schema'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import libraryGenerator from './generator'
 
+vi.mock(import('@nx/js'))
+vi.mock(import('./dependencies.ts'))
+vi.mock(import('./manifest.ts'))
+vi.mock(import('../vite-config/generator.ts'))
+vi.mock(import('../cspell-config/generator.ts'))
+vi.mock(import('../jest-config/generator.ts'))
+vi.mock(import('../eslint-config/generator.ts'))
+
 describe('library generator', () => {
   let tree: Tree
   let options: LibrarySchema
@@ -26,14 +34,6 @@ describe('library generator', () => {
   let eslintConfigSpy: MockInstance
 
   beforeAll(async () => {
-    vi.mock('@nx/js')
-    vi.mock('./dependencies.ts')
-    vi.mock('./manifest.ts')
-    vi.mock('../vite-config/generator.ts')
-    vi.mock('../cspell-config/generator.ts')
-    vi.mock('../jest-config/generator.ts')
-    vi.mock('../eslint-config/generator.ts')
-
     viteConfigSpy = vi.spyOn(
       await import('../vite-config/generator.js'),
       'viteConfigGenerator',

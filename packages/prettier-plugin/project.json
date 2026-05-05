@@ -4,5 +4,10 @@
   "projectType": "library",
   "sourceRoot": "packages/prettier-plugin/src",
   "tags": ["npm:public"],
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc"
+    },
+    "watch-tests": {}
+  }
 }

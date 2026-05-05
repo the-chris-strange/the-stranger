@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Tree } from '@nx/devkit'
 
@@ -8,14 +8,12 @@ import { markerFiles } from '../../lib/config-marker-files'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { viteConfigGenerator } from './generator'
 
+vi.mock(import('./tsconfig.ts'))
+vi.mock(import('./dependencies.ts'))
+
 describe('vite config generator', () => {
   let tree: Tree
   let options: ViteConfigSchema
-
-  beforeAll(() => {
-    vi.mock('./dependencies.ts')
-    vi.mock('./tsconfig.ts')
-  })
 
   beforeEach(() => {
     options = {

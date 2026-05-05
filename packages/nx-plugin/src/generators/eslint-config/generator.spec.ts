@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Tree } from '@nx/devkit'
 
@@ -7,13 +7,11 @@ import type { ESLintConfigSchema } from './schema'
 import { createTestTree } from '../../test/helpers/create-test-tree'
 import { eslintConfigGenerator, FILE_EXTENSIONS } from './generator'
 
+vi.mock(import('../../lib/add-dependencies.ts'))
+
 describe('eslint config generator', () => {
   let tree: Tree
   let options: ESLintConfigSchema
-
-  beforeAll(() => {
-    vi.mock('../../lib/add-dependencies.ts')
-  })
 
   beforeEach(() => {
     options = { force: true, project: 'test', skipFormat: true }

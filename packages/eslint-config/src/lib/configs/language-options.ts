@@ -1,9 +1,9 @@
-import tseslintPlugin from 'typescript-eslint'
+import parser from '@typescript-eslint/parser'
 
 import type { Config } from 'eslint/config'
 
 export const languageOptions = {
-  parser: tseslintPlugin.parser,
+  parser,
   parserOptions: {
     projectService: true,
     tsconfigRootDir: import.meta.dirname,

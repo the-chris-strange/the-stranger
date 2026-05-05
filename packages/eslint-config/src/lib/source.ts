@@ -5,6 +5,7 @@ import {
   getFilePatterns,
   setSeverity,
 } from '@the-stranger/eslint-utils'
+import prettierConfig from 'eslint-config-prettier'
 import jsdocPlugin from 'eslint-plugin-jsdoc'
 import nPlugin from 'eslint-plugin-n'
 import perfectionistPlugin from 'eslint-plugin-perfectionist'
@@ -112,6 +113,8 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
       rules: agentSkillsRules,
     })
   }
+
+  configs.push(prettierConfig)
 
   return configs
 }

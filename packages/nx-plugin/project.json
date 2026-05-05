@@ -46,6 +46,7 @@
         "outputPath": "dist/packages/nx-plugin",
         "tsConfig": "packages/nx-plugin/tsconfig.lib.json"
       }
-    }
+    },
+    "watch-tests": {}
   }
 }

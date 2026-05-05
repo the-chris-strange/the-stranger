@@ -2,7 +2,7 @@
   "name": "@the-stranger/root",
   "version": "0.0.0",
   "private": true,
-  "description": "A collection of plugins & reusable configurations for TypeScript, ESLint, Prettier, Vite, NX, Yarn, and more.",
+  "description": "A collection of opinionated plugins & reusable configurations that make my life easier.",
   "repository": {
     "type": "git",
     "url": "https://github.com/the-chris-strange/the-stranger.git"
@@ -51,6 +51,7 @@
     "@swc/core": "1.15.26",
     "@swc/helpers": "0.5.21",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
+    "@types/micromatch": "^4",
     "@types/node": "^24.12.2",
     "@typescript-eslint/parser": "^8.58.2",
     "@vitest/coverage-v8": "4.1.4",
@@ -85,6 +86,7 @@
     "jiti": "^2.6.1",
     "jsdom": "~26.1.0",
     "jsonc-eslint-parser": "^3.1.0",
+    "micromatch": "^4.0.8",
     "nx": "22.5.2",
     "prettier": "^3.8.3",
     "prettier-plugin-packagejson": "^3.0.2",

@@ -275,9 +275,7 @@ describe('TSConfig', () => {
 
   describe('.write', () => {
     it("creates a new file if the path provided does't exist", () => {
-      if (tree.exists(paths.tsconfig)) {
-        tree.delete(paths.tsconfig)
-      }
+      tree.delete(paths.tsconfig)
 
       tsconfig = new TSConfig(paths.tsconfig, tree)
       tsconfig.write()
@@ -377,11 +375,11 @@ describe('TSConfig', () => {
     })
 
     it('normalizes paths to array of {path}', () => {
-      expect(TSConfig.normalizeReferences('./foo')).toEqual([{ path: './foo' }])
-      expect(TSConfig.normalizeReferences([{ path: './bar' }])).toEqual([
+      expect(TSConfig.normalizeReferences('./foo')).toStrictEqual([{ path: './foo' }])
+      expect(TSConfig.normalizeReferences([{ path: './bar' }])).toStrictEqual([
         { path: './bar' },
       ])
-      expect(TSConfig.normalizeReferences(null)).toEqual([])
+      expect(TSConfig.normalizeReferences(null)).toStrictEqual([])
     })
   })
 })

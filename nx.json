@@ -12,8 +12,15 @@
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production": ["default", "!{projectRoot}/vite.config.*", "!{projectRoot}/vitest.config.*"],
-    "sharedGlobals": ["{workspaceRoot}/tsconfig.json", "{workspaceRoot}/tsconfig.base.json"]
+    "eslintConfigs": ["{workspaceRoot}/eslint.config.?([cm])[jt]s", "{projectRoot}/eslint.config.?([cm])[jt]s"],
+    "noEslintConfigs": ["!{workspaceRoot}/eslint.config.?([cm])[jt]s", "!{projectRoot}/eslint.config.?([cm])[jt]s"],
+    "noTestFiles": [
+      "!{projectRoot}/**/*.spec.?([cm])[jt]s?(x)",
+      "!{projectRoot}/**/*.test.?([cm])[jt]s?(x)",
+      "!{projectRoot}/vite?(st).config.?([cm])[jt]s?(x)"
+    ],
+    "production": ["default", "noEslintConfigs", "noTestFiles", "!{projectRoot}/**/*.md", "!{projectRoot}/**/*.json"],
+    "sharedGlobals": []
   },
   "nxCloudId": "67eeb7b904dc9617051c453f",
   "parallel": 7,
@@ -75,11 +82,12 @@
   },
   "sync": { "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"] },
   "targetDefaults": {
-    "@nx/js:tsc": {
+    "build": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["default", "^default"],
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nx/js:tsc",
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.outputPath}/"],
       "options": {
         "assets": [
           "{projectRoot}/*.md",
@@ -106,19 +114,22 @@
       }
     },
     "lint": {
+      "cache": true,
       "inputs": [
         "default",
-        "{workspaceRoot}/eslint.config.{js,mjs,cjs,ts,mts,cts}",
-        "{projectRoot}/eslint.config.{js,mjs,cjs,ts,mts,cts}",
+        "eslintConfigs",
         "{workspaceRoot}/tools/eslint-rules/**/*",
         { "externalDependencies": ["eslint"] }
       ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
       "configurations": {
         "fix": {
-          "args": ["--fix"]
+          "fix": true
         },
         "warnings": {
-          "max-warnings": 0
+          "maxWarnings": 0
         }
       }
     },
@@ -129,27 +140,43 @@
       }
     },
     "test": {
-      "inputs": ["default", { "externalDependencies": ["vitest"] }, { "env": "CI" }, { "env": "GITHUB_ACTIONS" }],
+      "cache": true,
+      "inputs": [
+        "default",
+        "noEslintConfigs",
+        "^production",
+        { "externalDependencies": ["vitest"] },
+        { "env": "CI" },
+        { "env": "GITHUB_ACTIONS" }
+      ],
       "outputs": [
         "{workspaceRoot}/coverage/{projectRoot}/",
         "{workspaceRoot}/node_modules/.vitest/{projectRoot}/test-results.json"
       ],
+      "options": { "cwd": "{projectRoot}" },
       "configurations": {
         "coverage": {
-          "args": ["--coverage"]
+          "coverage": true
         }
       }
     },
     "typecheck": {
+      "dependsOn": ["build", "^typecheck"],
       "inputs": [
-        "{workspaceRoot}/out-tsc/{projectRoot}/tsconfig.lib.tsbuildinfo",
-        { "externalDependencies": ["typescript"] },
-        { "dependentTasksOutputFiles": "**/*.d.ts" }
+        "{projectRoot}/src/**/*.ts",
+        { "dependentTasksOutputFiles": "**/*.d.?([cm])ts" },
+        { "externalDependencies": ["typescript"] }
       ],
       "outputs": [
-        "{workspaceRoot}/out-tsc/{projectRoot}/tsconfig.lib.tsbuildinfo",
-        "{workspaceRoot}/dist/{projectRoot}/**/*.d.ts"
+        "{workspaceRoot}/out-tsc/{projectRoot}/tsconfig.?(*.)tsbuildinfo",
+        "{workspaceRoot}/out-tsc/{projectRoot}/**/*.d.?([cm])ts?(.map)"
       ]
+    },
+    "watch-tests": {
+      "cache": false,
+      "executor": "@nx/vitest:test",
+      "options": { "cwd": "{projectRoot}", "watch": true },
+      "continuous": true
     }
   },
   "tui": {

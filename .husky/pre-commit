@@ -1,5 +1,5 @@
 # ensure package.json files are in sync
-yarn nx run root:constraints
+yarn constraints
 
 # check formatting for the whole workspace
 yarn nx format:check

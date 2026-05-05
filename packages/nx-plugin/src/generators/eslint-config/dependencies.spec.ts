@@ -19,6 +19,8 @@ import {
   VITEST_DEPENDENCIES,
 } from './dependencies'
 
+vi.mock(import('../../lib/add-dependencies.ts'))
+
 describe('addEslintDependencies', () => {
   const projectPath = (...pth: string[]) => joinPathFragments('packages/test', ...pth)
   const project: ProjectConfiguration = { root: projectPath() }
@@ -27,8 +29,6 @@ describe('addEslintDependencies', () => {
   let spy: MockInstance
 
   beforeAll(async () => {
-    vi.mock('../../lib/add-dependencies.ts')
-
     spy = vi.spyOn(
       await import('../../lib/add-dependencies.js'),
       'addDependenciesToProject',
