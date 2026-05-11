@@ -2780,6 +2780,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/js@npm:~8.57.0":
+  version: 8.57.1
+  resolution: "@eslint/js@npm:8.57.1"
+  checksum: 10c0/b489c474a3b5b54381c62e82b3f7f65f4b8a5eaaed126546520bf2fede5532a8ed53212919fed1e9048dcf7f37167c8561d58d0ba4492a4244004e7793805223
+  languageName: node
+  linkType: hard
+
 "@eslint/object-schema@npm:^2.1.7":
   version: 2.1.7
   resolution: "@eslint/object-schema@npm:2.1.7"
@@ -4765,6 +4772,7 @@ __metadata:
     "@dotenvx/dotenvx": "npm:^1.61.0"
     "@eslint-react/eslint-plugin": "npm:^2.13.0"
     "@eslint/config-inspector": "npm:^1.5.0"
+    "@eslint/js": "npm:~8.57.0"
     "@nx/devkit": "npm:22.5.2"
     "@nx/eslint": "npm:22.5.2"
     "@nx/eslint-plugin": "npm:22.5.2"
