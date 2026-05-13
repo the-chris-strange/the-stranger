@@ -3,7 +3,7 @@ import {
   FilePatterns,
   getFilePatterns,
 } from '@the-stranger/eslint-utils'
-import { browser, node } from 'globals'
+import globals from 'globals'
 
 import type { ConfigOptions } from './configure.js'
 
@@ -19,8 +19,8 @@ export function configureJs({ js }: ConfigOptions['source']): ConfigWithExtends[
       files: getFilePatterns(FilePatterns.js),
       languageOptions: {
         globals: {
-          ...(js.browser ? browser : {}),
-          ...(js.node ? node : {}),
+          ...(js.browser ? globals.browser : {}),
+          ...(js.node ? globals.node : {}),
         },
       },
       name: namer('javascript/base'),
