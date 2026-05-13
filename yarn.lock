@@ -4667,9 +4667,6 @@ __metadata:
   peerDependencies:
     eslint: ^9
     typescript-eslint: ^8
-  peerDependenciesMeta:
-    "@nx/eslint-plugin":
-      optional: true
   languageName: unknown
   linkType: soft
 
@@ -4699,7 +4696,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@the-stranger/nx-plugin@workspace:packages/nx-plugin":
+"@the-stranger/nx-plugin-internal@workspace:tools/nx-plugin":
+  version: 0.0.0-use.local
+  resolution: "@the-stranger/nx-plugin-internal@workspace:tools/nx-plugin"
+  dependencies:
+    "@nx/devkit": "npm:22.5.2"
+    "@the-stranger/nx-plugin": "workspace:^"
+    nx: "npm:22.5.2"
+    tslib: "npm:^2.8.1"
+  languageName: unknown
+  linkType: soft
+
+"@the-stranger/nx-plugin@workspace:^, @the-stranger/nx-plugin@workspace:packages/nx-plugin":
   version: 0.0.0-use.local
   resolution: "@the-stranger/nx-plugin@workspace:packages/nx-plugin"
   dependencies:
@@ -4730,7 +4738,7 @@ __metadata:
     vite: "npm:7.3.2"
     vitest: "npm:4.1.4"
   peerDependencies:
-    nx: ^22
+    nx: ">=21 <23"
   languageName: unknown
   linkType: soft
 

@@ -2,11 +2,11 @@
   "compilerOptions": {
     "paths": {
       "@the-stranger/eslint-config": ["packages/eslint-config/src/index.ts"],
-      "@the-stranger/eslint-plugin": ["./packages/eslint-plugin/src/index.ts"],
+      "@the-stranger/eslint-plugin": ["packages/eslint-plugin/src/index.ts"],
       "@the-stranger/eslint-utils": ["packages/eslint-utils/src/index.ts"],
-      "@the-stranger/nx-plugin": ["./packages/nx-plugin/src/index.ts"],
-      "@the-stranger/prettier-plugin": ["./packages/prettier-plugin/src/index.ts"],
-      "@the-stranger/yarn-config": ["./packages/yarn-config/src/index.ts"]
+      "@the-stranger/nx-plugin": ["packages/nx-plugin/src/index.ts"],
+      "@the-stranger/prettier-plugin": ["packages/prettier-plugin/src/index.ts"],
+      "@the-stranger/yarn-config": ["packages/yarn-config/src/index.ts"]
     },
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",

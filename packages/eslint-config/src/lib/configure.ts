@@ -1,6 +1,4 @@
-import '../types.js'
-
-import { defineConfig, globalIgnores } from 'eslint/config'
+import { type Config, defineConfig, globalIgnores } from 'eslint/config'
 
 import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
@@ -11,9 +9,12 @@ import { configureSource } from './source.js'
 import { configureTests } from './tests.js'
 import { configureYaml } from './yaml.js'
 
-export function configure(options?: Options) {
+export function configure(
+  options?: Options,
+  ...configs: ConfigWithExtends[]
+): Config[] {
   const config = resolveOptions(options)
-  const configs: ConfigWithExtends[] = [
+  const configArray: ConfigWithExtends[] = [
     ...configureSource(config),
     ...configureTests(config),
     ...configureJson(config),
@@ -21,7 +22,7 @@ export function configure(options?: Options) {
   ]
 
   if (config.toml) {
-    configs.push(...tomlConfig)
+    configArray.push(...tomlConfig)
   }
 
   return defineConfig(
@@ -44,6 +45,7 @@ export function configure(options?: Options) {
 
     { linterOptions: { reportUnusedDisableDirectives: 'error' } },
 
+    ...configArray,
     ...configs,
   )
 }

@@ -294,12 +294,7 @@ const sourceFilesConfig = defineConfig(
         {
           enforceBuildableLibDependency: true,
           allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
-          depConstraints: [
-            {
-              sourceTag: '*',
-              onlyDependOnLibsWithTags: ['*'],
-            },
-          ],
+          depConstraints: [],
         },
       ],
 

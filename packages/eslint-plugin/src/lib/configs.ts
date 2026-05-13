@@ -1,20 +1,34 @@
-import { type Options, configure } from '@the-stranger/eslint-config'
+import {
+  type ConfigOptions,
+  type Options,
+  configure,
+} from '@the-stranger/eslint-config'
 
 import { disableTypeCheckedConfig } from './disable-type-checked.js'
 import { disableExcept } from './utils/options.js'
 
 const recommendedSourceOptions = {
   agentSkills: true,
-  js: true,
+  js: {
+    browser: true,
+    node: true,
+  },
   jsdoc: true,
   node: true,
   promise: true,
-  react: false,
+  react: {
+    astro: false,
+    typeChecked: false,
+    typescript: false,
+  },
   regexp: true,
   sort: true,
-  ts: { strict: false, typeChecked: true },
+  ts: {
+    strict: false,
+    typeChecked: true,
+  },
   unicorn: true,
-} satisfies Options['source']
+} satisfies ConfigOptions['source']
 
 const recommendedReactOptions = {
   ...recommendedSourceOptions,
@@ -23,7 +37,7 @@ const recommendedReactOptions = {
     typeChecked: true,
     typescript: true,
   },
-} satisfies Options['source']
+} satisfies ConfigOptions['source']
 
 const recommendedOptions = {
   json: { sort: true },

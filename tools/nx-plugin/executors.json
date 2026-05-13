@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "write-file-header": {
+      "description": "Write header text at the top of one or more files",
+      "implementation": "./src/executors/write-file-header/executor",
+      "schema": "./src/executors/write-file-header/schema.json"
+    }
+  }
+}

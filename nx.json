@@ -80,7 +80,9 @@
       "versionPrefix": "^"
     }
   },
-  "sync": { "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"] },
+  "sync": {
+    "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"]
+  },
   "targetDefaults": {
     "build": {
       "cache": true,
@@ -105,6 +107,11 @@
             "glob": "package.json",
             "input": "{projectRoot}",
             "output": "."
+          },
+          {
+            "glob": "**/*.d.ts",
+            "input": "{projectRoot}/src",
+            "output": "./src"
           }
         ],
         "generatePackageJson": true,
@@ -140,7 +147,6 @@
       }
     },
     "test": {
-      "cache": true,
       "inputs": [
         "default",
         "noEslintConfigs",
@@ -150,10 +156,12 @@
         { "env": "GITHUB_ACTIONS" }
       ],
       "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}/",
+        "{workspaceRoot}/coverage/{projectRoot}",
         "{workspaceRoot}/node_modules/.vitest/{projectRoot}/test-results.json"
       ],
-      "options": { "cwd": "{projectRoot}" },
+      "options": {
+        "cwd": "{projectRoot}"
+      },
       "configurations": {
         "coverage": {
           "coverage": true
@@ -175,7 +183,10 @@
     "watch-tests": {
       "cache": false,
       "executor": "@nx/vitest:test",
-      "options": { "cwd": "{projectRoot}", "watch": true },
+      "options": {
+        "cwd": "{projectRoot}",
+        "watch": true
+      },
       "continuous": true
     }
   },
