@@ -15,7 +15,8 @@
     "./generators": {
       "types": "./src/generators.d.ts",
       "default": "./src/generators.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
