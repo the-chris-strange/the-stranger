@@ -53,7 +53,7 @@
     "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "nx": "^22"
+    "nx": ">=21 <23"
   },
   "engines": {
     "node": "^24"
