@@ -17,7 +17,7 @@
     "tools/**"
   ],
   "scripts": {
-    "build": "nx run-many -t build",
+    "build": "nx run-many -t build resolve-workspace-dependencies",
     "ci": "nx run-many -t lint test build typecheck",
     "commit": "commit",
     "commit:lint": "commitlint",

@@ -146,6 +146,14 @@
         "packageRoot": "{workspaceRoot}/dist/{projectRoot}"
       }
     },
+    "resolve-workspace-dependencies": {
+      "dependsOn": ["nx-plugin-internal:build", "build", "^resolve-workspace-dependencies"],
+      "executor": "@the-stranger/nx-plugin-internal:workspace-dependencies",
+      "options": {
+        "destination": "{workspaceRoot}/dist/{projectRoot}/package.json",
+        "source": "{projectRoot}/package.json"
+      }
+    },
     "test": {
       "inputs": [
         "default",
