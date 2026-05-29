@@ -17,6 +17,10 @@ import { namer } from './namer.js'
 import { reactRules } from './rulesets/react.js'
 
 export function configureReact({ react }: ConfigOptions['source']) {
+  if (!Object.values(react).includes(true)) {
+    return []
+  }
+
   const configs: ConfigWithExtends[] = [
     {
       extends: [

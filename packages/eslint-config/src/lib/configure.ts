@@ -43,7 +43,10 @@ export function configure(
       namer('global ignores'),
     ),
 
-    { linterOptions: { reportUnusedDisableDirectives: 'error' } },
+    {
+      linterOptions: { reportUnusedDisableDirectives: 'error' },
+      name: namer('linter options'),
+    },
 
     ...configArray,
     ...configs,
@@ -139,10 +142,14 @@ function resolveTsOptions({ source }: Options): TypescriptOptions {
   const getValue = (key: keyof TypescriptOptions) => {
     if (typeof source === 'boolean') return source
     if (typeof source?.ts === 'boolean') return source.ts
-    return source?.ts?.[key] ?? key === 'typeChecked'
+    return source?.ts?.[key] ?? (key === 'typeChecked' || key === 'typescript')
   }
 
-  return { strict: getValue('strict'), typeChecked: getValue('typeChecked') }
+  return {
+    strict: getValue('strict'),
+    typeChecked: getValue('typeChecked'),
+    typescript: getValue('typescript'),
+  }
 }
 
 function resolveYamlOptions({ yaml }: Options): ConfigOptions['yaml'] {
@@ -211,6 +218,7 @@ interface TestFileOptions {
 interface TypescriptOptions {
   strict: boolean
   typeChecked: boolean
+  typescript: boolean
 }
 
 interface YamlSortOptions {

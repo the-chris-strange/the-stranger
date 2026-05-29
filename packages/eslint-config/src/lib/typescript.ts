@@ -25,23 +25,20 @@ export function configureTs({
   const config = {
     extends: [] as InfiniteConfigArray[],
     files: getFilePatterns(FilePatterns.ts),
-    languageOptions: undefined as ConfigWithExtends['languageOptions'],
+    languageOptions,
     name: namer('typescript/base'),
     rules: typescriptRules,
   } satisfies ConfigWithExtends
 
-  if (ts.typeChecked)
+  if (ts.typeChecked) {
     config.extends.push(
       tseslintPlugin.configs[`${ts.strict ? 'strict' : 'recommended'}TypeCheckedOnly`],
     )
+    Object.assign(config.rules, typeCheckedRules)
+  }
 
   if (jsdoc) {
     config.extends.push(jsdocPlugin.configs['flat/recommended-typescript'])
-  }
-
-  if (ts.typeChecked) {
-    config.languageOptions = languageOptions
-    config.rules = { ...config.rules, ...typeCheckedRules }
   }
 
   return [config]

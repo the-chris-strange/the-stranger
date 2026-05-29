@@ -26,6 +26,7 @@ const recommendedSourceOptions = {
   ts: {
     strict: false,
     typeChecked: true,
+    typescript: true,
   },
   unicorn: true,
 } satisfies ConfigOptions['source']

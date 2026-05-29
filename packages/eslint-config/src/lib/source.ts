@@ -15,15 +15,18 @@ import unicornPlugin from 'eslint-plugin-unicorn'
 import tseslintPlugin from 'typescript-eslint'
 
 import type { ConfigOptions } from './configure.js'
+import type { Rules } from './rulesets/rules.js'
 
 import { configureJs } from './javascript.js'
 import { namer } from './namer.js'
 import { configureNx } from './nx.js'
 import { configureReact } from './react.js'
 import { agentSkillsRules } from './rulesets/agent-skills.js'
-import { baseRules } from './rulesets/base.js'
-import { commonjsRules } from './rulesets/commonjs.js'
+import { jsdocRules } from './rulesets/jsdoc.js'
+import { nRules } from './rulesets/n.js'
+import { promiseRules } from './rulesets/promise.js'
 import { sortRules } from './rulesets/sort.js'
+import { unicornRules } from './rulesets/unicorn.js'
 import { configureTs } from './typescript.js'
 
 export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtends[] {
@@ -37,40 +40,43 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
     return []
   }
 
+  const plugins: Exclude<ConfigWithExtends['plugins'], undefined> = {}
   const baseConfig = {
     extends: [tseslintPlugin.configs['recommended']] as InfiniteConfigArray[],
     files: getFilePatterns(FilePatterns.source),
     name: namer('source/base'),
-    plugins: {} as Exclude<ConfigWithExtends['plugins'], undefined>,
+    rules: {} as Rules,
     settings: undefined as ConfigWithExtends['settings'],
   } satisfies ConfigWithExtends
+
+  if (source.node) {
+    plugins['n'] = nPlugin
+    Object.assign(baseConfig.rules, nRules)
+  }
 
   if (source.sort) {
     baseConfig.extends.push(
       setSeverity(perfectionistPlugin.configs['recommended-natural'], 'warn'),
     )
+    Object.assign(baseConfig.rules, sortRules)
   }
 
   if (source.unicorn) {
+    plugins['unicorn'] = unicornPlugin
+    Object.assign(baseConfig.rules, unicornRules)
     baseConfig.extends.push(unicornPlugin.configs['unopinionated'])
   }
 
   if (source.jsdoc) {
-    baseConfig.plugins['jsdoc'] = jsdocPlugin
+    plugins['jsdoc'] = jsdocPlugin
+    Object.assign(baseConfig.rules, jsdocRules)
     baseConfig.extends.push(jsdocPlugin.configs['flat/recommended'])
-    baseConfig.settings = {
-      jsdoc: {
-        tagNamePreference: {
-          augments: 'extends',
-        },
+    baseConfig.settings ??= {}
+    baseConfig.settings['jsdoc'] = {
+      tagNamePreference: {
+        augments: 'extends',
       },
     }
-  } else {
-    delete baseConfig.settings
-  }
-
-  if (source.node) {
-    baseConfig.plugins['n'] = nPlugin
   }
 
   if (source.regexp) {
@@ -78,10 +84,20 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
   }
 
   if (source.promise) {
+    Object.assign(baseConfig.rules, promiseRules)
     baseConfig.extends.push(promisePlugin.configs['flat/recommended'])
   }
 
+  if (Object.keys(baseConfig.settings ?? {}).length === 0) {
+    delete baseConfig.settings
+  }
+
   const configs: ConfigWithExtends[] = [
+    {
+      name: namer('source/plugins'),
+      plugins,
+    },
+
     ...configureNx(nx),
     ...configureJs(source),
 
@@ -90,21 +106,8 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
     ...configureTs(source),
     ...configureReact(source),
 
-    {
-      name: namer('source/rules'),
-      rules: baseRules,
-    },
-
-    {
-      files: getFilePatterns(FilePatterns.cjs),
-      name: namer('source/rules/cjs'),
-      rules: commonjsRules,
-    },
+    createCJSConfig(source),
   ]
-
-  if (source.sort) {
-    configs.push({ name: namer('source/rules/sort'), rules: sortRules })
-  }
 
   if (source.agentSkills) {
     configs.push({
@@ -117,4 +120,22 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
   configs.push(prettierConfig)
 
   return configs
+}
+
+function createCJSConfig(source: ConfigOptions['source']): ConfigWithExtends {
+  const rules: Rules = {}
+
+  if (Object.values(source.ts).includes(true)) {
+    rules['@typescript-eslint/no-require-imports'] = 'off'
+  }
+
+  if (source.unicorn) {
+    rules['unicorn/prefer-module'] = 'off'
+  }
+
+  return {
+    files: getFilePatterns(FilePatterns.cjs),
+    name: namer('source/rules/cjs'),
+    rules,
+  }
 }

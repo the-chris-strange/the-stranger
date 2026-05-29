@@ -18,12 +18,14 @@ export function configureNx(nx: ConfigOptions['nx']): ConfigWithExtends[] {
   }
 
   const config: ConfigWithExtends = {
+    name: namer('nx'),
     plugins: { '@nx': nxPlugin as unknown as ESLint.Plugin },
   }
 
   if (Array.isArray(nx)) {
     return [config, ...nx]
   }
+
   return [
     config,
     moduleBoundaries({
