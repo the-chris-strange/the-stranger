@@ -26,6 +26,12 @@ describe('setSeverity', () => {
         },
       ],
       files: ['*.*'],
+      plugins: {
+        '@eslint-plugin/plugin-eslint': {},
+        '@foo': {},
+        '@that-plugin': {},
+        '@this-plugin': {},
+      },
       rules: {
         '@eslint-plugin-plugin-eslint/no-bad-code': 'error',
         '@foo/no-good-code': 'off',
@@ -46,6 +52,13 @@ describe('setSeverity', () => {
     setSeverity(config, levels, matcher)
 
     expect(spy).not.toHaveBeenCalled()
+  })
+
+  it('leave config properties not related to rules alone', () => {
+    const originalConfig = { ...config }
+    setSeverity(config, levels, matcher)
+    expect(config.files).toStrictEqual(originalConfig.files)
+    expect(config.plugins).toStrictEqual(originalConfig.plugins)
   })
 
   it('sets the severity of a config', () => {
