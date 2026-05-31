@@ -1,5 +1,5 @@
 {
-  "name": "tools/nx-plugin",
+  "name": "nx-plugin-internal",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "tools/nx-plugin/src",
@@ -11,11 +11,6 @@
       "options": {
         "assets": [
           "tools/nx-plugin/*.md",
-          {
-            "glob": "**/*.md",
-            "input": "./tools/nx-plugin/docs",
-            "output": "./docs"
-          },
           {
             "glob": "**/!(*.ts)",
             "input": "./tools/nx-plugin/src",

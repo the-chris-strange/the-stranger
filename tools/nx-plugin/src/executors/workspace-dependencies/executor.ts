@@ -21,8 +21,6 @@ const runExecutor: PromiseExecutor<WorkspaceDependenciesSchema> = async (
     return { success: false }
   }
 
-  logger.debug(options, `Resolving workspace dependencies for ${context.projectName}`)
-
   const projectNode = context.projectGraph.nodes[context.projectName]
   if (!projectNode) {
     logger.error(`Project ${context.projectName} not found in project graph`)
@@ -37,7 +35,6 @@ const runExecutor: PromiseExecutor<WorkspaceDependenciesSchema> = async (
       {},
       projectNode,
     )
-    logger.debug(`Resolved build outputs for ${context.projectName}`, outputs)
     options.destination = findPackageJson(
       outputs.map(resolveWorkspacePath),
     ).next().value
@@ -53,9 +50,9 @@ const runExecutor: PromiseExecutor<WorkspaceDependenciesSchema> = async (
     const destManifest = await readPackageJson(destinationPath)
 
     for await (const dependency of getWorkspaceDependencies(sourceManifest)) {
-      logger.debug(`Resolved ${dependency.name} to ${dependency.version}`, dependency)
       destManifest[dependency.dependencySet] ??= {}
-      destManifest[dependency.dependencySet]![dependency.name] = dependency.version
+      destManifest[dependency.dependencySet]![dependency.name] =
+        `${options.resolvedVersionPrefix ?? '^'}${dependency.version}`
     }
 
     await writePackageJson(destinationPath, destManifest)

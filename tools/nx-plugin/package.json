@@ -2,11 +2,6 @@
   "name": "@the-stranger/nx-plugin-internal",
   "version": "0.0.1",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/the-chris-strange/the-stranger.git",
-    "directory": "tools/nx-plugin"
-  },
   "type": "commonjs",
   "exports": {
     ".": {
@@ -27,9 +22,7 @@
   "devDependencies": {
     "nx": "22.5.2"
   },
-  "engines": {
-    "node": "^24"
-  },
+  "engines": {},
   "executors": "./executors.json",
   "generators": "./generators.json"
 }

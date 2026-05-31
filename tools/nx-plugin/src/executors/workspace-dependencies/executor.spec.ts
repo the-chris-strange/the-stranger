@@ -44,10 +44,7 @@ describe('inter-project dependency resolver executor', () => {
     [projectNames.b]: join(projectBDir, 'package.json'),
   } as const
 
-  const options: WorkspaceDependenciesSchema = {
-    destination: destinationPath,
-    source: projectARoot,
-  }
+  let options: WorkspaceDependenciesSchema
   const context: ExecutorContext = {
     cwd: process.cwd(),
     isVerbose: false,
@@ -109,6 +106,11 @@ describe('inter-project dependency resolver executor', () => {
       name: projectNames.b,
       version: '1.0.0',
     })
+
+    options = {
+      destination: destinationPath,
+      source: projectARoot,
+    }
   })
 
   afterAll(async () => {
@@ -124,7 +126,7 @@ describe('inter-project dependency resolver executor', () => {
     await executor(options, context)
 
     const destinationManifest = await readPackageJson(manifests.destination)
-    expect(destinationManifest.dependencies?.[projectNames.b]).toBe('1.0.0')
+    expect(destinationManifest.dependencies?.[projectNames.b]).toBe('^1.0.0')
   })
 
   it('resolves inferred build outputs relative to the workspace root', async () => {
@@ -132,6 +134,25 @@ describe('inter-project dependency resolver executor', () => {
     expect(output.success).toBe(true)
 
     const destinationManifest = await readPackageJson(manifests.destination)
-    expect(destinationManifest.dependencies?.[projectNames.b]).toBe('1.0.0')
+    expect(destinationManifest.dependencies?.[projectNames.b]).toBe('^1.0.0')
   })
+
+  it('defaults to a ^ prefix for resolved versions', async () => {
+    options.resolvedVersionPrefix = undefined
+    await executor(options, context)
+
+    const destinationManifest = await readPackageJson(manifests.destination)
+    expect(destinationManifest.dependencies?.[projectNames.b]).toBe('^1.0.0')
+  })
+
+  it.each(['', '^', '~'] as const)(
+    'overrides the version prefix if specified',
+    async v => {
+      options.resolvedVersionPrefix = v
+      await executor(options, context)
+
+      const destinationManifest = await readPackageJson(manifests.destination)
+      expect(destinationManifest.dependencies?.[projectNames.b]).toBe(v + '1.0.0')
+    },
+  )
 })
