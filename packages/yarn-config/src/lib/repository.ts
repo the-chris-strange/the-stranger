@@ -13,7 +13,7 @@ export function getRepository(yarn: Yarn): Repository | undefined {
 export function setRepository(yarn: Yarn, ws: Workspace) {
   const directory = ws.cwd.replace(/^\.\//, '')
   const repo = getRepository(yarn)
-  if (repo) {
+  if (repo && ws.manifest.private !== true) {
     ws.set('repository.type', repo.type)
     ws.set('repository.url', repo.url)
     ws.set('repository.directory', directory)

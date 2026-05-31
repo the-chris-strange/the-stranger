@@ -7,7 +7,7 @@ import type { Yarn as yarn } from '@yarnpkg/types'
  */
 export function setNodeEngine(yarn: Yarn, ws: Workspace) {
   const version = yarn.workspace({ cwd: '.' })?.manifest?.['engines']?.['node']
-  if (version) {
+  if (version && ws.manifest.private !== true) {
     ws.set('engines.node', version)
   } else {
     ws.unset('engines.node')
