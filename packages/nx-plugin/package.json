@@ -16,6 +16,10 @@
       "types": "./src/generators.d.ts",
       "default": "./src/generators.js"
     },
+    "./testing": {
+      "types": "./src/test/index.d.ts",
+      "default": "./src/test/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./src/index.js",

@@ -6,7 +6,7 @@ import type { Tsconfig } from 'tsconfig-type'
 
 import type { JestConfigSchema } from './schema'
 
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { jestConfigGenerator } from './generator'
 vi.mock(import('./dependencies.ts'))
 

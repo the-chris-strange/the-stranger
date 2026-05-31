@@ -3,8 +3,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 import type { Tsconfig } from 'tsconfig-type'
 
-import { addProject } from '../../test/helpers/add-project'
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { addProject } from '../../test/utils/add-project'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { viteConfigGenerator } from './generator'
 import { type NormalizedSchema, normalizeOptions } from './options'
 import { generateTsc } from './tsconfig'

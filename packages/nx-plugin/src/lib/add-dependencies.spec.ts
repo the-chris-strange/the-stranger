@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { PackageJson } from 'nx/src/utils/package-json'
 
-import { createTestTree } from '../test/helpers/create-test-tree'
+import { createTestTree } from '../test/utils/create-test-tree'
 import { addDependenciesToProject, getWorkspaceVersion } from './add-dependencies'
 
 let tree: Tree

@@ -1,7 +1,7 @@
 import { type Tree, joinPathFragments } from '@nx/devkit'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createTestTree } from '../test/helpers/create-test-tree'
+import { createTestTree } from '../test/utils/create-test-tree'
 import { markerFiles } from './config-marker-files'
 import { detectConfig } from './detect-config'
 

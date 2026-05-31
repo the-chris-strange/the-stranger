@@ -4,7 +4,7 @@ import type { Tree } from '@nx/devkit'
 
 import type { ESLintConfigSchema } from './schema'
 
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { eslintConfigGenerator, FILE_EXTENSIONS } from './generator'
 
 vi.mock(import('../../lib/add-dependencies.ts'))

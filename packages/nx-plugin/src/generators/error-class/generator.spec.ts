@@ -4,7 +4,7 @@ import type { Tree } from '@nx/devkit'
 
 import type { ErrorClassSchema } from './schema'
 
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { errorClassGenerator } from './generator'
 
 describe('custom error class generator', () => {

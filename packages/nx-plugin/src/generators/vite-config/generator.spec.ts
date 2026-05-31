@@ -5,7 +5,7 @@ import type { Tree } from '@nx/devkit'
 import type { ViteConfigSchema } from './schema'
 
 import { markerFiles } from '../../lib/config-marker-files'
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { viteConfigGenerator } from './generator'
 
 vi.mock(import('./tsconfig.ts'))

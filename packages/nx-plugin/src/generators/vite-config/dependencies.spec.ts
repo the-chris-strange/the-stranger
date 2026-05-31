@@ -15,7 +15,7 @@ import type { Tree } from '@nx/devkit'
 import type { ViteConfigSchema } from './schema'
 
 import { writeJson } from '../../lib/json'
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { addDependencies } from './dependencies'
 
 vi.mock(import('../../lib/add-dependencies.ts'))

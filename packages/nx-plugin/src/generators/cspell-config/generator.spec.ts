@@ -4,7 +4,7 @@ import type { Tree } from '@nx/devkit'
 
 import type { CSpellConfigSchema } from './schema'
 
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { cspellConfigGenerator } from './generator'
 
 describe('cspell config generator', () => {

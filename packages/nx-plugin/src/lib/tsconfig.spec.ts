@@ -5,7 +5,7 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Tsconfig } from 'tsconfig-type'
 
-import { createTestTree } from '../test/helpers/create-test-tree'
+import { createTestTree } from '../test/utils/create-test-tree'
 import { type TSConfigOptions, TSConfig } from './tsconfig'
 
 describe('TSConfig', () => {

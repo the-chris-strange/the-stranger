@@ -17,6 +17,9 @@ export function addProject(tree: Tree, config: string | ProjectConfig) {
   addProjectConfiguration(tree, config.name, config as ProjectConfiguration)
 }
 
+/**
+ * A project configuration object for use in tests. The `name` property is required, while the `root` property is optional and will default to `packages/{name}` if not provided. All other properties are optional.
+ */
 export type ProjectConfig = Omit<ProjectConfiguration, 'name' | 'root'> &
   Partial<Pick<ProjectConfiguration, 'root'>> &
   Required<Pick<ProjectConfiguration, 'name'>>
