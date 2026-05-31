@@ -6,7 +6,7 @@ const {
   setNodeEngine,
   enforceConsistentProjectDependencies,
   setRepository,
-} = require('./dist/packages/yarn-config/src/index')
+} = require('./dist/packages/yarn-config')
 
 module.exports = defineConfig({
   async constraints({ Yarn }) {
