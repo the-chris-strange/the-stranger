@@ -10,12 +10,16 @@ import jestPlugin from 'eslint-plugin-jest'
 import playwrightPlugin from 'eslint-plugin-playwright'
 
 import type { ConfigOptions } from './configure.js'
+import type { Rules } from './rulesets/rules.js'
 
 import { namer } from './namer.js'
 import { playwrightRules } from './rulesets/playwright.js'
-import { testFileRules } from './rulesets/tests.js'
+import { jestTestFileRules, vitestTestFileRules } from './rulesets/tests.js'
+import { typeCheckedTestFileRules } from './rulesets/type-checked.js'
+import { typescriptTestFileRules } from './rulesets/typescript.js'
+import { unicornTestFileRules } from './rulesets/unicorn.js'
 
-export function configureTests({ tests }: ConfigOptions) {
+export function configureTests({ source, tests }: ConfigOptions) {
   const { disallowedWords = ['should'], e2eTestRunner, unitTestRunner } = tests ?? {}
   const configs: ConfigWithExtends[] = []
 
@@ -23,22 +27,49 @@ export function configureTests({ tests }: ConfigOptions) {
     return configs
   }
 
-  const unitTestConfig = {
+  const baseConfig = {
     extends: [] as InfiniteConfigArray[],
     files: getFilePatterns(FilePatterns.test),
     name: namer('tests/base'),
   } satisfies ConfigWithExtends
+  const unitTestRules = {} satisfies Rules
 
   if (unitTestRunner === 'vitest') {
-    unitTestConfig.extends.push(vitestPlugin.configs['recommended'])
+    baseConfig.extends.push(vitestPlugin.configs['recommended'])
+    Object.assign(unitTestRules, vitestTestFileRules, {
+      'vitest/valid-title': ['warn', { disallowedWords }],
+    })
   } else if (unitTestRunner === 'jest') {
-    unitTestConfig.extends.push(
+    baseConfig.extends.push(
       jestPlugin.configs['flat/recommended'],
       jestPlugin.configs['flat/style'],
     )
+    Object.assign(unitTestRules, jestTestFileRules, {
+      'jest/valid-title': ['error', { disallowedWords }],
+    })
   }
 
-  configs.push(unitTestConfig)
+  configs.push(baseConfig)
+
+  if (unitTestRunner) {
+    if (source.unicorn) {
+      Object.assign(unitTestRules, unicornTestFileRules)
+    }
+
+    if (source.ts.typescript) {
+      Object.assign(unitTestRules, typescriptTestFileRules)
+    }
+
+    if (source.ts.typeChecked) {
+      Object.assign(unitTestRules, typeCheckedTestFileRules)
+    }
+
+    configs.push({
+      files: getFilePatterns(FilePatterns.test),
+      name: namer('tests/rules'),
+      rules: unitTestRules,
+    })
+  }
 
   if (e2eTestRunner === 'playwright') {
     configs.push({
@@ -64,16 +95,6 @@ export function configureTests({ tests }: ConfigOptions) {
       name: namer('tests/e2e/cypress'),
     })
   }
-
-  configs.push({
-    files: getFilePatterns(FilePatterns.test),
-    name: namer('tests/rules'),
-    rules: {
-      ...testFileRules,
-      'jest/valid-title': ['warn', { disallowedWords }],
-      'vitest/valid-title': ['warn', { disallowedWords }],
-    },
-  })
 
   return configs
 }

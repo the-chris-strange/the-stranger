@@ -30,7 +30,7 @@ export const commonTestRules = {
 
 export function createCommonTestRules(pluginName: 'jest' | 'vitest'): Rules {
   // the name of the container of test utility functions
-  const utilityName = pluginName === 'vitest' ? 'vi' : ('jest' as const)
+  const utilityName = pluginName === 'vitest' ? 'vi' : pluginName
 
   const rules: Rules = {
     [`${pluginName}/prefer-${utilityName}-mocked`]: 'error',
@@ -43,22 +43,14 @@ export function createCommonTestRules(pluginName: 'jest' | 'vitest'): Rules {
   }, rules)
 }
 
-export const testFileRules = {
-  '@typescript-eslint/no-non-null-assertion': 'off',
-  '@typescript-eslint/no-unsafe-argument': 'off',
-  '@typescript-eslint/no-unsafe-member-access': 'off',
-
+export const jestTestFileRules = {
   'jest/no-confusing-set-timeout': 'error',
   'jest/no-export': 'off',
 
-  'unicorn/no-nested-ternary': 'off',
-  'unicorn/no-null': 'off',
+  ...createCommonTestRules('jest'),
+} satisfies Rules
 
-  'unicorn/no-useless-undefined': [
-    'error',
-    { checkArguments: false, checkArrowFunctionBody: false },
-  ],
-
+export const vitestTestFileRules = {
   'vitest/consistent-vitest-vi': ['error', { fn: 'vi' }],
   'vitest/hoisted-apis-on-top': 'error',
   'vitest/no-conditional-tests': 'error',
@@ -68,6 +60,5 @@ export const testFileRules = {
   'vitest/prefer-to-contain': 'error',
   'vitest/prefer-to-have-length': 'error',
 
-  ...createCommonTestRules('jest'),
   ...createCommonTestRules('vitest'),
 } satisfies Rules

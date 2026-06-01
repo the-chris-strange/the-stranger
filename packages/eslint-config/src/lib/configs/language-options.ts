@@ -6,6 +6,6 @@ export const languageOptions = {
   parser,
   parserOptions: {
     projectService: true,
-    tsconfigRootDir: import.meta.dirname,
+    tsconfigRootDir: process.cwd(),
   },
 } satisfies Config['languageOptions']

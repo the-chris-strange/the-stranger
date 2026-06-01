@@ -48,28 +48,29 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
     rules: {} as Rules,
     settings: undefined as ConfigWithExtends['settings'],
   } satisfies ConfigWithExtends
+  const baseRules = {} satisfies Rules
 
   if (source.node) {
     plugins['n'] = nPlugin
-    Object.assign(baseConfig.rules, nRules)
+    Object.assign(baseRules, nRules)
   }
 
   if (source.sort) {
     baseConfig.extends.push(
       setSeverity(perfectionistPlugin.configs['recommended-natural'], 'warn'),
     )
-    Object.assign(baseConfig.rules, sortRules)
+    Object.assign(baseRules, sortRules)
   }
 
   if (source.unicorn) {
     plugins['unicorn'] = unicornPlugin
-    Object.assign(baseConfig.rules, unicornRules)
+    Object.assign(baseRules, unicornRules)
     baseConfig.extends.push(unicornPlugin.configs['unopinionated'])
   }
 
   if (source.jsdoc) {
     plugins['jsdoc'] = jsdocPlugin
-    Object.assign(baseConfig.rules, jsdocRules)
+    Object.assign(baseRules, jsdocRules)
     baseConfig.extends.push(jsdocPlugin.configs['flat/recommended'])
     baseConfig.settings ??= {}
     baseConfig.settings['jsdoc'] = {
@@ -84,7 +85,7 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
   }
 
   if (source.promise) {
-    Object.assign(baseConfig.rules, promiseRules)
+    Object.assign(baseRules, promiseRules)
     baseConfig.extends.push(promisePlugin.configs['flat/recommended'])
   }
 
@@ -98,13 +99,17 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
       plugins,
     },
 
-    ...configureNx(nx),
-    ...configureJs(source),
-
     baseConfig,
 
+    ...configureNx(nx),
+    ...configureJs(source),
     ...configureTs(source),
     ...configureReact(source),
+
+    {
+      name: namer('source/rules'),
+      rules: baseRules,
+    },
 
     createCJSConfig(source),
   ]
