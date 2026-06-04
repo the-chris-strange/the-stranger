@@ -1,0 +1,22 @@
+// THIS FILE IS GENERATED. DO NOT EDIT.
+
+import baseConfig, { dependencyChecks } from '<%= paths.baseConfig %>'
+
+export default [
+  ...baseConfig,
+
+  dependencyChecks({
+    ignoredFiles: [
+<% for (const value of dependencyChecksIgnore) { -%>
+      '<%= value %>',
+<% } -%>
+    ],
+<% if (dependencyChecksRuntime.length > 0) { -%>
+    runtimeHelpers: [
+<% for (const value of dependencyChecksRuntime) { -%>
+      '<%= value %>',
+<% } -%>
+    ],
+<% } -%>
+  }),
+]

@@ -68,3 +68,6 @@ languageSettings:
       - latex
       - node
       - npm
+cache:
+  cacheLocation: ./node_modules/.cache/cspell
+  useCache: true

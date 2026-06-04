@@ -29,22 +29,18 @@ const eslintConfigNx = jiti('@the-stranger/eslint-config/nx')
 
 export const { dependencyChecks, moduleBoundaries } = eslintConfigNx
 
-const configureOptions = {
-  tests: {
-    unitTestRunner: 'vitest',
-  },
-}
+const configureOptions = <%- configureOptions %>
 
-const existingNxConfigs = Array.isArray(configureOptions.nx) ? configureOptions.nx : []
+<% if (includeModuleBoundaries) { -%>
+const existingNxConfigs = Array.isArray(configureOptions.nx)
+  ? configureOptions.nx
+  : []
 
 configureOptions.nx = [
-  moduleBoundaries({
-    allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
-    depConstraints: [],
-    enforceBuildableLibDependency: true,
-  }),
+  moduleBoundaries(<%- moduleBoundaries %>),
   ...existingNxConfigs,
 ]
+<% } -%>
 
 /**
  * Array of file patterns matching JavaScript (but not TypeScript) files.
@@ -109,4 +105,8 @@ export default configure(
       ],
     },
   },
+<% for (const expression of configureConfigExpressions) { -%>
+
+  <%- expression %>,
+<% } -%>
 )
