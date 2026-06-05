@@ -6,9 +6,9 @@ import {
 } from '@the-stranger/eslint-utils'
 import * as jsoncParser from 'jsonc-eslint-parser'
 
-import type { ESLint } from 'eslint'
+import type { Config } from 'eslint/config'
 
-import type { ConfigOptions } from './configure.js'
+import type { ConfigOptions } from './options.js'
 
 import { namer } from './namer.js'
 
@@ -17,17 +17,12 @@ export function configureNx(nx: ConfigOptions['nx']): ConfigWithExtends[] {
     return []
   }
 
-  const config: ConfigWithExtends = {
-    name: namer('nx'),
-    plugins: { '@nx': nxPlugin as unknown as ESLint.Plugin },
-  }
+  const configs = [
+    {
+      name: namer('nx'),
+      plugins: { '@nx': nxPlugin as unknown as Plugin },
+    },
 
-  if (Array.isArray(nx)) {
-    return [config, ...nx]
-  }
-
-  return [
-    config,
     moduleBoundaries({
       allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
       depConstraints: [
@@ -38,6 +33,12 @@ export function configureNx(nx: ConfigOptions['nx']): ConfigWithExtends[] {
       ],
     }),
   ]
+
+  if (Array.isArray(nx)) {
+    configs.push(...nx)
+  }
+
+  return configs
 }
 
 /**
@@ -52,6 +53,7 @@ export function dependencyChecks(options?: DependencyCheckOptions): ConfigWithEx
       parser: jsoncParser,
     },
     name: namer('nx/dependency-checks'),
+    plugins: { '@nx': nxPlugin as unknown as Plugin },
     rules: {
       '@nx/dependency-checks': ['error', options],
     },
@@ -67,6 +69,7 @@ export function moduleBoundaries(options?: ModuleBoundaryOptions): ConfigWithExt
   return {
     files: getFilePatterns(FilePatterns.js, FilePatterns.ts, FilePatterns.react),
     name: namer('nx/module-boundaries'),
+    plugins: { '@nx': nxPlugin as unknown as Plugin },
     rules: {
       '@nx/enforce-module-boundaries': ['error', options ?? {}],
     },
@@ -182,3 +185,5 @@ interface ModuleBoundariesDepConstraint {
    */
   sourceTag?: string
 }
+
+type Plugin = Required<Required<Config>['plugins']>[string]

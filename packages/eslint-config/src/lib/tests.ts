@@ -8,8 +8,9 @@ import vitestPlugin from '@vitest/eslint-plugin'
 import cypressPlugin from 'eslint-plugin-cypress'
 import jestPlugin from 'eslint-plugin-jest'
 import playwrightPlugin from 'eslint-plugin-playwright'
+import unicornPlugin from 'eslint-plugin-unicorn'
 
-import type { ConfigOptions } from './configure.js'
+import type { ConfigOptions } from './options.js'
 import type { Rules } from './rulesets/rules.js'
 
 import { namer } from './namer.js'
@@ -18,6 +19,11 @@ import { jestTestFileRules, vitestTestFileRules } from './rulesets/tests.js'
 import { typeCheckedTestFileRules } from './rulesets/type-checked.js'
 import { typescriptTestFileRules } from './rulesets/typescript.js'
 import { unicornTestFileRules } from './rulesets/unicorn.js'
+
+const cypressConfigs = getPluginConfigs(cypressPlugin)
+const jestConfigs = getPluginConfigs(jestPlugin)
+const playwrightConfigs = getPluginConfigs(playwrightPlugin)
+const vitestConfigs = getPluginConfigs(vitestPlugin)
 
 export function configureTests({ source, tests }: ConfigOptions) {
   const { disallowedWords = ['should'], e2eTestRunner, unitTestRunner } = tests ?? {}
@@ -31,49 +37,42 @@ export function configureTests({ source, tests }: ConfigOptions) {
     extends: [] as InfiniteConfigArray[],
     files: getFilePatterns(FilePatterns.test),
     name: namer('tests/base'),
+    plugins: {} as Exclude<ConfigWithExtends['plugins'], undefined>,
+    rules: {} as Rules,
   } satisfies ConfigWithExtends
-  const unitTestRules = {} satisfies Rules
 
   if (unitTestRunner === 'vitest') {
-    baseConfig.extends.push(vitestPlugin.configs['recommended'])
-    Object.assign(unitTestRules, vitestTestFileRules, {
+    baseConfig.extends.push(vitestConfigs['recommended'])
+    Object.assign(baseConfig.rules, vitestTestFileRules, {
       'vitest/valid-title': ['warn', { disallowedWords }],
     })
   } else if (unitTestRunner === 'jest') {
-    baseConfig.extends.push(
-      jestPlugin.configs['flat/recommended'],
-      jestPlugin.configs['flat/style'],
-    )
-    Object.assign(unitTestRules, jestTestFileRules, {
+    baseConfig.extends.push(jestConfigs['flat/recommended'], jestConfigs['flat/style'])
+    Object.assign(baseConfig.rules, jestTestFileRules, {
       'jest/valid-title': ['error', { disallowedWords }],
     })
   }
 
-  configs.push(baseConfig)
-
   if (unitTestRunner) {
     if (source.unicorn) {
-      Object.assign(unitTestRules, unicornTestFileRules)
+      baseConfig.plugins = { ...baseConfig.plugins, unicorn: unicornPlugin }
+      Object.assign(baseConfig.rules, unicornTestFileRules)
     }
 
     if (source.ts.typescript) {
-      Object.assign(unitTestRules, typescriptTestFileRules)
+      Object.assign(baseConfig.rules, typescriptTestFileRules)
     }
 
     if (source.ts.typeChecked) {
-      Object.assign(unitTestRules, typeCheckedTestFileRules)
+      Object.assign(baseConfig.rules, typeCheckedTestFileRules)
     }
-
-    configs.push({
-      files: getFilePatterns(FilePatterns.test),
-      name: namer('tests/rules'),
-      rules: unitTestRules,
-    })
   }
+
+  configs.push(baseConfig)
 
   if (e2eTestRunner === 'playwright') {
     configs.push({
-      extends: [playwrightPlugin.configs['flat/recommended']],
+      extends: [playwrightConfigs['flat/recommended']],
       files: ['e2e/**/*.{test,spec}.{ts,js}'],
       name: namer('tests/e2e/playwright'),
       rules: {
@@ -90,11 +89,25 @@ export function configureTests({ source, tests }: ConfigOptions) {
     })
   } else if (e2eTestRunner === 'cypress') {
     configs.push({
-      extends: [cypressPlugin.configs.recommended],
+      extends: [cypressConfigs.recommended],
       files: getFilePatterns(FilePatterns.cypress),
       name: namer('tests/e2e/cypress'),
     })
   }
 
   return configs
+}
+
+function getPluginConfigs<T extends { configs: object }>(plugin: T): T['configs'] {
+  const module = plugin as T & { default?: T }
+
+  if (module.configs) {
+    return module.configs
+  }
+
+  if (module.default?.configs) {
+    return module.default.configs
+  }
+
+  throw new TypeError('Unable to resolve ESLint plugin configs')
 }

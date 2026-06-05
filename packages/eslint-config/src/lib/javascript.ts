@@ -5,7 +5,7 @@ import {
 } from '@the-stranger/eslint-utils'
 import globals from 'globals'
 
-import type { ConfigOptions } from './configure.js'
+import type { ConfigOptions } from './options.js'
 
 import { namer } from './namer.js'
 

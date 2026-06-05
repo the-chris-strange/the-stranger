@@ -14,7 +14,7 @@ import rePlugin from 'eslint-plugin-regexp'
 import unicornPlugin from 'eslint-plugin-unicorn'
 import tseslintPlugin from 'typescript-eslint'
 
-import type { ConfigOptions } from './configure.js'
+import type { ConfigOptions } from './options.js'
 import type { Rules } from './rulesets/rules.js'
 
 import { configureJs } from './javascript.js'
@@ -45,7 +45,7 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
     extends: [tseslintPlugin.configs['recommended']] as InfiniteConfigArray[],
     files: getFilePatterns(FilePatterns.source),
     name: namer('source/base'),
-    rules: {} as Rules,
+    plugins,
     settings: undefined as ConfigWithExtends['settings'],
   } satisfies ConfigWithExtends
   const baseRules = {} satisfies Rules
@@ -63,13 +63,11 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
   }
 
   if (source.unicorn) {
-    plugins['unicorn'] = unicornPlugin
     Object.assign(baseRules, unicornRules)
     baseConfig.extends.push(unicornPlugin.configs['unopinionated'])
   }
 
   if (source.jsdoc) {
-    plugins['jsdoc'] = jsdocPlugin
     Object.assign(baseRules, jsdocRules)
     baseConfig.extends.push(jsdocPlugin.configs['flat/recommended'])
     baseConfig.settings ??= {}
@@ -94,11 +92,6 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
   }
 
   const configs: ConfigWithExtends[] = [
-    {
-      name: namer('source/plugins'),
-      plugins,
-    },
-
     baseConfig,
 
     ...configureNx(nx),
@@ -107,6 +100,7 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
     ...configureReact(source),
 
     {
+      files: getFilePatterns(FilePatterns.source),
       name: namer('source/rules'),
       rules: baseRules,
     },
@@ -115,11 +109,17 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
   ]
 
   if (source.agentSkills) {
-    configs.push({
+    const agentSkillsConfig: ConfigWithExtends = {
       files: ['**/skills/**/*.{js,mjs,cjs,ts,mts,cts}'],
       name: namer('source/rules/skills'),
       rules: agentSkillsRules,
-    })
+    }
+
+    if (!source.node) {
+      agentSkillsConfig.plugins = { n: nPlugin }
+    }
+
+    configs.push(agentSkillsConfig)
   }
 
   configs.push(prettierConfig)
