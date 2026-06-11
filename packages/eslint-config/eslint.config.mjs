@@ -1,8 +1,9 @@
+import { defineConfig } from 'eslint/config'
 import * as jsoncParser from 'jsonc-eslint-parser'
 
 import baseConfig from '../../eslint.config.mjs'
 
-export default [
+export default defineConfig(
   ...baseConfig,
 
   {
@@ -28,4 +29,4 @@ export default [
       ],
     },
   },
-]
+)

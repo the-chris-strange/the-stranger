@@ -1,8 +1,9 @@
+import { defineConfig } from 'eslint/config'
 import * as jsoncParser from 'jsonc-eslint-parser'
 
 import baseConfig from '../../eslint.config.mjs'
 
-export default [
+export default defineConfig(
   ...baseConfig,
 
   {
@@ -12,6 +13,7 @@ export default [
       '@nx/dependency-checks': [
         'error',
         {
+          ignoredDependencies: ['@nx/eslint-plugin'],
           ignoredFiles: [
             '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
             '{projectRoot}/src/**/*.spec.{ts,js,tsx,jsx}',
@@ -23,4 +25,4 @@ export default [
       ],
     },
   },
-]
+)

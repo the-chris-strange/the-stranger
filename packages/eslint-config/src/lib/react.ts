@@ -5,7 +5,7 @@ import {
   getFilePatterns,
 } from '@the-stranger/eslint-utils'
 import astroPlugin from 'eslint-plugin-astro'
-import jsxAllyPlugin from 'eslint-plugin-jsx-a11y'
+import jsxAllyPlugin from 'eslint-plugin-jsx-a11y-x'
 import reactHooks from 'eslint-plugin-react-hooks'
 import unicornPlugin from 'eslint-plugin-unicorn'
 
@@ -23,7 +23,7 @@ export function configureReact({ react }: ConfigOptions['source']) {
   const configs: ConfigWithExtends[] = [
     {
       extends: [
-        jsxAllyPlugin.flatConfigs['recommended'],
+        jsxAllyPlugin.configs['recommended'],
         reactHooks.configs.flat['recommended'],
         eslintReactPlugin.configs['strict'],
       ],

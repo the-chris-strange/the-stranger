@@ -27,6 +27,7 @@ export default defineConfig(
       '@nx/dependency-checks': [
         'error',
         {
+          ignoredDependencies: ['@nx/eslint-plugin'],
           ignoredFiles: [
             '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
             '{projectRoot}/src/**/*.spec.{ts,js,tsx,jsx}',
