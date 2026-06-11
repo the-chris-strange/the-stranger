@@ -1,77 +1,28 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  combineExtensions,
-  expandExtension,
-  FilePatterns,
-  getFilePatterns,
-  sourceFilePattern,
-  testFilePattern,
-} from './patterns.js'
-
-describe('combineExtensions', () => {
-  it('throws if no extensions are provided', () => {
-    expect(() => combineExtensions()).toThrow('No file extensions provided')
-  })
-})
-
-describe('expandExtension', () => {
-  it.each([
-    ['js', ['js', 'cjs', 'mjs', 'jsx']],
-    ['ts', ['ts', 'cts', 'mts', 'tsx']],
-  ])('returns the expected extensions for "%s" files', (ext, expected) => {
-    expect(expandExtension(ext)).toMatchObject(expected)
-  })
-
-  it('normalizes input value', () => {
-    expect(expandExtension('.js')).not.toContain('.js')
-  })
-})
-
-describe('sourceFilePattern', () => {
-  it('flattens nested arrays from input', () => {
-    expect(sourceFilePattern('js', ['jsx', 'cjs'])).toBe('**/*.{js,jsx,cjs}')
-  })
-
-  it('normalizes input values', () => {
-    expect(sourceFilePattern('.js', ['.ts'])).toBe('**/*.{js,ts}')
-  })
-})
-
-describe('testFilePattern', () => {
-  it('flattens nested arrays from input', () => {
-    expect(testFilePattern('js', ['jsx', 'cjs'])).toBe('**/*.{spec,test}.{js,jsx,cjs}')
-  })
-
-  it('normalizes input values', () => {
-    expect(testFilePattern('.js', ['.ts'])).toBe('**/*.{spec,test}.{js,ts}')
-  })
-})
+import { FilePatterns, getFilePatterns } from './patterns.js'
 
 describe('getFilePatterns', () => {
-  const testCases: [string, FilePatterns, string[]][] = [
-    ['FilePatterns.all', FilePatterns.all, ['**/**']],
-    ['FilePatterns.astro', FilePatterns.astro, ['**/*.astro']],
-    ['FilePatterns.astroScript', FilePatterns.astroScript, ['**/*.astro/**/*.{js,ts}']],
-    ['FilePatterns.cjs', FilePatterns.cjs, ['**/*.{cjs,cts}']],
-    ['FilePatterns.cypress', FilePatterns.cypress, ['**/*.cy.{js,ts}']],
-    ['FilePatterns.esm', FilePatterns.esm, ['**/*.{mjs,mts}']],
-    ['FilePatterns.js', FilePatterns.js, ['**/*.{js,cjs,mjs,jsx}']],
-    ['FilePatterns.testJs', FilePatterns.testJs, ['**/*.{spec,test}.{js,jsx}']],
-    ['FilePatterns.react', FilePatterns.react, ['**/*.{js,ts,jsx,tsx}']],
-    ['FilePatterns.reactJs', FilePatterns.reactJs, ['**/*.{js,jsx}']],
-    ['FilePatterns.reactTs', FilePatterns.reactTs, ['**/*.{ts,tsx}']],
-    [
-      'FilePatterns.source',
-      FilePatterns.source,
-      ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,astro}'],
-    ],
-    ['FilePatterns.test', FilePatterns.test, ['**/*.{spec,test}.{js,jsx,ts,tsx}']],
-    ['FilePatterns.ts', FilePatterns.ts, ['**/*.{ts,cts,mts,tsx}']],
-    ['FilePatterns.testTs', FilePatterns.testTs, ['**/*.{spec,test}.{ts,tsx}']],
-  ]
+  const testCases = [
+    ['all', FilePatterns.all, ['**/**']],
+    ['astro', FilePatterns.astro, ['**/*.astro', '**/*.astro/**/*.{js,ts}']],
+    ['astroModules', FilePatterns.astroModules, ['**/*.astro']],
+    ['astroScript', FilePatterns.astroScript, ['**/*.astro/**/*.{js,ts}']],
+    ['cjs', FilePatterns.cjs, ['**/*.{cjs,cts}']],
+    ['cypress', FilePatterns.cypress, ['**/*.cy.{js,ts}']],
+    ['esm', FilePatterns.esm, ['**/*.{mjs,mts}']],
+    ['js', FilePatterns.js, ['**/*.{js,cjs,mjs,jsx}']],
+    ['testJs', FilePatterns.testJs, ['**/*.{spec,test}.{js,jsx}']],
+    ['react', FilePatterns.react, ['**/*.{js,ts,jsx,tsx}']],
+    ['reactJs', FilePatterns.reactJs, ['**/*.{js,jsx}']],
+    ['reactTs', FilePatterns.reactTs, ['**/*.{ts,tsx}']],
+    ['source', FilePatterns.source, ['**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,astro}']],
+    ['test', FilePatterns.test, ['**/*.{spec,test}.{js,jsx,ts,tsx}']],
+    ['ts', FilePatterns.ts, ['**/*.{ts,cts,mts,tsx}']],
+    ['testTs', FilePatterns.testTs, ['**/*.{spec,test}.{ts,tsx}']],
+  ] satisfies [string, FilePatterns, string[]][]
   it.each(testCases)(
-    'returns the expected patterns for "%s"',
+    'returns the expected patterns for "FilePatterns.%s"',
     (_, pattern, expected) => {
       expect(getFilePatterns(pattern)).toMatchObject(expected)
     },
