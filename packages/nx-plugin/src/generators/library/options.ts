@@ -26,6 +26,6 @@ type StrictTSLibrarySchema = ExtendRequired<
   LibrarySchema,
   Exclude<
     keyof LibrarySchema,
-    'commonjs' | 'directory' | 'force' | 'skipDependencies' | 'skipFormat'
+    'commonjs' | 'directory' | 'dryRun' | 'force' | 'skipDependencies' | 'skipFormat'
   >
 >
