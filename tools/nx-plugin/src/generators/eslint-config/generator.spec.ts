@@ -1,5 +1,5 @@
 import { createTestTree } from '@the-stranger/nx-plugin/testing'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 import type { Tree } from '@nx/devkit'
 
@@ -20,10 +20,10 @@ describe('internal ESLint config generator', () => {
   })
 
   it('customizes configure options in the root config', async () => {
-    const files = '**/*.yxz'
+    const files = ['**/*.yxz']
     const additionalConfigs = [
       "{ name: 'custom/rules', files: ['**/*.custom.js'], rules: {} }",
-      { files: [files], rules: {} },
+      { files, rules: {} },
     ]
     const configureOptions = {
       json: false,
@@ -31,7 +31,6 @@ describe('internal ESLint config generator', () => {
         unitTestRunner: 'jest',
       },
     } as const
-    const spy = vi.spyOn(await import('@nx/devkit'), 'generateFiles')
 
     await eslintConfigGenerator(tree, {
       additionalConfigs,
@@ -39,15 +38,12 @@ describe('internal ESLint config generator', () => {
       skipFormat: true,
     })
 
-    expect(spy).toHaveBeenLastCalledWith(
-      tree,
-      expect.any(String),
-      expect.any(String),
-      expect.objectContaining({
-        additionalConfigs: [additionalConfigs[0], expect.stringContaining(files)],
-        configureOptions,
-      }),
-    )
+    const config = tree.read('eslint.config.mjs', 'utf8')
+    expect(config).toMatchSnapshot()
+    expect(config).toContain('"json": false')
+    expect(config).toContain('"unitTestRunner": "jest"')
+    expect(config).toContain(additionalConfigs[0])
+    expect(config).toContain('"**/*.yxz"')
   })
 
   it('generates a project config for the specified project', async () => {

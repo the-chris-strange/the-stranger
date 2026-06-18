@@ -23,7 +23,7 @@ export function generateProjectConfig(tree: Tree, options: NormalizedOptions) {
     joinPathFragments(offsetFromRoot(project.root), 'eslint.config.mjs')
 
   const data = {
-    dependencyChecks: JSON.stringify(dependencyChecks(), undefined, 2),
+    dependencyChecks: dependencyChecks(),
     paths: { baseConfig },
   }
 

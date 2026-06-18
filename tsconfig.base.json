@@ -2,6 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@the-stranger/eslint-config": ["packages/eslint-config/src/index.ts"],
+      "@the-stranger/eslint-config/nx": ["packages/eslint-config/src/nx.ts"],
       "@the-stranger/eslint-plugin": ["packages/eslint-plugin/src/index.ts"],
       "@the-stranger/eslint-utils": ["packages/eslint-utils/src/index.ts"],
       "@the-stranger/nx-plugin": ["packages/nx-plugin/src/index.ts"],
