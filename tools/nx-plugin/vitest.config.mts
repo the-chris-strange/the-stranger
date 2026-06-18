@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config'
 
+const name = 'nx-plugin-internal' as const
 const projectPath = 'tools/nx-plugin' as const
 const cacheDir = `../../node_modules/.vitest/${projectPath}` as const
 
@@ -17,14 +18,7 @@ export default defineConfig(() => ({
     environment: 'node',
     globals: false,
     include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-    name: 'nx-plugin-internal',
-    reporters: [
-      'default',
-      process.env['GITHUB_ACTIONS'] === 'true' || process.env['CI']
-        ? 'github-actions'
-        : {},
-      ['json', { outputFile: `${cacheDir}/test-results.json` }],
-    ],
+    name,
     typecheck: {
       include: [
         'src/**/*.{test,spec}.?(c|m)[jt]s?(x)',

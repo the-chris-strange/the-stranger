@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config'
 
-const projectPath = 'packages/eslint-utils' as const
+const name = 'eslint-utils' as const
+const projectPath = `packages/${name}` as const
 const cacheDir = `../../node_modules/.vitest/${projectPath}` as const
 
 export default defineConfig(() => ({
@@ -16,14 +17,7 @@ export default defineConfig(() => ({
     environment: 'node',
     globals: true,
     include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-    name: 'eslint-utils',
-    reporters: [
-      'default',
-      process.env['GITHUB_ACTIONS'] === 'true' || process.env['CI']
-        ? 'github-actions'
-        : {},
-      ['json', { outputFile: `${cacheDir}/test-results.json` }],
-    ],
+    name,
     typecheck: {
       include: [
         'src/**/*.{test,spec}-d.?(c|m)[jt]s?(x)',
