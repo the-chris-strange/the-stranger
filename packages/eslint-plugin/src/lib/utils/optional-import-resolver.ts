@@ -36,7 +36,7 @@ export class ImportResolver {
     try {
       const pending = this.loadModule<T>(specifier)
       this.cache.set(specifier, pending)
-      return pending
+      return await pending
     } catch (error) {
       this.cache.delete(specifier)
       throw error
@@ -90,7 +90,7 @@ export class ImportResolver {
    * @returns the target, or undefined if the message doesn't match the expected pattern
    */
   private extractCannotFindModuleTarget(message: string) {
-    const match = message.match(/Cannot find module ['"]([^'"]+)['"]/i)
+    const match = /Cannot find module ['"]([^'"]+)['"]/i.exec(message)
     return match?.[1]
   }
 
@@ -102,7 +102,7 @@ export class ImportResolver {
    * @returns the target, or undefined if the message doesn't match the expected pattern
    */
   private extractQuotedMissingTarget(message: string) {
-    const match = message.match(/Cannot find (?:package|module) ['"]([^'"]+)['"]/i)
+    const match = /Cannot find (?:package|module) ['"]([^'"]+)['"]/i.exec(message)
     return match?.[1]
   }
 

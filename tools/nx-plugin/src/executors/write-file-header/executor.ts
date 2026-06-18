@@ -15,7 +15,13 @@ const runExecutor: PromiseExecutor<WriteFileHeaderExecutorSchema> = async option
   const result = { success: true }
   for (const chunk of filesChunks) {
     await Promise.all(
-      chunk.map(e => writeHeader(e, header).catch(() => (result.success = false))),
+      chunk.map(async e => {
+        try {
+          await writeHeader(e, header)
+        } catch {
+          result.success = false
+        }
+      }),
     )
   }
 

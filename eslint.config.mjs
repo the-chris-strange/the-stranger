@@ -2,9 +2,7 @@
 
 import { join } from 'node:path'
 
-import { defineConfig } from 'eslint/config'
 import { createJiti } from 'jiti'
-import tseslint from 'typescript-eslint'
 
 const workspaceRoot = import.meta.dirname
 const jiti = createJiti(import.meta.url, {
@@ -21,58 +19,89 @@ const jiti = createJiti(import.meta.url, {
       workspaceRoot,
       'packages/eslint-utils/src/index.ts',
     ),
+    '@the-stranger/eslint-plugin': join(
+      workspaceRoot,
+      'packages/eslint-plugin/src/index.ts',
+    ),
   },
+  interopDefault: false,
+  tsconfigPaths: true,
 })
 
-const { configure } = jiti('@the-stranger/eslint-config')
-const eslintConfigNx = jiti('@the-stranger/eslint-config/nx')
+/** @type {import('@the-stranger/eslint-config')} */
+const { configure } = await jiti.import('@the-stranger/eslint-config')
 
-export const { dependencyChecks, moduleBoundaries } = eslintConfigNx
+/** @type {import('@the-stranger/eslint-utils')} */
+const { getFilePatterns, FilePatterns } = await jiti.import(
+  '@the-stranger/eslint-utils',
+)
+
+/** @type {import('@the-stranger/eslint-plugin')} */
+const wsPlugin = await jiti.import('@the-stranger/eslint-plugin')
 
 const configureOptions = {
+  json: {
+    nx: true,
+    tsconfig: true,
+    vscode: true,
+  },
+  nx: true,
+  source: {
+    agentSkills: true,
+    js: {
+      browser: false,
+      node: true,
+    },
+    jsdoc: true,
+    node: true,
+    promise: true,
+    react: false,
+    regexp: true,
+    sort: true,
+    ts: {
+      strict: false,
+      typeChecked: true,
+      typescript: true,
+    },
+    unicorn: true,
+  },
   tests: {
+    disallowedWords: ['should'],
     unitTestRunner: 'vitest',
   },
+  yaml: {
+    cspellConfig: true,
+    dependabotConfig: true,
+    githubActions: true,
+    markdownlintConfig: true,
+    yarnrc: true,
+  },
 }
-
-const existingNxConfigs = Array.isArray(configureOptions.nx) ? configureOptions.nx : []
-
-configureOptions.nx = [
-  moduleBoundaries({
-    allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
-    depConstraints: [],
-    enforceBuildableLibDependency: true,
-  }),
-  ...existingNxConfigs,
-]
 
 /**
  * Array of file patterns matching JavaScript (but not TypeScript) files.
  * @example *.js, *.mjs
  */
-export const JS_FILES = ['*.{js,mjs,cjs,jsx}', '**/*.{js,mjs,cjs,jsx}']
+export const JS_FILES = getFilePatterns(FilePatterns.js, '*.{js,mjs,cjs,jsx}')
 
 /**
  * Array of file patterns matching TypeScript (but not JavaScript) files.
  * @example *.ts, *.tsx
  */
-export const TS_FILES = ['*.{ts,mts,cts,tsx}', '**/*.{ts,mts,cts,tsx}']
+export const TS_FILES = getFilePatterns(FilePatterns.ts, '*.{ts,mts,cts,tsx}')
 
 /**
  * Array of file patterns matching test files.
  * @example *.spec.ts, *.test.jsx
  */
-export const TEST_FILES = ['**/*.{spec,test}.{js,jsx,ts,tsx}']
+export const TEST_FILES = getFilePatterns(FilePatterns.test)
 
 /**
  * Array of file patterns matching all source files.
  */
-export const SOURCE_FILES = [...JS_FILES, ...TS_FILES]
+export const SOURCE_FILES = getFilePatterns(FilePatterns.source)
 
-export const disableTypeChecked = defineConfig({
-  name: tseslint.configs.disableTypeChecked.name,
-  rules: tseslint.configs.disableTypeChecked.rules,
-})
+export const disableTypeChecked = wsPlugin.configs.disableTypeChecked
 
 export default configure(
   configureOptions,
@@ -91,22 +120,6 @@ export default configure(
     rules: {
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
       '@typescript-eslint/prefer-optional-chain': 'off',
-    },
-  },
-
-  {
-    name: 'the-stranger/source/react-filenames',
-    files: ['**/*.tsx', '**/*.jsx'],
-    rules: {
-      'unicorn/filename-case': [
-        'error',
-        {
-          cases: {
-            pascalCase: true,
-            kebabCase: true,
-          },
-        },
-      ],
     },
   },
 )

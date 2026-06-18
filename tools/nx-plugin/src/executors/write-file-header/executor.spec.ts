@@ -36,7 +36,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await Promise.all(
-    options.files.map(e =>
+    options.files.map(async e =>
       writeFile(e, `export const content = "the contents of '${e}'"`),
     ),
   )

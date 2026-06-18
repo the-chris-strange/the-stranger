@@ -18,7 +18,7 @@ describe('toArray', () => {
   /* eslint-disable unicorn/new-for-builtins */
   it.each([
     ['strings', ['foo', 'bar']],
-    ['numbers', [0, 1, Number(2), 3.456, 7_890_123_456_789]],
+    ['numbers', [0, 1, 3.456, 7_890_123_456_789]],
     ['booleans', [true, false]],
     ['bigints', [1n, 2n]],
     ['objects', [{}, {}]],

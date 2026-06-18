@@ -45,7 +45,7 @@ export async function jestConfigGenerator(tree: Tree, options: JestConfigSchema)
       coverageDirectory: joinPathFragments(
         offset,
         'quality-reports/packages',
-        projectConfig.name as string,
+        projectConfig.name!,
       ),
       jestPreset: jestPreset ? joinPathFragments(offset, jestPreset) : undefined,
     },

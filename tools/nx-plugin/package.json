@@ -14,6 +14,7 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "@nx/devkit": "22.5.2",
+    "@the-stranger/eslint-config": "workspace:^",
     "@the-stranger/nx-plugin": "workspace:^",
     "nx": "22.5.2",
     "sort-package-json": "3.6.1",

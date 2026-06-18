@@ -71,20 +71,22 @@ export class TSConfig implements TSConfigType {
    * @returns the normalized `compilerOptions` object
    */
   static normalizeCompilerOptions(options: Tsconfig['compilerOptions']) {
-    return Object.entries(options ?? {}).reduce((acc, [key, value]) => {
-      if (key === 'types') {
-        const types = new Set(toArray(value as CompilerOptions['types']))
-        if (types.size > 0) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          acc[key] = [...types]
+    return Object.entries(options ?? {}).reduce<TSConfigType['compilerOptions']>(
+      (acc, [key, value]) => {
+        if (key === 'types') {
+          const types = new Set(toArray(value as CompilerOptions['types']))
+          if (types.size > 0) {
+            acc.types = [...types]
+          }
+        } else if (!isEmpty(value)) {
+          acc[key as keyof CompilerOptions] = Array.isArray(value)
+            ? value.filter(e => !isEmpty(e))
+            : (value as any)
         }
-      } else if (!isEmpty(value)) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        acc[key] = Array.isArray(value) ? value.filter(e => !isEmpty(e)) : value
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return acc
-    }, {} as any) as TSConfigType['compilerOptions']
+        return acc
+      },
+      {},
+    )
   }
 
   /**

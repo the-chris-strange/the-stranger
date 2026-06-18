@@ -1,22 +1,11 @@
 // THIS FILE IS GENERATED. DO NOT EDIT.
+import { defineConfig } from 'eslint/config'
+import * as jsoncParser from 'jsonc-eslint-parser'
 
-import baseConfig, { dependencyChecks } from '<%= paths.baseConfig %>'
+import baseConfig from '<%= paths.baseConfig %>'
 
-export default [
+export default defineConfig(
   ...baseConfig,
 
-  dependencyChecks({
-    ignoredFiles: [
-<% for (const value of dependencyChecksIgnore) { -%>
-      '<%= value %>',
-<% } -%>
-    ],
-<% if (dependencyChecksRuntime.length > 0) { -%>
-    runtimeHelpers: [
-<% for (const value of dependencyChecksRuntime) { -%>
-      '<%= value %>',
-<% } -%>
-    ],
-<% } -%>
-  }),
-]
+  <%= dependencyChecks %>,
+)

@@ -5,49 +5,25 @@
   "description": "Generate the workspace or project ESLint configuration used by this repository.",
   "type": "object",
   "properties": {
-    "configureOptions": {
-      "type": "object",
-      "description": "Options to pass as the first argument to configure().",
-      "additionalProperties": true
-    },
-    "configureConfigExpressions": {
-      "type": "array",
-      "description": "JavaScript expressions to append as additional configure() arguments after the generated workspace defaults.",
-      "items": {
-        "type": "string"
-      }
-    },
-    "moduleBoundaries": {
-      "description": "Options to pass to the generated moduleBoundaries() config. Set to false to leave the nx option entirely controlled by configureOptions.",
-      "oneOf": [
-        {
-          "type": "boolean",
-          "const": false
-        },
-        {
-          "type": "object",
-          "additionalProperties": true
-        }
-      ]
-    },
     "project": {
       "type": "string",
-      "description": "The name of the project where the ESLint config should be generated. If omitted, the root ESLint config is generated."
+      "description": "The name of the project where the ESLint config should be generated. If omitted, the root ESLint config is generated.",
+      "$default": {
+        "$source": "projectName"
+      }
     },
     "extend": {
       "type": "string",
       "description": "The path to the base ESLint config a project config should extend."
     },
-    "dependencyChecksIgnore": {
-      "type": "array",
-      "description": "Additional ignored files for @nx/dependency-checks.",
-      "items": {
-        "type": "string"
-      }
+    "configureOptions": {
+      "type": "object",
+      "description": "Options to pass as the first argument to configure().",
+      "additionalProperties": true
     },
-    "dependencyChecksRuntime": {
+    "additionalConfigs": {
       "type": "array",
-      "description": "Runtime helper dependencies for @nx/dependency-checks.",
+      "description": "JavaScript expressions to append as additional configure() arguments after the generated workspace defaults.",
       "items": {
         "type": "string"
       }
@@ -60,6 +36,10 @@
       "type": "boolean",
       "description": "Skip formatting generated files.",
       "x-priority": "internal"
+    },
+    "dryRun": {
+      "type": "boolean",
+      "description": "Run the generator without making any changes to the file system."
     }
   }
 }

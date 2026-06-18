@@ -1,6 +1,7 @@
-import { type Tree, addProjectConfiguration } from '@nx/devkit'
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { createTestTree } from '@the-stranger/nx-plugin/testing'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { Tree } from '@nx/devkit'
 
 import { eslintConfigGenerator } from './generator'
 
@@ -8,85 +9,53 @@ describe('internal ESLint config generator', () => {
   let tree: Tree
 
   beforeEach(() => {
-    tree = createTreeWithEmptyWorkspace()
+    tree = createTestTree('project-a')
   })
 
   it('generates the root config when no project is provided', async () => {
     await eslintConfigGenerator(tree, { skipFormat: true })
 
-    const content = tree.read('eslint.config.mjs', 'utf8')
-    expect(content).toContain('// THIS FILE IS GENERATED. DO NOT EDIT.')
-    expect(content).toContain(
-      "const { configure } = jiti('@the-stranger/eslint-config')",
-    )
-    expect(content).toContain('const configureOptions =')
-    expect(content).toContain('configureOptions.nx = [')
-    expect(content).toContain('String.raw')
-    expect(content).toContain('export const JS_FILES')
-    expect(content).toContain('export const disableTypeChecked')
+    expect(tree.exists('eslint.config.mjs')).toBe(true)
+    expect(tree.read('eslint.config.mjs', 'utf8')).toMatchSnapshot()
   })
 
   it('customizes configure options in the root config', async () => {
-    await eslintConfigGenerator(tree, {
-      configureConfigExpressions: [
-        "{ name: 'custom/rules', files: ['**/*.custom.js'], rules: {} }",
-      ],
-      configureOptions: {
-        json: false,
-        tests: {
-          unitTestRunner: 'jest',
-        },
+    const files = '**/*.yxz'
+    const additionalConfigs = [
+      "{ name: 'custom/rules', files: ['**/*.custom.js'], rules: {} }",
+      { files: [files], rules: {} },
+    ]
+    const configureOptions = {
+      json: false,
+      tests: {
+        unitTestRunner: 'jest',
       },
-      moduleBoundaries: false,
+    } as const
+    const spy = vi.spyOn(await import('@nx/devkit'), 'generateFiles')
+
+    await eslintConfigGenerator(tree, {
+      additionalConfigs,
+      configureOptions,
       skipFormat: true,
     })
 
-    const content = tree.read('eslint.config.mjs', 'utf8')
-    expect(content).toContain('json: false')
-    expect(content).toContain("unitTestRunner: 'jest'")
-    expect(content).not.toContain('configureOptions.nx = [')
-    expect(content).toContain(
-      "{ name: 'custom/rules', files: ['**/*.custom.js'], rules: {} }",
+    expect(spy).toHaveBeenLastCalledWith(
+      tree,
+      expect.any(String),
+      expect.any(String),
+      expect.objectContaining({
+        additionalConfigs: [additionalConfigs[0], expect.stringContaining(files)],
+        configureOptions,
+      }),
     )
   })
 
   it('generates a project config for the specified project', async () => {
-    addProjectConfiguration(tree, 'test', {
-      projectType: 'library',
-      root: 'packages/test',
-      sourceRoot: 'packages/test/src',
-      targets: {},
-    })
+    await eslintConfigGenerator(tree, { project: 'project-a', skipFormat: true })
 
-    await eslintConfigGenerator(tree, { project: 'test', skipFormat: true })
-
-    const content = tree.read('packages/test/eslint.config.mjs', 'utf8')
-    expect(content).toContain(
-      "import baseConfig, { dependencyChecks } from '../../eslint.config.mjs'",
-    )
-    expect(content).toContain('dependencyChecks({')
-    expect(content).toContain("'{projectRoot}/eslint.config.{ts,js,cjs,mjs}'")
-  })
-
-  it('uses explicit dependency check options in project configs', async () => {
-    addProjectConfiguration(tree, 'test', {
-      projectType: 'library',
-      root: 'packages/test',
-      sourceRoot: 'packages/test/src',
-      targets: {},
-    })
-
-    await eslintConfigGenerator(tree, {
-      dependencyChecksIgnore: ['generated/**'],
-      dependencyChecksRuntime: ['tslib'],
-      project: 'test',
-      skipFormat: true,
-    })
-
-    const content = tree.read('packages/test/eslint.config.mjs', 'utf8')
-    expect(content).toContain("'{projectRoot}/generated/**'")
-    expect(content).toContain('runtimeHelpers')
-    expect(content).toContain("'tslib'")
+    const resultPath = 'packages/project-a/eslint.config.mjs'
+    expect(tree.exists(resultPath)).toBe(true)
+    expect(tree.read(resultPath, 'utf8')).toMatchSnapshot()
   })
 
   it('does not overwrite an existing config without force', async () => {
