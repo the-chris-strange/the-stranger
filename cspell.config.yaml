@@ -39,6 +39,8 @@ dictionaries:
   - softwareTerms
   - web-services
 ignoreWords:
+  - cipe
+  - codexignore
   - dcignore
   - nxignore
 words:
@@ -66,3 +68,6 @@ languageSettings:
       - latex
       - node
       - npm
+cache:
+  cacheLocation: ./node_modules/.cache/cspell
+  useCache: true

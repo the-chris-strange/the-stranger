@@ -1,4 +1,4 @@
-import { Yarn as yarn } from '@yarnpkg/types'
+import type { Yarn as yarn } from '@yarnpkg/types'
 
 /**
  * Synchronize a project's version with the workspace version.

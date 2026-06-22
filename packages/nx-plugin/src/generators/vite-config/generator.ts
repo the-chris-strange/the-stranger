@@ -1,20 +1,21 @@
 import path from 'node:path'
 
 import {
+  type Tree,
   generateFiles,
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  Tree,
 } from '@nx/devkit'
 
-import markerFiles from '../../lib/config-marker-files'
+import type { ViteConfigSchema } from './schema'
+
+import { markerFiles } from '../../lib/config-marker-files'
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { removeAll } from '../../lib/remove-all'
 import { addDependencies } from './dependencies'
 import { normalizeOptions } from './options'
-import { ViteConfigSchema } from './schema'
 import { generateTsc } from './tsconfig'
 
 /**

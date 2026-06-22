@@ -1,12 +1,14 @@
 import path from 'node:path'
 
 import {
+  type Tree,
   generateFiles,
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  Tree,
 } from '@nx/devkit'
+
+import type { DependencyCheckOptions, ESLintConfigSchema } from './schema'
 
 import { detectConfig } from '../../lib/detect-config'
 import { findExisting } from '../../lib/find-existing'
@@ -14,8 +16,11 @@ import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { removeAll } from '../../lib/remove-all'
 import { addEslintDependencies } from './dependencies'
-import { FILE_EXTENSIONS, findFileExtension } from './file-extensions'
-import { DependencyCheckOptions, ESLintConfigSchema } from './schema'
+
+/**
+ * Possible file extensions for eslint.config, in order of precedence.
+ */
+export const FILE_EXTENSIONS = ['ts', 'mjs', 'cjs'] as const
 
 /**
  * Generate an ESLint configuration file for a project.
@@ -25,13 +30,23 @@ import { DependencyCheckOptions, ESLintConfigSchema } from './schema'
 export async function eslintConfigGenerator(tree: Tree, options: ESLintConfigSchema) {
   const project = readProjectConfiguration(tree, options.project)
 
-  const configFileNames = FILE_EXTENSIONS.map(e => `eslint.config.${e}`)
+  const baseConfig =
+    options.extend ??
+    findExisting(tree, ...FILE_EXTENSIONS.map(e => `eslint.config.${e}`))
 
-  const baseConfig = options.extend ?? findExisting(tree, ...configFileNames)
   if (baseConfig === undefined) {
     throw new Error('Unable to locate a base configuration file to extend.')
   }
-  const fileExtension = findFileExtension(options, baseConfig)
+
+  const {
+    fileExtension = path.extname(baseConfig).slice(1) as NonNullable<
+      ESLintConfigSchema['fileExtension']
+    >,
+  } = options
+
+  if (!FILE_EXTENSIONS.includes(fileExtension)) {
+    throw new Error(`Base config (${baseConfig}) has an invalid file extension.`)
+  }
 
   removeAll(
     tree,

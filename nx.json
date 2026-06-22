@@ -4,11 +4,26 @@
     "@nx/js": {
       "library": {
         "bundler": "tsc",
-        "linter": "eslint",
-        "unitTestRunner": "vitest",
+        "linter": "none",
+        "unitTestRunner": "none",
         "useProjectJson": true
       }
     }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "eslintConfigs": ["{workspaceRoot}/eslint.config.?([cm])[jt]s", "{projectRoot}/eslint.config.?([cm])[jt]s"],
+    "noEslintConfigs": ["!{workspaceRoot}/eslint.config.?([cm])[jt]s", "!{projectRoot}/eslint.config.?([cm])[jt]s"],
+    "noTestFiles": [
+      "!{projectRoot}/**/*.spec.?([cm])[jt]s?(x)",
+      "!{projectRoot}/**/*.test.?([cm])[jt]s?(x)",
+      "!{projectRoot}/vite?(st).config.?([cm])[jt]s?(x)",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json"
+    ],
+    "production": ["default", "noEslintConfigs", "noTestFiles"],
+    "productionCode": ["production", "!{projectRoot}/**/*.md", "!{projectRoot}/**/*.json"],
+    "sharedGlobals": []
   },
   "nxCloudId": "67eeb7b904dc9617051c453f",
   "parallel": 7,
@@ -34,17 +49,9 @@
       }
     },
     {
-      "plugin": "@nx/vite/plugin",
+      "plugin": "@nx/vitest",
       "options": {
-        "buildDepsTargetName": "build-deps",
-        "buildTargetName": "build",
-        "devTargetName": "dev",
-        "previewTargetName": "preview",
-        "serveStaticTargetName": "serve-static",
-        "serveTargetName": "serve",
-        "testTargetName": "test",
-        "typecheckTargetName": "typecheck",
-        "watchDepsTargetName": "watch-deps"
+        "testTargetName": "test"
       }
     }
   ],
@@ -71,57 +78,130 @@
         "tag": true
       },
       "manifestRootsToUpdate": ["{projectRoot}", "{workspaceRoot}/dist/{projectRoot}"],
-      "preVersionCommand": "yarn build",
       "preserveLocalDependencyProtocols": false,
       "specifierSource": "conventional-commits",
       "versionPrefix": "^"
     }
   },
+  "sync": {
+    "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"]
+  },
   "targetDefaults": {
-    "@nx/js:tsc": {
+    "build": {
       "cache": true,
       "dependsOn": ["^build"],
-      "inputs": ["default", "^default"],
+      "executor": "@nx/js:tsc",
+      "inputs": ["default", "^productionCode"],
+      "outputs": ["{options.outputPath}/"],
       "options": {
         "assets": [
           "{projectRoot}/*.md",
-          {
-            "glob": "LICENSE",
-            "input": "{workspaceRoot}",
-            "output": ""
-          },
           {
             "glob": "**/*.md",
             "input": "{projectRoot}/docs",
             "output": "./docs"
           },
           {
+            "glob": "LICENSE",
+            "input": "{workspaceRoot}",
+            "output": ""
+          },
+          {
             "glob": "package.json",
             "input": "{projectRoot}",
             "output": "."
+          },
+          {
+            "glob": "**/*.d.ts",
+            "input": "{projectRoot}/src",
+            "output": "./src"
           }
         ],
         "generatePackageJson": true,
         "main": "{projectRoot}/src/index.ts",
         "outputPath": "{workspaceRoot}/dist/{projectRoot}",
         "tsConfig": "{projectRoot}/tsconfig.lib.json"
-      },
-      "outputs": ["{options.outputPath}"]
+      }
     },
-    "@the-stranger/nx-plugin:update-manifest": {
+    "lint": {
       "cache": true,
-      "dependsOn": ["build"],
-      "inputs": ["{projectRoot}/package.json", "{workspaceRoot}/dist/{projectRoot}/package.json"],
+      "inputs": [
+        "default",
+        "eslintConfigs",
+        "{workspaceRoot}/tools/eslint-rules/**/*",
+        { "externalDependencies": ["eslint"] }
+      ],
       "options": {
-        "unset": ["main", "module", "types"]
+        "cwd": "{projectRoot}"
       },
-      "outputs": ["{workspaceRoot}/dist/{projectRoot}/package.json"]
+      "configurations": {
+        "fix": {
+          "fix": true
+        },
+        "warnings": {
+          "maxWarnings": 0
+        }
+      }
     },
     "nx-release-publish": {
       "dependsOn": ["^nx-release-publish", "build"],
       "options": {
         "packageRoot": "{workspaceRoot}/dist/{projectRoot}"
       }
+    },
+    "resolve-workspace-dependencies": {
+      "dependsOn": ["nx-plugin-internal:build", "build", "^resolve-workspace-dependencies"],
+      "executor": "@the-stranger/nx-plugin-internal:workspace-dependencies",
+      "options": {
+        "destination": "{workspaceRoot}/dist/{projectRoot}/package.json",
+        "source": "{projectRoot}/package.json"
+      }
+    },
+    "test": {
+      "inputs": [
+        "default",
+        "noEslintConfigs",
+        "^productionCode",
+        { "externalDependencies": ["vitest"] },
+        { "env": "CI" },
+        { "env": "GITHUB_ACTIONS" }
+      ],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}",
+        "{workspaceRoot}/node_modules/.vitest/{projectRoot}/test-results.json"
+      ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "coverage": {
+          "coverage": true
+        }
+      }
+    },
+    "typecheck": {
+      "dependsOn": ["build", "^typecheck"],
+      "inputs": [
+        "{projectRoot}/src/**/*.ts",
+        { "dependentTasksOutputFiles": "**/*.d.?([cm])ts" },
+        { "externalDependencies": ["typescript"] }
+      ],
+      "outputs": [
+        "{workspaceRoot}/out-tsc/{projectRoot}/tsconfig.?(*.)tsbuildinfo",
+        "{workspaceRoot}/out-tsc/{projectRoot}/**/*.d.?([cm])ts?(.map)"
+      ]
+    },
+    "watch-tests": {
+      "cache": false,
+      "executor": "@nx/vitest:test",
+      "options": {
+        "cwd": "{projectRoot}",
+        "watch": true
+      },
+      "continuous": true
     }
+  },
+  "tui": {
+    "autoExit": true
   }
 }

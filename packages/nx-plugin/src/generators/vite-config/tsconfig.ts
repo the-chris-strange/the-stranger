@@ -1,7 +1,8 @@
-import { Tree } from '@nx/devkit'
+import type { Tree } from '@nx/devkit'
 
-import { TSConfig, TSConfigOptions } from '../../lib/tsconfig'
-import { NormalizedSchema } from './options'
+import type { NormalizedSchema } from './options'
+
+import { type TSConfigOptions, TSConfig } from '../../lib/tsconfig'
 
 export function generateTsc(tree: Tree, options: NormalizedSchema) {
   const { names, outDir, target, tsBuildInfo } = options
@@ -24,7 +25,7 @@ export function generateTsc(tree: Tree, options: NormalizedSchema) {
     delete buildConfig.compilerOptions.declaration
     buildConfig.compilerOptions.outDir = outDir
 
-    if (target?.every(e => e.includes('node'))) {
+    if (target.every(e => e.includes('node'))) {
       buildConfig.removeTypes('vite/client')
     }
 

@@ -1,4 +1,4 @@
-import { Yarn as yarn } from '@yarnpkg/types'
+import type { Yarn as yarn } from '@yarnpkg/types'
 
 /**
  * Define the engines.node field of a workspace's package.json. If the field is defined in the root manifest, the version specified therein is enforced. If the field isn't defined, no constraint is required.
@@ -7,7 +7,7 @@ import { Yarn as yarn } from '@yarnpkg/types'
  */
 export function setNodeEngine(yarn: Yarn, ws: Workspace) {
   const version = yarn.workspace({ cwd: '.' })?.manifest?.['engines']?.['node']
-  if (version) {
+  if (version && ws.manifest.private !== true) {
     ws.set('engines.node', version)
   } else {
     ws.unset('engines.node')

@@ -1,11 +1,16 @@
 import eslintPlugin from 'eslint-plugin-eslint-plugin'
 import { defineConfig } from 'eslint/config'
-import jsoncParser from 'jsonc-eslint-parser'
+import * as jsoncParser from 'jsonc-eslint-parser'
 
 import baseConfig from '../../eslint.config.mjs'
 
 export default defineConfig(
-  eslintPlugin.configs['recommended'],
+  ...baseConfig,
+
+  {
+    files: ['src/**/*.ts'],
+    extends: [eslintPlugin.configs['recommended']],
+  },
 
   {
     files: ['src/lib/configs/*.ts'],
@@ -16,31 +21,23 @@ export default defineConfig(
     },
   },
 
-  ...baseConfig,
-
   {
     files: ['**/*.json'],
     rules: {
       '@nx/dependency-checks': [
         'error',
         {
+          ignoredDependencies: ['@nx/eslint-plugin'],
           ignoredFiles: [
             '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',
             '{projectRoot}/src/**/*.spec.{ts,js,tsx,jsx}',
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
-          runtimeHelpers: ['tslib', 'yaml-eslint-parser', 'toml-eslint-parser'],
+          runtimeHelpers: ['tslib'],
         },
       ],
     },
     languageOptions: { parser: jsoncParser },
-  },
-
-  {
-    files: ['src/**/*.ts'],
-    rules: {
-      'perfectionist/sort-interfaces': ['warn', { type: 'natural' }],
-    },
   },
 )

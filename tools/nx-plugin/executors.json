@@ -1,0 +1,14 @@
+{
+  "executors": {
+    "workspace-dependencies": {
+      "description": "Resolve workspace dependencies to concrete versions",
+      "implementation": "./src/executors/workspace-dependencies/executor",
+      "schema": "./src/executors/workspace-dependencies/schema.json"
+    },
+    "write-file-header": {
+      "description": "Write header text at the top of one or more files",
+      "implementation": "./src/executors/write-file-header/executor",
+      "schema": "./src/executors/write-file-header/schema.json"
+    }
+  }
+}

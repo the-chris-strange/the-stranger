@@ -1,3 +1,5 @@
+import packageJsonPlugin from 'prettier-plugin-packagejson'
+
 import type { Config } from 'prettier'
 
 export default {
@@ -26,7 +28,7 @@ export default {
     {
       files: ['package.json'],
       options: {
-        plugins: ['prettier-plugin-packagejson'],
+        plugins: [packageJsonPlugin],
       },
     },
     {
@@ -50,6 +52,5 @@ export default {
   singleQuote: true,
   tabWidth: 2,
   trailingComma: 'all',
-
   useTabs: false,
 } satisfies Config

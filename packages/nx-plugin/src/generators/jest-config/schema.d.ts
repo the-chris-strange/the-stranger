@@ -1,6 +1,6 @@
 import type { Config } from 'jest'
 
-import { GeneratorSchema } from '../../lib/generator-schema'
+import type { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
  * Schema for the jest configuration file generator.

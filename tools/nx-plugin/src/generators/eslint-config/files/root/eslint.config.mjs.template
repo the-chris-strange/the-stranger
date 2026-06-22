@@ -1,0 +1,92 @@
+// THIS FILE IS GENERATED. DO NOT EDIT.
+
+import { join } from 'node:path'
+
+import { createJiti } from 'jiti'
+
+const workspaceRoot = import.meta.dirname
+const jiti = createJiti(import.meta.url, {
+  alias: {
+    '@the-stranger/eslint-config': join(
+      workspaceRoot,
+      'packages/eslint-config/src/index.ts',
+    ),
+    '@the-stranger/eslint-config/nx': join(
+      workspaceRoot,
+      'packages/eslint-config/src/nx.ts',
+    ),
+    '@the-stranger/eslint-utils': join(
+      workspaceRoot,
+      'packages/eslint-utils/src/index.ts',
+    ),
+    '@the-stranger/eslint-plugin': join(
+      workspaceRoot,
+      'packages/eslint-plugin/src/index.ts',
+    ),
+  },
+  interopDefault: false,
+  tsconfigPaths: true,
+})
+
+/** @type {import('@the-stranger/eslint-config')} */
+const { configure } = await jiti.import('@the-stranger/eslint-config')
+
+/** @type {import('@the-stranger/eslint-utils')} */
+const { getFilePatterns, FilePatterns } = await jiti.import(
+  '@the-stranger/eslint-utils',
+)
+
+/** @type {import('@the-stranger/eslint-plugin')} */
+const wsPlugin = await jiti.import('@the-stranger/eslint-plugin')
+
+const configureOptions = <%- configureOptions %>
+
+/**
+ * Array of file patterns matching JavaScript (but not TypeScript) files.
+ * @example *.js, *.mjs
+ */
+export const JS_FILES = getFilePatterns(FilePatterns.js, '*.{js,mjs,cjs,jsx}')
+
+/**
+ * Array of file patterns matching TypeScript (but not JavaScript) files.
+ * @example *.ts, *.tsx
+ */
+export const TS_FILES = getFilePatterns(FilePatterns.ts, '*.{ts,mts,cts,tsx}')
+
+/**
+ * Array of file patterns matching test files.
+ * @example *.spec.ts, *.test.jsx
+ */
+export const TEST_FILES = getFilePatterns(FilePatterns.test)
+
+/**
+ * Array of file patterns matching all source files.
+ */
+export const SOURCE_FILES = getFilePatterns(FilePatterns.source)
+
+export const disableTypeChecked = wsPlugin.configs.disableTypeChecked
+
+export default configure(
+  configureOptions,
+
+  {
+    name: 'the-stranger/source/config-files',
+    files: ['eslint.config.*', 'prettier.config.mjs', 'yarn.config.cjs'],
+    rules: {
+      'perfectionist/sort-objects': 'off',
+    },
+  },
+
+  {
+    name: 'the-stranger/source/typescript-compat',
+    files: TS_FILES,
+    rules: {
+      '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/prefer-optional-chain': 'off',
+    },
+  },
+<% for (const cfg of additionalConfigs) { -%>
+
+  <%- cfg %>,
+<% } -%>
+)

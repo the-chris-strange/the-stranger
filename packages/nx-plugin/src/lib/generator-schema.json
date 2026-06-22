@@ -5,6 +5,10 @@
   "description": "Base schema for generators included in this plugin",
   "type": "object",
   "properties": {
+    "dryRun": {
+      "type": "boolean",
+      "description": "Don't actually write to the file system."
+    },
     "force": {
       "type": "boolean",
       "description": "Overwrite existing files."

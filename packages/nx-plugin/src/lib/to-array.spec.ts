@@ -18,9 +18,9 @@ describe('toArray', () => {
   /* eslint-disable unicorn/new-for-builtins */
   it.each([
     ['strings', ['foo', 'bar']],
-    ['numbers', [0, 1, Number(2), 3.456, 7_890_123_456_789]],
+    ['numbers', [0, 1, 3.456, 7_890_123_456_789]],
     ['booleans', [true, false]],
-    ['bigints', [BigInt(1), BigInt(2)]],
+    ['bigints', [1n, 2n]],
     ['objects', [{}, {}]],
     ['symbols', [Symbol.for('spam'), Symbol.for('eggs')]],
     ['boxed strings', [new String('foo')]],

@@ -1,47 +1,60 @@
 {
   "name": "@the-stranger/nx-plugin",
-  "version": "2.0.1",
+  "version": "2.1.1",
   "repository": {
-    "url": "git+https://github.com/the-chris-strange/the-stranger.git",
+    "type": "git",
+    "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/nx-plugin"
   },
   "type": "commonjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./generators": {
+      "types": "./src/generators.d.ts",
+      "default": "./src/generators.js"
+    },
+    "./testing": {
+      "types": "./src/test/index.d.ts",
+      "default": "./src/test/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "@nx/devkit": "21.6.4",
-    "@nx/js": "21.6.4",
-    "jest": "^30.2.0",
-    "sort-package-json": "3.6.0",
+    "sort-package-json": "3.6.1",
     "tsconfig-type": "^1.29.0",
-    "tslib": "^2.8.1",
-    "vite": "7.3.1",
-    "vitest": "^3.2.4"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@nx/devkit": "21.6.4",
-    "@nx/eslint": "21.6.4",
-    "@nx/eslint-plugin": "21.6.4",
-    "@nx/plugin": "21.6.4",
-    "@nx/vite": "21.6.4",
-    "@swc-node/register": "^1.11.1",
-    "@swc/cli": "~0.7.10",
-    "@swc/core": "^1.15.10",
-    "@swc/helpers": "~0.5.18",
-    "@types/node": "^24.10.9",
-    "@typescript-eslint/parser": "^8.53.1",
-    "@vitest/coverage-v8": "^3.2.4",
-    "eslint": "^9.39.2",
+    "@nx/devkit": "22.5.2",
+    "@nx/js": "22.5.2",
+    "@nx/plugin": "22.5.2",
+    "@swc-node/register": "1.11.1",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.26",
+    "@swc/helpers": "0.5.21",
+    "@types/node": "^24.12.2",
+    "@vitest/coverage-v8": "4.1.4",
+    "eslint": "^9.39.4",
+    "jest": "^30.3.0",
     "jsdom": "~26.1.0",
-    "jsonc-eslint-parser": "^2.4.2",
-    "nx": "21.6.4",
-    "prettier": "^3.8.0",
-    "prettier-plugin-packagejson": "^2.5.22",
+    "jsonc-eslint-parser": "^3.1.0",
+    "nx": "22.5.2",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "vite": "7.3.2",
+    "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "nx": "^21"
+    "@nx/devkit": ">=21 <23",
+    "@nx/js": ">=21 <23",
+    "jest": ">=29 <31",
+    "nx": ">=21 <23",
+    "vite": "^7",
+    "vitest": "^4"
   },
   "engines": {
     "node": "^24"

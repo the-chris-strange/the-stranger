@@ -1,19 +1,20 @@
 import path from 'node:path'
 
 import {
+  type Tree,
   generateFiles,
   joinPathFragments,
   offsetFromRoot,
   readProjectConfiguration,
-  Tree,
 } from '@nx/devkit'
+
+import type { JestConfigSchema } from './schema'
 
 import { findExisting } from '../../lib/find-existing'
 import { formatFiles } from '../../lib/format-files'
 import { owStrategy } from '../../lib/overwrite-strategy'
 import { TSConfig } from '../../lib/tsconfig'
 import { addDependencies } from './dependencies'
-import { JestConfigSchema } from './schema'
 
 /**
  * Generate a jest configuration file for a project.
@@ -44,7 +45,7 @@ export async function jestConfigGenerator(tree: Tree, options: JestConfigSchema)
       coverageDirectory: joinPathFragments(
         offset,
         'quality-reports/packages',
-        projectConfig.name as string,
+        projectConfig.name!,
       ),
       jestPreset: jestPreset ? joinPathFragments(offset, jestPreset) : undefined,
     },

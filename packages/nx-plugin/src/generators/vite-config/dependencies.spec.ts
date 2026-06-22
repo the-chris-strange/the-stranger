@@ -1,5 +1,5 @@
-import { Tree } from '@nx/devkit'
 import {
+  type MockInstance,
   afterAll,
   afterEach,
   beforeAll,
@@ -7,14 +7,18 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
   vi,
 } from 'vitest'
 
+import type { Tree } from '@nx/devkit'
+
+import type { ViteConfigSchema } from './schema'
+
 import { writeJson } from '../../lib/json'
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { addDependencies } from './dependencies'
-import { ViteConfigSchema } from './schema'
+
+vi.mock(import('../../lib/add-dependencies.ts'))
 
 describe('vite-config generator package dependencies utility', () => {
   let spy: MockInstance
@@ -24,8 +28,6 @@ describe('vite-config generator package dependencies utility', () => {
   const version = '0.0.0'
 
   beforeAll(async () => {
-    vi.mock('../../lib/add-dependencies.ts')
-
     tree = createTestTree('test')
 
     writeJson(
@@ -33,6 +35,7 @@ describe('vite-config generator package dependencies utility', () => {
       {
         devDependencies: {
           '@nx/vite': version,
+          '@nx/vitest': version,
           '@vitest/coverage-v8': version,
           'nx': version,
           'vite': version,
@@ -64,19 +67,20 @@ describe('vite-config generator package dependencies utility', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
-  it("adds [ 'nx', '@nx/vite' ]", () => {
+  it("adds [ 'nx' ]", () => {
     addDependencies(tree, options, pkg)
 
-    const expected = expect.arrayContaining(['nx', '@nx/vite'])
+    const expected = expect.arrayContaining(['nx'])
     expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
   })
 
   it.each([
-    [['vite', 'vite-plugin-dts'], 'includeBuild' as const, true],
-    [['vitest', '@vitest/coverage-v8'], 'includeTest' as const, true],
+    [['@nx/vite', 'vite', 'vite-plugin-dts'], 'includeBuild' as const, true],
+    [['@nx/vitest', 'vitest', '@vitest/coverage-v8'], 'includeTest' as const, true],
     [['vite-plugin-react'], 'react' as const, true],
   ])(
     'adds %o when `%s` is %s',

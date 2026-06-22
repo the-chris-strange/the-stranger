@@ -1,5 +1,5 @@
-import { Tree } from '@nx/devkit'
 import {
+  type MockInstance,
   afterAll,
   afterEach,
   beforeAll,
@@ -7,14 +7,18 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
   vi,
 } from 'vitest'
 
+import type { Tree } from '@nx/devkit'
+
+import type { JestConfigSchema } from './schema'
+
 import { writeJson } from '../../lib/json'
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { addDependencies } from './dependencies'
-import { JestConfigSchema } from './schema'
+
+vi.mock(import('../../lib/add-dependencies.ts'))
 
 describe('jest-config generator dependency utility', () => {
   let spy: MockInstance
@@ -24,8 +28,6 @@ describe('jest-config generator dependency utility', () => {
   const version = '0.0.0'
 
   beforeAll(async () => {
-    vi.mock('../../lib/add-dependencies.ts')
-
     tree = createTestTree(options.project)
 
     writeJson(
@@ -59,7 +61,8 @@ describe('jest-config generator dependency utility', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it("adds [ 'nx', '@nx/jest', 'jest', 'ts-jest' ]", () => {

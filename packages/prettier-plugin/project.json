@@ -7,6 +7,7 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc"
-    }
+    },
+    "watch-tests": {}
   }
 }

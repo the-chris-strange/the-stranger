@@ -1,4 +1,4 @@
-import { addDependenciesToPackageJson, readJson, Tree } from '@nx/devkit'
+import { type Tree, addDependenciesToPackageJson, readJson } from '@nx/devkit'
 
 import type { PackageJson } from 'nx/src/utils/package-json'
 
@@ -36,7 +36,7 @@ export function addDependenciesToProject(
  * @param dependency the name of the dependency
  * @param packageJson a JSON object representing the root package.json file
  * @returns the version of the dependency
- * @throws if the dependency is not listed in the root package.json
+ * @throws {Error} if the dependency is not listed in the root package.json
  */
 export function getWorkspaceVersion(
   tree: Tree,

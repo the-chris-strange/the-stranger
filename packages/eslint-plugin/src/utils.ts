@@ -1,3 +1,6 @@
-export { namer, objectNamer, type Named } from './lib/namer.js'
-export { FilePatterns, getFilePatterns } from './lib/patterns.js'
-export { setRuleLevel } from './lib/severity.js'
+export {
+  configure,
+  type ConfigOptions,
+  type Options,
+} from '@the-stranger/eslint-config'
+export { FilePatterns, getFilePatterns, setSeverity } from '@the-stranger/eslint-utils'

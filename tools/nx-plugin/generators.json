@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "eslint-config": {
+      "description": "Generate an ESLint configuration file that aligns with what `@the-stranger/eslint-config` produces",
+      "factory": "./src/generators/eslint-config/generator",
+      "schema": "./src/generators/eslint-config/schema.json"
+    }
+  }
+}

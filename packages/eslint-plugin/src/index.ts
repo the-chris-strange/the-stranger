@@ -1,2 +1,2 @@
-export { configs } from './lib/configs/index.js'
+export { configs } from './lib/configs.js'
 export { meta } from './lib/meta.js'

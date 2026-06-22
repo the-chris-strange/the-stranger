@@ -1,11 +1,12 @@
 import '../test/matchers/to-match-set'
 
-import { logger, OverwriteStrategy, readJson, Tree, writeJson } from '@nx/devkit'
-import { Tsconfig } from 'tsconfig-type'
+import { type Tree, logger, OverwriteStrategy, readJson, writeJson } from '@nx/devkit'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createTestTree } from '../test/helpers/create-test-tree'
-import { TSConfig, TSConfigOptions } from './tsconfig'
+import type { Tsconfig } from 'tsconfig-type'
+
+import { createTestTree } from '../test/utils/create-test-tree'
+import { type TSConfigOptions, TSConfig } from './tsconfig'
 
 describe('TSConfig', () => {
   const paths = {
@@ -274,9 +275,7 @@ describe('TSConfig', () => {
 
   describe('.write', () => {
     it("creates a new file if the path provided does't exist", () => {
-      if (tree.exists(paths.tsconfig)) {
-        tree.delete(paths.tsconfig)
-      }
+      tree.delete(paths.tsconfig)
 
       tsconfig = new TSConfig(paths.tsconfig, tree)
       tsconfig.write()
@@ -376,11 +375,11 @@ describe('TSConfig', () => {
     })
 
     it('normalizes paths to array of {path}', () => {
-      expect(TSConfig.normalizeReferences('./foo')).toEqual([{ path: './foo' }])
-      expect(TSConfig.normalizeReferences([{ path: './bar' }])).toEqual([
+      expect(TSConfig.normalizeReferences('./foo')).toStrictEqual([{ path: './foo' }])
+      expect(TSConfig.normalizeReferences([{ path: './bar' }])).toStrictEqual([
         { path: './bar' },
       ])
-      expect(TSConfig.normalizeReferences(null)).toEqual([])
+      expect(TSConfig.normalizeReferences(null)).toStrictEqual([])
     })
   })
 })

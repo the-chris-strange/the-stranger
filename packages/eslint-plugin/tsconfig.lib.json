@@ -2,12 +2,12 @@
   "extends": ["./tsconfig.json"],
   "compilerOptions": {
     "declarationMap": false,
-    "outDir": "../../dist/out-tsc",
+    "outDir": "../../dist",
     "tsBuildInfoFile": "../../out-tsc/packages/eslint-plugin/tsconfig.lib.tsbuildinfo",
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "../eslint-config/src/types.d.ts"],
   "exclude": [
     "vite.config.ts",
     "vite.config.mts",
@@ -22,5 +22,6 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/test/**/*.ts"
-  ]
+  ],
+  "references": [{ "path": "../eslint-config/tsconfig.lib.json" }, { "path": "../eslint-utils/tsconfig.lib.json" }]
 }

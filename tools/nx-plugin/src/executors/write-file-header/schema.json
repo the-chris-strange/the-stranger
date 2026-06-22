@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "version": 2,
+  "title": "Write File Headers",
+  "description": "Write header text at the top of files",
+  "type": "object",
+  "properties": {
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The paths to files that need headers."
+    },
+    "header": {
+      "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }],
+      "description": "The content to prepend to the files. If this is an array, each element is added to a new line at the beginning of the file."
+    }
+  },
+  "required": ["files", "header"]
+}

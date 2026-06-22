@@ -1,43 +1,35 @@
 {
   "name": "@the-stranger/yarn-config",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "repository": {
-    "url": "git+https://github.com/the-chris-strange/the-stranger.git",
+    "type": "git",
+    "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/yarn-config"
   },
-  "type": "module",
+  "type": "commonjs",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
       "types": "./src/index.d.ts",
-      "import": "./src/index.js",
       "default": "./src/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "main": "./src/index.js",
-  "module": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
     "@yarnpkg/types": "4.0.1",
+    "chalk": "^5.6.2",
+    "semver": "^7.8.1",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@nx/eslint": "21.6.4",
-    "@nx/eslint-plugin": "21.6.4",
-    "@nx/vite": "21.6.4",
-    "@types/node": "^24.10.9",
-    "@typescript-eslint/parser": "^8.53.1",
-    "@vitest/coverage-v8": "^3.2.4",
-    "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "jsonc-eslint-parser": "^2.4.2",
-    "nx": "21.6.4",
-    "prettier": "^3.8.0",
-    "prettier-plugin-packagejson": "^2.5.22",
+    "@types/node": "^24.12.2",
+    "@types/semver": "^7",
+    "@vitest/coverage-v8": "4.1.4",
+    "eslint": "^9.39.4",
+    "jsonc-eslint-parser": "^3.1.0",
     "typescript": "^5.9.3",
-    "vite": "7.3.1",
-    "vitest": "^3.2.4"
+    "vitest": "4.1.4"
   },
   "engines": {
     "node": "^24"

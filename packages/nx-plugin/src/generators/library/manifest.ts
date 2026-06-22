@@ -1,11 +1,17 @@
 import { join } from 'node:path'
 
-import { ProjectConfiguration, readProjectConfiguration, Tree } from '@nx/devkit'
-import { PackageJson } from 'nx/src/utils/package-json'
+import {
+  type ProjectConfiguration,
+  type Tree,
+  readProjectConfiguration,
+} from '@nx/devkit'
 import sortPackageJson from 'sort-package-json'
 
+import type { PackageJson } from 'nx/src/utils/package-json'
+
+import type { LibrarySchema } from './schema'
+
 import { readJson, writeJson } from '../../lib/json'
-import { LibrarySchema } from './schema'
 
 /**
  * Update the project's manifest (package.json) with the configured type and exports.
@@ -27,25 +33,14 @@ export function updateManifest(
     manifest.type = 'commonjs'
   } else {
     manifest.type = 'module'
-    const mainExport: PackageJsonExports = {
-      import: manifest.main ?? './src/index.js',
-      types: manifest.types ?? './src/index.d.ts',
-    }
     manifest.exports = {
-      '.': mainExport,
+      '.': {
+        import: manifest.main ?? './src/index.js',
+        types: manifest.types ?? './src/index.d.ts',
+      },
       './package.json': './package.json',
     }
-    delete manifest.main
-    delete manifest.types
   }
 
   writeJson(manifestPath, sortPackageJson(manifest), tree)
-}
-
-interface PackageJsonExports {
-  types?: string
-  require?: string
-  import?: string
-  development?: string
-  default?: string
 }

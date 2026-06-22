@@ -1,6 +1,6 @@
-import { LibraryGeneratorSchema } from '@nx/devkit'
+import type { LibraryGeneratorSchema } from '@nx/devkit'
 
-import { GeneratorSchema } from '../../lib/generator-schema'
+import type { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
  * Options to pass to the `@nx/dependency-checks` rule. Behaviors that differ from the default options are documented here. Additionally, these options are intentionally not available when invoking this generator from the command line.

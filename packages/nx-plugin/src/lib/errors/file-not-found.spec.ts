@@ -20,4 +20,12 @@ describe('FileNotFoundError', () => {
       `No file found at '${filepath}'`,
     )
   })
+
+  it('allows overriding the error message', () => {
+    const message = 'Custom error message'
+    expect(new FileNotFoundError('the/path', message)).toHaveProperty(
+      'message',
+      message,
+    )
+  })
 })

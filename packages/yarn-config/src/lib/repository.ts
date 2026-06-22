@@ -1,4 +1,4 @@
-import { Yarn as yarn } from '@yarnpkg/types'
+import type { Yarn as yarn } from '@yarnpkg/types'
 
 export function getRepository(yarn: Yarn): Repository | undefined {
   const repo = yarn.workspace({ cwd: '.' })?.manifest?.['repository']
@@ -13,7 +13,8 @@ export function getRepository(yarn: Yarn): Repository | undefined {
 export function setRepository(yarn: Yarn, ws: Workspace) {
   const directory = ws.cwd.replace(/^\.\//, '')
   const repo = getRepository(yarn)
-  if (repo) {
+  if (repo && ws.manifest.private !== true) {
+    ws.set('repository.type', repo.type)
     ws.set('repository.url', repo.url)
     ws.set('repository.directory', directory)
   } else {
@@ -24,6 +25,7 @@ export function setRepository(yarn: Yarn, ws: Workspace) {
 export interface Repository {
   url: string
   directory?: string
+  type?: string
 }
 
 type Workspace = yarn.Constraints.Workspace

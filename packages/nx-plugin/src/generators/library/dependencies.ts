@@ -1,7 +1,8 @@
-import { joinPathFragments, Tree } from '@nx/devkit'
+import { type Tree, joinPathFragments } from '@nx/devkit'
+
+import type { NormalizedSchema } from './options'
 
 import { addDependenciesToProject } from '../../lib/add-dependencies'
-import { NormalizedSchema } from './options'
 
 export function addDependencies(tree: Tree, config: DependencyConfig) {
   const pkg = joinPathFragments(config.directory, 'package.json')

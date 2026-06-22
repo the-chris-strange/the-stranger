@@ -4,10 +4,7 @@ import { isEmpty } from './is-empty'
 
 describe('isEmpty', () => {
   it.each(
-    [0, false, true, Symbol.for('tests'), () => 'things', BigInt(0)].map(e => [
-      e,
-      typeof e,
-    ]),
+    [0, false, true, Symbol.for('tests'), () => 'things', 0n].map(e => [e, typeof e]),
   )('recognizes %s (type %s) as non-empty', (_, value) => {
     expect(isEmpty(value)).toBe(false)
   })

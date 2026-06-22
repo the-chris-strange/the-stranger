@@ -1,14 +1,59 @@
 {
-  "name": "@the-stranger/root",
+  "name": "root",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
+    "constraints": {
+      "cache": true,
+      "dependsOn": ["yarn-config:build"],
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/packages/*/package.json",
+        { "dependentTasksOutputFiles": "**/*.{js,cjs}" }
+      ],
+      "outputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
+      "options": {
+        "color": true,
+        "command": "yarn constraints"
+      },
+      "configurations": {
+        "fix": {
+          "command": "yarn constraints --fix"
+        }
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "eslintConfigs",
+        "{workspaceRoot}/**/*",
+        "{workspaceRoot}/.*",
+        "{workspaceRoot}/.*/**/*",
+        "!{workspaceRoot}/.husky/**/*",
+        "!{workspaceRoot}/.codexignore",
+        "!{workspaceRoot}/.dcignore",
+        "!{workspaceRoot}/.gitattributes",
+        "!{workspaceRoot}/.prettierignore",
+        "!{workspaceRoot}/.vscode/mcp.json",
+        "!{workspaceRoot}/.yarnrc.yml",
+        "!{workspaceRoot}/packages/**/*",
+        "!{workspaceRoot}/**/LICENSE",
+        "!{workspaceRoot}/yarn.lock",
+        { "externalDependencies": ["eslint"] }
+      ],
+      "options": {
+        "command": "eslint .",
+        "ignore-pattern": "{packages,tools}/**/*"
+      }
+    },
     "local-registry": {
       "executor": "@nx/js:verdaccio",
       "options": {
         "config": ".verdaccio/config.yml",
         "port": 4873,
-        "storage": "tmp/local-registry/storage"
+        "storage": "node_modules/.local-registry/storage"
       }
     }
-  }
+  },
+  "includedScripts": []
 }

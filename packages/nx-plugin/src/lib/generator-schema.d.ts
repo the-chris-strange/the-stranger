@@ -3,6 +3,10 @@
  */
 export interface GeneratorSchema {
   /**
+   * Don't actually write to the file system.
+   */
+  dryRun?: boolean
+  /**
    * Overwrite existing files.
    */
   force?: boolean

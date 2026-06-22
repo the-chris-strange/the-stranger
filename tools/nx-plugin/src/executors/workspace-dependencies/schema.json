@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "version": 2,
+  "title": "Resolve Workspace Dependencies",
+  "description": "Resolves workspace dependencies and updates the package.json file with the resolved versions.",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "description": "The source manifest file where the workspace dependencies are declared. If not specified, the executor will use the manifest in the project root."
+    },
+    "destination": {
+      "type": "string",
+      "description": "The manifest file to write resolved dependency versions to. If not specified, the executor will attempt to find a manifest in the project's build output."
+    },
+    "resolvedVersionPrefix": {
+      "type": "string",
+      "enum": ["", "^", "~"],
+      "default": "^",
+      "description": "The prefix to use when writing resolved versions to the destination manifest."
+    }
+  },
+  "required": []
+}

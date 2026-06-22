@@ -1,5 +1,6 @@
-import { joinPathFragments, ProjectConfiguration, Tree } from '@nx/devkit'
+import { type ProjectConfiguration, type Tree, joinPathFragments } from '@nx/devkit'
 import {
+  type MockInstance,
   afterAll,
   afterEach,
   beforeAll,
@@ -7,17 +8,18 @@ import {
   describe,
   expect,
   it,
-  MockInstance,
   vi,
 } from 'vitest'
 
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import {
   addEslintDependencies,
   ESLINT_DEPENDENCIES,
   JEST_DEPENDENCIES,
   VITEST_DEPENDENCIES,
 } from './dependencies'
+
+vi.mock(import('../../lib/add-dependencies.ts'))
 
 describe('addEslintDependencies', () => {
   const projectPath = (...pth: string[]) => joinPathFragments('packages/test', ...pth)
@@ -27,8 +29,6 @@ describe('addEslintDependencies', () => {
   let spy: MockInstance
 
   beforeAll(async () => {
-    vi.mock('../../lib/add-dependencies.ts')
-
     spy = vi.spyOn(
       await import('../../lib/add-dependencies.js'),
       'addDependenciesToProject',
@@ -44,7 +44,8 @@ describe('addEslintDependencies', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   it('adds default dependencies if no relevant configs are present', () => {

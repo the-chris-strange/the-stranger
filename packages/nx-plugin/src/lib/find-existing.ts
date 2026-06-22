@@ -1,4 +1,4 @@
-import { Tree } from '@nx/devkit'
+import type { Tree } from '@nx/devkit'
 
 /**
  * Find the first file that exists from a list of possible file paths.

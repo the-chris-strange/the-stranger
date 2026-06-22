@@ -1,4 +1,4 @@
-import { Tree } from '@nx/devkit'
+import type { Tree } from '@nx/devkit'
 
 /**
  * Remove all of the specified files from the file system.

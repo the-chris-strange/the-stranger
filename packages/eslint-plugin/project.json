@@ -7,6 +7,11 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc"
-    }
+    },
+    "nx-release-publish": {
+      "dependsOn": ["resolve-workspace-dependencies"]
+    },
+    "resolve-workspace-dependencies": {},
+    "watch-tests": {}
   }
 }

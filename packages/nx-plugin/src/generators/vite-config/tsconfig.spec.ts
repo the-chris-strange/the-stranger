@@ -1,20 +1,21 @@
-import { readJson, Tree, writeJson } from '@nx/devkit'
-import { Tsconfig } from 'tsconfig-type'
+import { type Tree, readJson, writeJson } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { addProject } from '../../test/helpers/add-project'
-import { createTestTree } from '../../test/helpers/create-test-tree'
+import type { Tsconfig } from 'tsconfig-type'
+
+import { addProject } from '../../test/utils/add-project'
+import { createTestTree } from '../../test/utils/create-test-tree'
 import { viteConfigGenerator } from './generator'
-import { NormalizedSchema, normalizeOptions } from './options'
+import { type NormalizedSchema, normalizeOptions } from './options'
 import { generateTsc } from './tsconfig'
+
+vi.mock(import('../../lib/add-dependencies.ts'))
 
 describe('tsconfig generators', () => {
   let tree: Tree
   let options: NormalizedSchema
 
   beforeAll(() => {
-    vi.mock('../../lib/add-dependencies.ts')
-
     tree = createTestTree('test')
   })
 
@@ -93,7 +94,8 @@ describe('tsconfig generators', () => {
   })
 
   afterAll(() => {
-    vi.restoreAllMocks()
+    vi.resetAllMocks()
+    vi.resetModules()
   })
 
   const readConfig = (path: string) =>

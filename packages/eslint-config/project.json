@@ -1,0 +1,31 @@
+{
+  "name": "eslint-config",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/eslint-config/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc"
+    },
+    "nx-release-publish": {
+      "dependsOn": ["write-directive-header", "resolve-workspace-dependencies"]
+    },
+    "resolve-workspace-dependencies": {},
+    "watch-tests": {},
+    "write-directive-header": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "executor": "@the-stranger/nx-plugin-internal:write-file-header",
+      "inputs": ["{workspaceRoot}/dist/packages/eslint-config/src/index.d.ts"],
+      "outputs": ["{workspaceRoot}/dist/packages/eslint-config/src/index.d.ts"],
+      "options": {
+        "files": ["dist/packages/eslint-config/src/index.d.ts"],
+        "header": [
+          "// this directive is necessary until an official type declaration becomes available for `eslint-plugin-promise`",
+          "/// <reference path=\"./types.d.ts\" preserve=\"true\" />"
+        ]
+      }
+    }
+  }
+}

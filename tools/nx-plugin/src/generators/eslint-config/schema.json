@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "EslintConfig",
+  "title": "Internal ESLint configuration generator",
+  "description": "Generate the workspace or project ESLint configuration used by this repository.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project where the ESLint config should be generated. If omitted, the root ESLint config is generated.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
+    "extend": {
+      "type": "string",
+      "description": "The path to the base ESLint config a project config should extend."
+    },
+    "configureOptions": {
+      "type": "object",
+      "description": "Options to pass as the first argument to configure().",
+      "additionalProperties": true
+    },
+    "additionalConfigs": {
+      "type": "array",
+      "description": "JavaScript expressions to append as additional configure() arguments after the generated workspace defaults.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite existing files."
+    },
+    "skipFormat": {
+      "type": "boolean",
+      "description": "Skip formatting generated files.",
+      "x-priority": "internal"
+    },
+    "dryRun": {
+      "type": "boolean",
+      "description": "Run the generator without making any changes to the file system."
+    }
+  }
+}

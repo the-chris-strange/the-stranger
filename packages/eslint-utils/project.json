@@ -1,0 +1,13 @@
+{
+  "name": "eslint-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/eslint-utils/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc"
+    },
+    "watch-tests": {}
+  }
+}

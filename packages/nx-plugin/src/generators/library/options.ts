@@ -1,5 +1,5 @@
-import { ExtendRequired } from '../../lib/type-utils'
-import { LibrarySchema } from './schema'
+import type { ExtendRequired } from '../../lib/type-utils'
+import type { LibrarySchema } from './schema'
 
 export function normalizeOptions(options: LibrarySchema): NormalizedSchema {
   return {
@@ -26,6 +26,6 @@ type StrictTSLibrarySchema = ExtendRequired<
   LibrarySchema,
   Exclude<
     keyof LibrarySchema,
-    'commonjs' | 'directory' | 'force' | 'skipDependencies' | 'skipFormat'
+    'commonjs' | 'directory' | 'dryRun' | 'force' | 'skipDependencies' | 'skipFormat'
   >
 >
