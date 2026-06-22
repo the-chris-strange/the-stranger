@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
       - if: startsWith(github.event_name, 'pull_request')
-        uses: nrwl/nx-set-shas@v4
+        uses: nrwl/nx-set-shas@v5
       - run: corepack enable && corepack install
       - uses: actions/setup-node@v5
         with:
