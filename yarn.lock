@@ -4776,7 +4776,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.58.2"
     "@vitest/coverage-v8": "npm:4.1.4"
     "@vitest/eslint-plugin": "npm:^1.6.16"
-    "@vitest/ui": "npm:4.1.4"
+    "@vitest/ui": "npm:4.1.9"
     "@yarnpkg/types": "npm:4.0.1"
     astro-eslint-parser: "npm:^1.4.0"
     chalk: "npm:^5.6.2"
@@ -5683,6 +5683,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vitest/pretty-format@npm:4.1.9":
+  version: 4.1.9
+  resolution: "@vitest/pretty-format@npm:4.1.9"
+  dependencies:
+    tinyrainbow: "npm:^3.1.0"
+  checksum: 10c0/5b96295f25ab885616230ad1355fc82f490bebb39cc707688d7c8969c08270d7e076ed8a10af4e762ed57145193c6061a1f549f136f0ded344f8db0c2b3fb3de
+  languageName: node
+  linkType: hard
+
 "@vitest/runner@npm:4.1.4":
   version: 4.1.4
   resolution: "@vitest/runner@npm:4.1.4"
@@ -5712,11 +5721,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/ui@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/ui@npm:4.1.4"
+"@vitest/ui@npm:4.1.9":
+  version: 4.1.9
+  resolution: "@vitest/ui@npm:4.1.9"
   dependencies:
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/utils": "npm:4.1.9"
     fflate: "npm:^0.8.2"
     flatted: "npm:^3.4.2"
     pathe: "npm:^2.0.3"
@@ -5724,8 +5733,8 @@ __metadata:
     tinyglobby: "npm:^0.2.15"
     tinyrainbow: "npm:^3.1.0"
   peerDependencies:
-    vitest: 4.1.4
-  checksum: 10c0/2bd711f9f20b479e0b118508b1a1ea3b3dfe1ebd55905aed7a9324a1a59c07b3e7f82b58c94ffc7dbcb91bc66355883d932b1325bba7a96824c25d0e8b5c8ac7
+    vitest: 4.1.9
+  checksum: 10c0/9c480d79a61ebe40552ab4f1fa2a15dad0147d9c5e40186cb210f2199a0bfd886cd34e9ac11b1ef4ff0bf3436be46f5652c3f36200cdb278dfd2b3634996e50a
   languageName: node
   linkType: hard
 
@@ -5737,6 +5746,17 @@ __metadata:
     convert-source-map: "npm:^2.0.0"
     tinyrainbow: "npm:^3.1.0"
   checksum: 10c0/7f81db08e5a8db1e83a37a8d64db011ae3a08b5bcc9aa220a6da428385acb75b11c77b169ab7a9f753529cc25ec11406cff6099b92711fda6291f844fb840a4e
+  languageName: node
+  linkType: hard
+
+"@vitest/utils@npm:4.1.9":
+  version: 4.1.9
+  resolution: "@vitest/utils@npm:4.1.9"
+  dependencies:
+    "@vitest/pretty-format": "npm:4.1.9"
+    convert-source-map: "npm:^2.0.0"
+    tinyrainbow: "npm:^3.1.0"
+  checksum: 10c0/d55506c077fd72c091eb66f02926f0abf72801c87a085f565698289562f47befa114ae2c680ab8736dfe46abab0cfd6b8031f2ac519bafeb37578aa6e5ad03c5
   languageName: node
   linkType: hard
 
