@@ -148,8 +148,5 @@
     ".reports": true,
     "coverage": true,
     "dist": true
-  },
-  "snyk.advanced.autoSelectOrganization": true,
-  "snyk.advanced.organization": "b543d7e9-543e-4a40-a294-e4e4d977c18a",
-  "snyk.features.openSourceSecurity": false
+  }
 }

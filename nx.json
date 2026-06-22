@@ -4,8 +4,8 @@
     "@nx/js": {
       "library": {
         "bundler": "tsc",
-        "linter": "eslint",
-        "unitTestRunner": "vitest",
+        "linter": "none",
+        "unitTestRunner": "none",
         "useProjectJson": true
       }
     }
@@ -17,9 +17,12 @@
     "noTestFiles": [
       "!{projectRoot}/**/*.spec.?([cm])[jt]s?(x)",
       "!{projectRoot}/**/*.test.?([cm])[jt]s?(x)",
-      "!{projectRoot}/vite?(st).config.?([cm])[jt]s?(x)"
+      "!{projectRoot}/vite?(st).config.?([cm])[jt]s?(x)",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json"
     ],
-    "production": ["default", "noEslintConfigs", "noTestFiles", "!{projectRoot}/**/*.md", "!{projectRoot}/**/*.json"],
+    "production": ["default", "noEslintConfigs", "noTestFiles"],
+    "productionCode": ["production", "!{projectRoot}/**/*.md", "!{projectRoot}/**/*.json"],
     "sharedGlobals": []
   },
   "nxCloudId": "67eeb7b904dc9617051c453f",
@@ -88,7 +91,7 @@
       "cache": true,
       "dependsOn": ["^build"],
       "executor": "@nx/js:tsc",
-      "inputs": ["default", "^production"],
+      "inputs": ["default", "^productionCode"],
       "outputs": ["{options.outputPath}/"],
       "options": {
         "assets": [
@@ -158,7 +161,7 @@
       "inputs": [
         "default",
         "noEslintConfigs",
-        "^production",
+        "^productionCode",
         { "externalDependencies": ["vitest"] },
         { "env": "CI" },
         { "env": "GITHUB_ACTIONS" }

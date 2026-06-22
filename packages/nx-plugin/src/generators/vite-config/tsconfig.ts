@@ -25,7 +25,7 @@ export function generateTsc(tree: Tree, options: NormalizedSchema) {
     delete buildConfig.compilerOptions.declaration
     buildConfig.compilerOptions.outDir = outDir
 
-    if (target?.every(e => e.includes('node'))) {
+    if (target.every(e => e.includes('node'))) {
       buildConfig.removeTypes('vite/client')
     }
 
