@@ -2780,10 +2780,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:~8.57.0":
-  version: 8.57.1
-  resolution: "@eslint/js@npm:8.57.1"
-  checksum: 10c0/b489c474a3b5b54381c62e82b3f7f65f4b8a5eaaed126546520bf2fede5532a8ed53212919fed1e9048dcf7f37167c8561d58d0ba4492a4244004e7793805223
+"@eslint/js@npm:~10.0.1":
+  version: 10.0.1
+  resolution: "@eslint/js@npm:10.0.1"
+  peerDependencies:
+    eslint: ^10.0.0
+  peerDependenciesMeta:
+    eslint:
+      optional: true
+  checksum: 10c0/9f3fcaf71ba7fdf65d82e8faad6ecfe97e11801cc3c362b306a88ea1ed1344ae0d35330dddb0e8ad18f010f6687a70b75491b9e01c8af57acd7987cee6b3ec6c
   languageName: node
   linkType: hard
 
@@ -4757,7 +4762,7 @@ __metadata:
     "@dotenvx/dotenvx": "npm:^1.61.0"
     "@eslint-react/eslint-plugin": "npm:^2.13.0"
     "@eslint/config-inspector": "npm:^1.5.0"
-    "@eslint/js": "npm:~8.57.0"
+    "@eslint/js": "npm:~10.0.1"
     "@nx/devkit": "npm:22.5.2"
     "@nx/eslint": "npm:22.5.2"
     "@nx/eslint-plugin": "npm:22.5.2"
