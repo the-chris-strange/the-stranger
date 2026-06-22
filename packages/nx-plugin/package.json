@@ -1,6 +1,6 @@
 {
   "name": "@the-stranger/nx-plugin",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/the-chris-strange/the-stranger.git",

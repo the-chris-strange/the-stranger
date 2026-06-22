@@ -77,7 +77,7 @@
         "stageChanges": false,
         "tag": true
       },
-      "manifestRootsToUpdate": ["{projectRoot}", "{workspaceRoot}/dist/{projectRoot}"],
+      "manifestRootsToUpdate": ["{workspaceRoot}/dist/{projectRoot}"],
       "preserveLocalDependencyProtocols": false,
       "specifierSource": "conventional-commits",
       "versionPrefix": "^"
