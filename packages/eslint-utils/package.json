@@ -1,6 +1,6 @@
 {
   "name": "@the-stranger/eslint-utils",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/the-chris-strange/the-stranger.git",
@@ -26,7 +26,6 @@
     "eslint": "^9.39.4",
     "jsonc-eslint-parser": "^3.1.0",
     "typescript": "^5.9.3",
-    "vite": "7.3.2",
     "vitest": "4.1.4"
   },
   "peerDependencies": {
