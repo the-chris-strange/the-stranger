@@ -4668,7 +4668,6 @@ __metadata:
     jsonc-eslint-parser: "npm:^3.1.0"
     tslib: "npm:^2.8.1"
     typescript: "npm:^5.9.3"
-    vite: "npm:7.3.2"
     vitest: "npm:4.1.4"
   peerDependencies:
     "@nx/eslint-plugin": ">=21 <23"
