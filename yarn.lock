@@ -3541,6 +3541,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nx/devkit@npm:23.0.0":
+  version: 23.0.0
+  resolution: "@nx/devkit@npm:23.0.0"
+  dependencies:
+    "@zkochan/js-yaml": "npm:0.0.7"
+    ejs: "npm:5.0.1"
+    enquirer: "npm:~2.3.6"
+    minimatch: "npm:10.2.5"
+    semver: "npm:^7.6.3"
+    tslib: "npm:^2.3.0"
+    yargs-parser: "npm:21.1.1"
+  peerDependencies:
+    nx: ">= 22 <= 24 || ^23.0.0-0"
+  checksum: 10c0/f82665090d0e493ec654145cb77a2881d9a43ba781f358ad4e862f688465ce95892ac4d8c9a217d46821b255ce880bce01ebf1463c40c905ccb3cd60444adaaf
+  languageName: node
+  linkType: hard
+
 "@nx/eslint-plugin@npm:22.5.2":
   version: 22.5.2
   resolution: "@nx/eslint-plugin@npm:22.5.2"
@@ -4682,7 +4699,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@the-stranger/nx-plugin-internal@workspace:tools/nx-plugin"
   dependencies:
-    "@nx/devkit": "npm:22.5.2"
+    "@nx/devkit": "npm:23.0.0"
     "@the-stranger/eslint-config": "workspace:^"
     "@the-stranger/nx-plugin": "workspace:^"
     nx: "npm:22.5.2"
@@ -4695,7 +4712,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@the-stranger/nx-plugin@workspace:packages/nx-plugin"
   dependencies:
-    "@nx/devkit": "npm:22.5.2"
+    "@nx/devkit": "npm:23.0.0"
     "@nx/js": "npm:22.5.2"
     "@nx/plugin": "npm:22.5.2"
     "@swc-node/register": "npm:1.11.1"
@@ -4757,7 +4774,7 @@ __metadata:
     "@eslint-react/eslint-plugin": "npm:^2.13.0"
     "@eslint/config-inspector": "npm:^1.5.0"
     "@eslint/js": "npm:~8.57.0"
-    "@nx/devkit": "npm:22.5.2"
+    "@nx/devkit": "npm:23.0.0"
     "@nx/eslint": "npm:22.5.2"
     "@nx/eslint-plugin": "npm:22.5.2"
     "@nx/js": "npm:22.5.2"
@@ -7840,6 +7857,15 @@ __metadata:
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
   checksum: 10c0/b5bb125ee93161bc16bfe6e56c6b04de5ad2aa44234d8f644813cc95d861a6910903132b05093706de2b706599367c4130eb6d170f6b46895686b95f87d017b7
+  languageName: node
+  linkType: hard
+
+"ejs@npm:5.0.1":
+  version: 5.0.1
+  resolution: "ejs@npm:5.0.1"
+  bin:
+    ejs: bin/cli.js
+  checksum: 10c0/7791e4d621e1c050b4310b87b75b43bb18de20cbe4560ee4640693ec052a19ae884df838ed4e391c26ec25530af90b58c35a3465462b6b1734e4b084ce45f872
   languageName: node
   linkType: hard
 
@@ -11684,6 +11710,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:10.2.5, minimatch@npm:^10.2.2, minimatch@npm:^10.2.5":
+  version: 10.2.5
+  resolution: "minimatch@npm:10.2.5"
+  dependencies:
+    brace-expansion: "npm:^5.0.5"
+  checksum: 10c0/6bb058bd6324104b9ec2f763476a35386d05079c1f5fe4fbf1f324a25237cd4534d6813ecd71f48208f4e635c1221899bef94c3c89f7df55698fe373aaae20fd
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:7.4.6":
   version: 7.4.6
   resolution: "minimatch@npm:7.4.6"
@@ -11699,15 +11734,6 @@ __metadata:
   dependencies:
     brace-expansion: "npm:^2.0.2"
   checksum: 10c0/8d5406a9697edb9b7ea02697d58cabcb3d3a9a4a02caa1cf57b9ab5ae22c78b2945600661a78f91d1545f77521f97f3cb5f8cb066e58356a121b50e4e60ccdbe
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^10.2.2, minimatch@npm:^10.2.5":
-  version: 10.2.5
-  resolution: "minimatch@npm:10.2.5"
-  dependencies:
-    brace-expansion: "npm:^5.0.5"
-  checksum: 10c0/6bb058bd6324104b9ec2f763476a35386d05079c1f5fe4fbf1f324a25237cd4534d6813ecd71f48208f4e635c1221899bef94c3c89f7df55698fe373aaae20fd
   languageName: node
   linkType: hard
 
