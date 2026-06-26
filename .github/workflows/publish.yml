@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
     environment: prod-npm
     steps:
       - uses: actions/checkout@v5
@@ -34,5 +35,3 @@ jobs:
         run: yarn build
       - if: success() && github.ref == 'refs/heads/main'
         run: yarn nx release publish --access public
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

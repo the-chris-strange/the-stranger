@@ -9,9 +9,6 @@ on:
       - .github/workflows/copilot-setup-steps.yml
   workflow_dispatch:
 
-env:
-  NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_CI }}
-
 jobs:
   # required name
   copilot-setup-steps:
