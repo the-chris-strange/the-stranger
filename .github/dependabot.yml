@@ -4,11 +4,24 @@ updates:
     directories:
       - /
       - "/packages/*"
+      - "/tools/*"
     schedule:
       interval: weekly
     versioning-strategy: increase
+    groups:
+      npm:
+        patterns:
+          - "*"
+    ignore:
+      - dependency-name: "@the-stranger/*"
+      - dependency-name: "@nx/*"
+      - dependency-name: nx
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
