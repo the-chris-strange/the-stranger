@@ -40,6 +40,7 @@ export function maybeReadJson<T extends object>(
  * @param options options for parsing the JSON object
  * @template T the expected type of the JSON object
  * @returns the parsed content of the file
+ * @throws {FileNotFoundError} if the file doesn't exist
  */
 export function readJson<T extends object = any>(
   path: string,
