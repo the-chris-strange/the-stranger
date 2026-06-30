@@ -6,6 +6,7 @@ const {
   setNodeEngine,
   enforceConsistentProjectDependencies,
   setRepository,
+  setLicense,
 } = require('./dist/packages/yarn-config')
 
 module.exports = defineConfig({
@@ -17,6 +18,7 @@ module.exports = defineConfig({
       enforceConsistentProjectDependencies(Yarn, ws)
       setNodeEngine(Yarn, ws)
       setRepository(Yarn, ws)
+      setLicense(Yarn, ws)
     }
   },
 })
