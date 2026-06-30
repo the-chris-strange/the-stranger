@@ -9,6 +9,7 @@ ignorePaths:
   - .env*
   - .git
   - .gitattributes
+  - .github/dependabot.yml
   - .gitignore
   - .nx
   - .nxignore
