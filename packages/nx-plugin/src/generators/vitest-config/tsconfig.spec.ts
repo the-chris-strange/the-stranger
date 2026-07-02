@@ -3,10 +3,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 import type { Tsconfig } from 'tsconfig-type'
 
-import { addProject } from '../../test/utils/add-project'
 import { createTestTree } from '../../test/utils/create-test-tree'
-import { viteConfigGenerator } from './generator'
 import { type NormalizedSchema, normalizeOptions } from './options'
+import { generateTsc } from './tsconfig'
 
 vi.mock(import('../../lib/add-dependencies.ts'))
 
@@ -21,7 +20,7 @@ describe('tsconfig generators', () => {
   beforeEach(() => {
     options = normalizeOptions(tree, {
       force: true,
-      includeBuild: true,
+      includeTest: true,
       project: 'test',
       skipFormat: true,
     })
@@ -102,29 +101,13 @@ describe('tsconfig generators', () => {
       path.startsWith('packages/test') ? path : `packages/test/${path}`,
     )
 
-  it('includes .tsx files in compilation if using react', async () => {
-    options.react = true
+  it('adds vitest/globals if `globals` option is true', () => {
+    options.globals = true
 
-    await viteConfigGenerator(tree, options)
+    generateTsc(tree, options)
 
-    const tsconfig = readConfig('tsconfig.lib.json')
-    expect(tsconfig.include).toContain('src/**/*.tsx')
+    const tsconfig = readConfig('tsconfig.spec.json')
+    expect(tsconfig.compilerOptions?.types).toContain('vitest/globals')
   })
 
-  it('creates tsconfig.app.json if the project is an application', async () => {
-    options.project = 'app-test'
-    addProject(tree, { name: options.project, projectType: 'application' })
-
-    await viteConfigGenerator(tree, options)
-
-    expect(tree.exists('packages/app-test/tsconfig.app.json')).toBe(true)
-  })
-
-  it('removes vite/client from build types if only targeting node', async () => {
-    options.target = ['node24']
-    await viteConfigGenerator(tree, options)
-    expect(readConfig('tsconfig.lib.json').compilerOptions?.types).not.toContain(
-      'vite/client',
-    )
-  })
 })

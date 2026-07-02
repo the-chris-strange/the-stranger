@@ -8,12 +8,11 @@ import {
   readProjectConfiguration,
 } from '@nx/devkit'
 
-import type { ExtendRequired } from '../../lib/type-utils'
-import type { ViteConfigSchema } from './schema'
+import type { VitestConfigSchema } from './schema'
 
 export function normalizeOptions(
   tree: Tree,
-  options: ViteConfigSchema & { includeTest?: false },
+  options: VitestConfigSchema,
 ): NormalizedSchema {
   const project = readProjectConfiguration(tree, options.project)
   const offset = offsetFromRoot(project.root)
@@ -41,13 +40,13 @@ export function normalizeOptions(
   }
 
   return {
-    formats: ['es'],
-    includeBuild: undefined,
-    includeTest: false,
+    globals: false,
+    includeBuild: false,
+    includeTest: true,
     react: false,
-    rollupExternals: [],
     target: [],
-    worker: false,
+    testEnvironment: 'node',
+    testReportPath: '.reports/tests',
     ...options,
     baseExtends,
     names,
@@ -62,12 +61,14 @@ export function normalizeOptions(
   }
 }
 
-export interface NormalizedSchema extends StrictViteConfigSchema {
+export interface NormalizedSchema extends Omit<VitestConfigSchema, 'globals' | 'includeTest' | 'testEnvironment' | 'testReportPath'>, Required<Pick<VitestConfigSchema, 'globals' | 'includeTest' | 'testEnvironment' | 'testReportPath'>> {
   baseExtends: string
-  includeTest: false
+  includeBuild: false
   names: Names
   outDir: string
   projectType: ProjectType
+  react: false
+  target: string[]
   tsBuildInfo: string
 }
 
@@ -82,12 +83,3 @@ interface Names {
   full: ConfigNames
   relative: ConfigNames
 }
-
-type StrictViteConfigSchema = ExtendRequired<
-  ViteConfigSchema,
-  | 'formats'
-  | 'react'
-  | 'rollupExternals'
-  | 'target'
-  | 'worker'
->

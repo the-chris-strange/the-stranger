@@ -26,9 +26,14 @@
       "schema": "./src/generators/library/schema.json"
     },
     "vite-config": {
-      "description": "Generate a vite/vitest configuration file",
+      "description": "Generate a Vite configuration file",
       "factory": "./src/generators/vite-config/generator",
       "schema": "./src/generators/vite-config/schema.json"
+    },
+    "vitest-config": {
+      "description": "Generate a Vitest configuration file",
+      "factory": "./src/generators/vitest-config/generator",
+      "schema": "./src/generators/vitest-config/schema.json"
     }
   }
 }

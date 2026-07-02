@@ -33,10 +33,21 @@ export function generateTsc(tree: Tree, options: NormalizedSchema) {
       buildConfig.include.push('src/**/*.tsx')
     }
 
+    if (options.inSourceTests) {
+      buildConfig.addTypes('vitest/importMeta')
+    }
   } else {
     buildConfig.removeTypes('vite/client')
   }
 
+  if (options.includeTest) {
+    baseConfig.addReferences(names.relative.test)
+    testConfig.addReferences(names.relative.build)
+
+    if (!options.globals) {
+      testConfig.removeTypes('vitest/globals')
+    }
+  }
 
   baseConfig.write()
   buildConfig.write()

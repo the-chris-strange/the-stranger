@@ -24,30 +24,21 @@ import { generateTsc } from './tsconfig'
  * @param options generator options
  */
 export async function viteConfigGenerator(tree: Tree, options: ViteConfigSchema) {
-  if (options.includeBuild === undefined && options.includeTest === undefined) {
-    return
-  }
-
   const project = readProjectConfiguration(tree, options.project)
 
-  if (!(options.includeBuild || options.includeTest)) {
-    const markers = [...markerFiles.vite, ...markerFiles.vitest].map(e =>
-      joinPathFragments(project.root, e),
-    )
+  if (options.includeBuild === false) {
+    const markers = markerFiles.vite.map(e => joinPathFragments(project.root, e))
     removeAll(tree, ...markers)
     await formatFiles(tree, options)
     return
   }
 
-  const config = normalizeOptions(tree, options)
+  const config = normalizeOptions(tree, { ...options, includeBuild: true, includeTest: false })
 
   const offset = offsetFromRoot(project.root)
   const paths = {
     buildOutput: joinPathFragments(offset, 'dist', project.root),
-    coverage: joinPathFragments(offset, 'coverage', project.root),
-    defineConfig: config.includeTest ? 'vitest/config' : 'vite',
     reactPlugin: config.swc ? 'vite-plugin-react-swc' : 'vite-plugin-react',
-    testReports: joinPathFragments(offset, config.testReportPath, project.root),
     viteCache: joinPathFragments(offset, 'node_modules/.vite', project.root),
   }
 

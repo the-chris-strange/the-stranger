@@ -8,6 +8,7 @@ import { cspellConfigGenerator } from '../cspell-config/generator'
 import { eslintConfigGenerator } from '../eslint-config/generator'
 import { jestConfigGenerator } from '../jest-config/generator'
 import { viteConfigGenerator } from '../vite-config/generator'
+import { vitestConfigGenerator } from '../vitest-config/generator'
 import { addDependencies } from './dependencies'
 import { updateManifest } from './manifest'
 import { normalizeOptions } from './options'
@@ -52,17 +53,28 @@ export async function libraryGenerator(tree: Tree, options: LibrarySchema) {
   }
 
   if (!config.skipTestConfig) {
-    if (config.bundler === 'vite' || config.unitTestRunner === 'vitest') {
+    if (config.bundler === 'vite') {
       await viteConfigGenerator(tree, {
         force,
-        globals: config.globals,
-        includeBuild: config.bundler === 'vite',
-        includeTest: config.unitTestRunner === 'vitest',
+        includeBuild: true,
         project,
         react: config.react,
         rollupExternals: config.rollupExternals,
+        skipDependencies: config.skipDependencies,
         skipFormat: true,
         swc: config.swc,
+        tsconfigName: 'tsconfig.lib.json',
+      })
+    }
+
+    if (config.unitTestRunner === 'vitest') {
+      await vitestConfigGenerator(tree, {
+        force,
+        globals: config.globals,
+        includeTest: true,
+        project,
+        skipDependencies: config.skipDependencies,
+        skipFormat: true,
         testEnvironment: config.testEnvironment,
         tsconfigName: 'tsconfig.lib.json',
       })

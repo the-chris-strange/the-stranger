@@ -6,7 +6,7 @@ import dts from 'vite-plugin-dts'
 <%_ } _%>
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin'
 <%_ if (react) { _%> import react from '<%= paths.reactPlugin %>' <%_ } _%>
-import { defineConfig } from '<%= paths.defineConfig %>'
+import { defineConfig } from 'vite'
 
 export default defineConfig(() => ({
 <%_ if (includeBuild) { _%>
@@ -41,26 +41,6 @@ export default defineConfig(() => ({
   ],
 
   root: import.meta.dirname,
-
-<%_ if (includeTest) { _%>
-  test: {
-    coverage: {
-      provider: 'v8' as const,
-      reportsDirectory: '<%= paths.coverage %>',
-    },
-    environment: '<%= testEnvironment %>',
-    globals: <%= globals %>,
-    include: ['{src,tests}/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-    name: '<%= project %>',
-    typecheck: {
-      include: [
-        'src/**/*.{test,spec}-d.?(c|m)[jt]s?(x)',
-        'src/**/*.{test,spec}.?(c|m)[jt]s?(x)',
-      ],
-    },
-    watch: false,
-  },
-<%_ } _%>
 
 <%_ if (worker) { _%>
   worker: {
