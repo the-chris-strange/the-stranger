@@ -80,7 +80,6 @@ describe('vite-config generator package dependencies utility', () => {
 
   it.each([
     [['@nx/vite', 'vite', 'vite-plugin-dts'], 'includeBuild' as const, true],
-    [['@nx/vitest', 'vitest', '@vitest/coverage-v8'], 'includeTest' as const, true],
     [['vite-plugin-react'], 'react' as const, true],
   ])(
     'adds %o when `%s` is %s',

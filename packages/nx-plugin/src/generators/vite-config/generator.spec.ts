@@ -29,27 +29,18 @@ describe('vite config generator', () => {
     vi.resetModules()
   })
 
-  it('does not create a config by default', async () => {
+  it('creates a config by default', async () => {
     await viteConfigGenerator(tree, options)
-    expect(tree.exists('packages/test/vite.config.ts')).toBe(false)
+    expect(tree.exists('packages/test/vite.config.ts')).toBe(true)
   })
 
-  it('removes vite config files if both includeBuild and includeTest are false', async () => {
+  it('removes vite config files if includeBuild is false', async () => {
     options.includeBuild = false
-    options.includeTest = false
-    for (const f of markerFiles.vitest) {
+    for (const f of markerFiles.vite) {
       tree.write(`packages/test/${f}`, '')
     }
     await viteConfigGenerator(tree, options)
-    expect(markerFiles.vitest.some(e => tree.exists(`packages/test/${e}`))).toBe(false)
-  })
-
-  it('sets import path for `defineConfig` if including test config', async () => {
-    options.includeTest = true
-    await viteConfigGenerator(tree, options)
-    expect(tree.read('packages/test/vite.config.ts', 'utf8')).toContain(
-      "import { defineConfig } from 'vitest/config'",
-    )
+    expect(markerFiles.vite.some(e => tree.exists(`packages/test/${e}`))).toBe(false)
   })
 
   it('sets import path for `defineConfig` if only creating build config', async () => {

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "VitestConfig",
+  "title": "Vitest configuration file generator",
+  "description": "Generate a vitest.config.ts file for a project.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The name of the project in which to generate a vitest config.",
+      "$default": {
+        "$source": "projectName",
+        "index": 0
+      },
+      "x-prompt": "To which project would you like to add a Vitest configuration file?"
+    },
+    "coveragePath": {
+      "type": "string",
+      "description": "Specify a path to write coverage reports, relative to the workspace root.",
+      "default": ".reports/coverage"
+    },
+    "globals": {
+      "type": "boolean",
+      "description": "Allow vitest to inject jest-like API's into the testing environment.",
+      "default": false
+    },
+    "includeTest": {
+      "type": "boolean",
+      "description": "Include configuration for Vitest in the generated file.",
+      "default": true
+    },
+    "inSourceTests": {
+      "type": "boolean",
+      "description": "Include setup for writing tests directly in source code files, rather than creating separate *.spec files."
+    },
+    "skipTsconfigs": {
+      "type": "boolean",
+      "description": "Skip updating the project's tsconfig.json files."
+    },
+    "testEnvironment": {
+      "type": "string",
+      "description": "The testing environment for the project.",
+      "default": "node",
+      "enum": ["node", "jsdom"]
+    },
+    "testReportPath": {
+      "type": "string",
+      "description": "Specify a path to write unit test reports, relative to the workspace root."
+    },
+    "tsconfigName": {
+      "type": "string",
+      "description": "Set the filename to use for the build tsconfig referenced by the test tsconfig."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite existing files."
+    }
+  },
+  "required": ["project"]
+}
