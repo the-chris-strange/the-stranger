@@ -101,7 +101,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.58.2",
     "verdaccio": "^6.5.2",
-    "vite": "7.3.2",
+    "vite": "7.3.5",
     "vite-node": "^5.3.0",
     "vitest": "4.1.4",
     "yaml-eslint-parser": "^2.0.0"
