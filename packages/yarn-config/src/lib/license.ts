@@ -1,18 +1,20 @@
-import type { Yarn as yarn } from '@yarnpkg/types'
+import type { ConstraintOptions, Workspace, Yarn } from './types'
+
+import { getManifest } from './manifest'
 
 /**
  * Require that the `license` field of a workspace's package.json match the root package.json.
- * @param yarn the yarn context
  * @param ws a project in the workspace
+ * @param yarn the yarn context
+ * @param options constraints options
  */
-export function setLicense(yarn: Yarn, ws: Workspace) {
-  const license = yarn.workspace({ cwd: '.' })?.manifest?.['license']
-  if (license && ws.manifest.private !== true) {
+export function setLicense(ws: Workspace, yarn: Yarn, options?: ConstraintOptions) {
+  const license = getManifest(yarn.workspace({ cwd: '.' })).license
+  const include = getManifest(ws).private !== true || options?.includePrivate
+
+  if (license && include) {
     ws.set('license', license)
   } else {
     ws.unset('license')
   }
 }
-
-type Workspace = yarn.Constraints.Workspace
-type Yarn = yarn.Constraints.Yarn

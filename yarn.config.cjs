@@ -15,10 +15,10 @@ module.exports = defineConfig({
       if (ws.cwd === '.') {
         continue
       }
-      enforceConsistentProjectDependencies(Yarn, ws)
-      setNodeEngine(Yarn, ws)
-      setRepository(Yarn, ws)
-      setLicense(Yarn, ws)
+      enforceConsistentProjectDependencies(ws, Yarn)
+      setNodeEngine(ws, Yarn)
+      setRepository(ws, Yarn)
+      setLicense(ws, Yarn)
     }
   },
 })

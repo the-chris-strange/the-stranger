@@ -1,14 +1,14 @@
-import type { Yarn as yarn } from '@yarnpkg/types'
+import type { Workspace, Yarn } from './types'
 
 /**
  * Synchronize a project's version with the workspace version.
- * @param yarn the yarn context
  * @param ws a project in the workspace
+ * @param yarn the yarn context
  * @param versions an array of project version constraints to apply to the workspace
  */
 export function setProjectVersion(
-  yarn: Yarn,
   ws: Workspace,
+  yarn: Yarn,
   ...versions: ProjectVersion[]
 ) {
   const projectVersion = versions.find(e => ws.ident && e.name.endsWith(ws.ident))
@@ -31,6 +31,3 @@ export interface ProjectVersion {
    */
   version?: string
 }
-
-type Workspace = yarn.Constraints.Workspace
-type Yarn = yarn.Constraints.Yarn

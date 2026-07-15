@@ -1,14 +1,14 @@
 import chalk from 'chalk'
 import { satisfies, validRange } from 'semver'
 
-import type { Yarn as yarn } from '@yarnpkg/types'
+import type { Workspace, Yarn } from './types'
 
 /**
- * Require that any dependency of a project is also a dependency of the root workspace. If the dependency is a peer dependency, its range must be satisfied by the workspace version. If the dependency is a regular dependency, its range is updated to match the workspace version.
- * @param yarn the yarn context
+ * Require that any dependency of a project is also a dependency of the root workspace. If the dependency is a peer dependency, its range must be satisfied by the workspace version, and the dependency must be listed with a satisfying version in the project's devDependencies. If the dependency is a regular dependency, its range is updated to match the workspace version.
  * @param ws a project in the workspace
+ * @param yarn the yarn context
  */
-export function enforceConsistentProjectDependencies(yarn: Yarn, ws: Workspace) {
+export function enforceConsistentProjectDependencies(ws: Workspace, yarn: Yarn) {
   const workspace = yarn.workspace({ cwd: '.' }) ?? undefined
 
   for (const pkg of yarn.dependencies({ workspace: ws })) {
@@ -21,7 +21,6 @@ export function enforceConsistentProjectDependencies(yarn: Yarn, ws: Workspace) 
     if (!rootPkg) {
       pkg.error(underlined`${pkg.ident} is not installed in the workspace.`)
     } else if (pkg.type === 'peerDependencies') {
-      // TODO: also require that peer dependencies are listed in the project's devDependencies
       const pkgRange = validRange(pkg.range)
       const rootVersion = rootPkg.resolution?.version
 
@@ -50,6 +49,3 @@ function underlined(template: TemplateStringsArray, ...args: any[]) {
     return acc + str + (arg === undefined ? '' : chalk.bold.underline(arg))
   }, '')
 }
-
-type Workspace = yarn.Constraints.Workspace
-type Yarn = yarn.Constraints.Yarn
