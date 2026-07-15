@@ -1,0 +1,4 @@
+interface:
+  display_name: Write Tests
+  short_description: Coordinate unit and e2e test writing
+  default_prompt: Use $write-tests to add focused unit or e2e coverage for this project.

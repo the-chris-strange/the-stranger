@@ -1,0 +1,4 @@
+interface:
+  display_name: Write Docs
+  short_description: Coordinate README, API, and JSDoc writing
+  default_prompt: Use $write-docs to improve README, API, or JSDoc documentation for this project.
