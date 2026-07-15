@@ -14,6 +14,7 @@ export function addProject(tree: Tree, config: string | ProjectConfig) {
     config = { name: config }
   }
   config.root ??= `packages/${config.name}`
+  config.projectType ??= 'library'
   addProjectConfiguration(tree, config.name, config as ProjectConfiguration)
 }
 

@@ -3,7 +3,7 @@ import type { LibraryFormats } from 'vite'
 import type { GeneratorSchema } from '../../lib/generator-schema'
 
 /**
- * Options for the Vite/Vitest configuration generator.
+ * Options for the Vite configuration generator.
  */
 export interface ViteConfigSchema extends GeneratorSchema {
   /**
@@ -11,32 +11,15 @@ export interface ViteConfigSchema extends GeneratorSchema {
    */
   project: string
   /**
-   * Specify a path to write coverage reports, relative to the workspace root. This option is ignored if {@link includeTest} is false.
-   * @default '.reports/coverage'
+   * The file extension to use for the generated vite config.
+   * @default 'mts'
    */
-  coveragePath?: string
+  ext?: 'mts' | 'ts'
   /**
-   * Module formats produced by the build process. This option is ignored if {@link includeBuild} is false.
+   * Module formats produced by the build process.
    * @default ['es']
    */
   formats?: LibraryFormats[]
-  /**
-   * Allow vitest to inject jest-like API's into the testing environment.
-   * @default false
-   */
-  globals?: boolean
-  /**
-   * Include build configuration in the generated file.
-   */
-  includeBuild?: boolean
-  /**
-   * Include configuration for Vitest in the generated file.
-   */
-  includeTest?: boolean
-  /**
-   * Include setup for writing tests directly in source code files, rather than creating separate *.spec files.
-   */
-  inSourceTests?: boolean
   /**
    * Indicate that the project uses React.js.
    * @default false
@@ -55,23 +38,9 @@ export interface ViteConfigSchema extends GeneratorSchema {
    */
   swc?: boolean
   /**
-   * Build targets. This options is ignored if {@link includeBuild} is false.
+   * Build targets.
    */
   target?: string[]
-  /**
-   * The testing environment for the project.
-   * @default 'node'
-   */
-  testEnvironment?: 'jsdom' | 'node'
-  /**
-   * Specify a path to write unit test reports, relative to the workspace root. This option is ignored if {@link includeTest} is false.
-   * @default '.reports/tests'
-   */
-  testReportPath?: string
-  /**
-   * Set the filename to use in the configuration for `vite-plugin-dts`. If unspecified, the generator will use the project's 'projectType' configuration value to create a file name.
-   */
-  tsconfigName?: string
   /**
    * Indicates whether the project uses workers.
    * @default false

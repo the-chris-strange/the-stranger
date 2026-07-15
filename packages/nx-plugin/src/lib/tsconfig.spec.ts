@@ -1,11 +1,12 @@
 import '../test/matchers/to-match-set'
 
-import { type Tree, logger, OverwriteStrategy, readJson, writeJson } from '@nx/devkit'
+import { type Tree, logger, OverwriteStrategy } from '@nx/devkit'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Tsconfig } from 'tsconfig-type'
 
 import { createTestTree } from '../test/utils/create-test-tree'
+import { readJson, writeJson } from './json'
 import { type TSConfigOptions, TSConfig } from './tsconfig'
 
 describe('TSConfig', () => {
@@ -274,6 +275,8 @@ describe('TSConfig', () => {
   })
 
   describe('.write', () => {
+    const readConfig = (path: string) => readJson<Tsconfig>(path, tree)
+
     it("creates a new file if the path provided does't exist", () => {
       tree.delete(paths.tsconfig)
 
@@ -293,24 +296,21 @@ describe('TSConfig', () => {
       tsconfig.compilerOptions = options
       tsconfig.write()
 
-      expect(readJson<Tsconfig>(tree, paths.tsconfig)).toHaveProperty(
-        'compilerOptions',
-        options,
-      )
+      expect(readConfig(paths.tsconfig)).toHaveProperty('compilerOptions', options)
     })
 
     it('writes to a different file if provided', () => {
       const path = 'tsconfig.app.json'
       tsconfig.write(path)
 
-      expect(readJson<Tsconfig>(tree, path)).toMatchObject(config)
+      expect(readConfig(path)).toMatchObject(config)
     })
 
     it('writes to a different file tree if provided', () => {
       const newTree = createTestTree('another-test')
       const path = 'packages/another-test/tsconfig.json'
       tsconfig.write(path, newTree)
-      expect(readJson<Tsconfig>(newTree, path)).toMatchObject(config)
+      expect(readJson<Tsconfig>(path, newTree)).toMatchObject(config)
     })
 
     it('updates path and tree if provided', () => {
@@ -321,7 +321,7 @@ describe('TSConfig', () => {
     })
 
     it("throws if it can't overwrite an existing file", () => {
-      writeJson(tree, paths.tsconfig, config)
+      writeJson(paths.tsconfig, config, tree)
       expect(() => {
         tsconfig.write(paths.tsconfig, tree, {
           overwriteStrategy: OverwriteStrategy.ThrowIfExisting,

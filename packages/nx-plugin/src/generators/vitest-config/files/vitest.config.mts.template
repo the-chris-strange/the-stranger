@@ -1,0 +1,30 @@
+import { defineConfig } from 'vitest/config'
+
+const name = '<%= project %>' as const
+const projectPath = `<%= projectPath %>/${name}` as const
+const cacheDir = `../../node_modules/.vitest/${projectPath}` as const
+
+export default defineConfig(() => ({
+  cacheDir,
+
+  root: import.meta.dirname,
+
+  test: {
+    coverage: {
+      provider: '<%= coverageProvider %>' as const,
+      reportsDirectory: '<%= coveragePath %>',
+    },
+    environment: '<%= testEnvironment %>',
+    globals: <%= globals %>,
+    include: ['{src,test}/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
+    name,
+    passWithNoTests: true,
+    typecheck: {
+      include: [
+        'src/**/*.{test,spec}-d.?(c|m)[jt]s?(x)',
+        'src/**/*.{test,spec}.?(c|m)[jt]s?(x)',
+      ],
+    },
+    watch: false,
+  },
+}))

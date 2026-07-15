@@ -14,33 +14,15 @@
       },
       "x-prompt": "To which project would you like to add a Vite configuration file?"
     },
-    "coveragePath": {
-      "type": "string",
-      "description": "Specify a path to write coverage reports, relative to the workspace root. This option is ignored if 'includeTest' is false.",
-      "default": ".reports/coverage"
-    },
     "formats": {
       "type": "array",
       "enum": ["es", "cjs", "umd", "iife", "system"],
       "description": "Module formats produced by the build process. This option is ignored if 'includeBuild' is false.",
       "default": ["es"]
     },
-    "globals": {
-      "type": "boolean",
-      "description": "Allow vitest to inject jest-like API's into the testing environment.",
-      "default": false
-    },
     "includeBuild": {
       "type": "boolean",
       "description": "Include build configuration in the generated file."
-    },
-    "includeTest": {
-      "type": "boolean",
-      "description": "Include configuration for Vitest in the generated file."
-    },
-    "inSourceTests": {
-      "type": "boolean",
-      "description": "Include setup for writing tests directly in source code files, rather than creating separate *.spec files."
     },
     "react": {
       "type": "boolean",
@@ -50,7 +32,9 @@
     "rollupExternals": {
       "type": "array",
       "description": "An array of values to add to the `rollupOptions.external` configuration field.",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "skipTsconfigs": {
       "type": "boolean",
@@ -62,18 +46,10 @@
     },
     "target": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Build targets. This option is ignored if 'includeBuild' is false."
-    },
-    "testEnvironment": {
-      "type": "string",
-      "description": "The testing environment for the project.",
-      "default": "node",
-      "enum": ["node", "jsdom"]
-    },
-    "testReportPath": {
-      "type": "string",
-      "description": "Specify a path to write unit test reports, relative to the workspace root. This option is ignored if 'includeTest' is false."
     },
     "tsconfigName": {
       "type": "string",

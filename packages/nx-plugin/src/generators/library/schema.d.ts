@@ -2,6 +2,7 @@ import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schem
 
 import type { GeneratorSchema } from '../../lib/generator-schema'
 import type { ViteConfigSchema } from '../vite-config/schema'
+import type { VitestConfigSchema } from '../vitest-config/schema'
 
 export interface LibrarySchema extends GeneratorSchema, NxLibOptions, ViteOptions {
   /**
@@ -35,7 +36,5 @@ type NxLibOptions = Pick<
   'bundler' | 'testEnvironment' | 'unitTestRunner'
 >
 
-type ViteOptions = Pick<
-  ViteConfigSchema,
-  'globals' | 'react' | 'rollupExternals' | 'swc'
->
+type ViteOptions = Pick<ViteConfigSchema, 'react' | 'rollupExternals' | 'swc'> &
+  Pick<VitestConfigSchema, 'globals'>
