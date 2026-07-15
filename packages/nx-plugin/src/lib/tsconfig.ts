@@ -1,10 +1,4 @@
-import {
-  type Tree,
-  logger,
-  OverwriteStrategy,
-  writeJson,
-  writeJsonFile,
-} from '@nx/devkit'
+import { type Tree, logger, OverwriteStrategy } from '@nx/devkit'
 
 import type { Tsconfig } from 'tsconfig-type'
 
@@ -13,7 +7,7 @@ import type { ExtendRequired, PickNonNullable } from './type-utils'
 import { FileNotFoundError } from './errors/file-not-found'
 import { exists } from './exists'
 import { isEmpty } from './is-empty'
-import { maybeReadJson } from './json'
+import { maybeReadJson, writeJson } from './json'
 import { owStrategy } from './overwrite-strategy'
 import { toArray } from './to-array'
 
@@ -220,11 +214,7 @@ export class TSConfig implements TSConfigType {
     }
 
     if (!fileExists || this.overwriteStrategy === OverwriteStrategy.Overwrite) {
-      if (this.$tree) {
-        writeJson(this.$tree, this.$path, this.toJSON())
-      } else {
-        writeJsonFile(this.$path, this.toJSON())
-      }
+      writeJson(this.$path, this.toJSON(), this.$tree)
     }
   }
 

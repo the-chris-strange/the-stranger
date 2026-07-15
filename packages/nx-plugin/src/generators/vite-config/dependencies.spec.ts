@@ -71,27 +71,26 @@ describe('vite-config generator package dependencies utility', () => {
     vi.resetModules()
   })
 
-  it("adds [ 'nx' ]", () => {
+  it('adds required dependencies', () => {
     addDependencies(tree, options, pkg)
 
-    const expected = expect.arrayContaining(['nx'])
+    const expected = expect.arrayContaining([
+      'nx',
+      '@nx/vite',
+      'vite',
+      'vite-plugin-dts',
+    ])
     expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
   })
 
-  it.each([
-    [['@nx/vite', 'vite', 'vite-plugin-dts'], 'includeBuild' as const, true],
-    [['@nx/vitest', 'vitest', '@vitest/coverage-v8'], 'includeTest' as const, true],
-    [['vite-plugin-react'], 'react' as const, true],
-  ])(
-    'adds %o when `%s` is %s',
-    (expectedPkgs, prop, value: ViteConfigSchema[typeof prop]) => {
-      options[prop] = value
-      addDependencies(tree, options, pkg)
+  it("adds [ 'vite-plugin-react' ] when `react` is true", () => {
+    options.react = true
+    options.swc = false
+    addDependencies(tree, options, pkg)
 
-      const expected = expect.arrayContaining(expectedPkgs)
-      expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
-    },
-  )
+    const expected = expect.arrayContaining(['vite-plugin-react'])
+    expect(spy).toHaveBeenCalledExactlyOnceWith(tree, [], expected, pkg)
+  })
 
   it("adds [ 'vite-plugin-react-swc' ] when `swc` and `react` are true", () => {
     options.react = true

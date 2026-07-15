@@ -1,20 +1,19 @@
-import { type Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type { Tree } from '@nx/devkit'
 import type { Tsconfig } from 'tsconfig-type'
 
-import type { ViteConfigSchema } from './schema'
+import type { VitestConfigSchema } from './schema'
 
 import { readJson, writeJson } from '../../lib/json'
-import { addProject } from '../../test/utils/add-project'
 import { createTestTree } from '../../test/utils/create-test-tree'
-import { viteConfigGenerator } from './generator'
+import { generateTsc } from './tsconfig'
 
 vi.mock(import('../../lib/add-dependencies.ts'))
 
 describe('tsconfig generators', () => {
   let tree: Tree
-  let options: ViteConfigSchema
+  let options: VitestConfigSchema
 
   beforeAll(() => {
     tree = createTestTree('test')
@@ -25,7 +24,6 @@ describe('tsconfig generators', () => {
       force: true,
       project: 'test',
       skipFormat: true,
-      skipTsconfigs: false,
     }
 
     writeJson(
@@ -122,31 +120,12 @@ describe('tsconfig generators', () => {
       tree,
     )
 
-  it('includes .tsx files in compilation if using react', async () => {
-    options.react = true
+  it('adds vitest/globals if `globals` option is true', () => {
+    options.globals = true
 
-    await viteConfigGenerator(tree, options)
+    generateTsc(tree, options)
 
-    console.log(readConfig('packages/test/tsconfig.lib.json'))
-
-    const tsconfig = readConfig('tsconfig.lib.json')
-    expect(tsconfig.include).toContain('src/**/*.tsx')
-  })
-
-  it('creates tsconfig.app.json if the project is an application', async () => {
-    options.project = 'app-test'
-    addProject(tree, { name: options.project, projectType: 'application' })
-
-    await viteConfigGenerator(tree, options)
-
-    expect(tree.exists('packages/app-test/tsconfig.app.json')).toBe(true)
-  })
-
-  it('removes vite/client from build types if only targeting node', async () => {
-    options.target = ['node24']
-    await viteConfigGenerator(tree, options)
-    expect(readConfig('tsconfig.lib.json').compilerOptions?.types).not.toContain(
-      'vite/client',
-    )
+    const tsconfig = readConfig('tsconfig.spec.json')
+    expect(tsconfig.compilerOptions?.types).toContain('vitest/globals')
   })
 })

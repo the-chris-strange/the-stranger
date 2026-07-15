@@ -30,7 +30,7 @@ jobs:
           cache: yarn
           node-version: 24
           registry-url: "https://registry.npmjs.org"
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
       - if: success()
         run: yarn build
       - if: success() && github.ref == 'refs/heads/main'
