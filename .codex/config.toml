@@ -13,3 +13,4 @@ config_file = 'agents/ci-monitor-subagent.toml'
 
 [sandbox_workspace_write]
 network_access = true
+writable_roots = ["."]
