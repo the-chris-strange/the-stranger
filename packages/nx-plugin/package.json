@@ -25,9 +25,10 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
+    "get-tsconfig": "^4.14.0",
     "sort-package-json": "3.6.1",
-    "tsconfig-type": "^1.29.0",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "type-fest": "^5.8.0"
   },
   "devDependencies": {
     "@nx/devkit": "22.5.2",

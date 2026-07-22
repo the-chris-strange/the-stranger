@@ -1,7 +1,7 @@
 import { type Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { Tsconfig } from 'tsconfig-type'
+import type { TsConfigJson } from 'get-tsconfig'
 
 import type { ViteConfigSchema } from './schema'
 
@@ -117,7 +117,7 @@ describe('tsconfig generators', () => {
   })
 
   const readConfig = (path: string) =>
-    readJson<Tsconfig>(
+    readJson<TsConfigJson>(
       path.startsWith('packages/test') ? path : `packages/test/${path}`,
       tree,
     )
