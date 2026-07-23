@@ -6,6 +6,7 @@
     "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/nx-plugin"
   },
+  "license": "MIT",
   "type": "commonjs",
   "exports": {
     ".": {

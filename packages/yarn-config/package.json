@@ -6,6 +6,7 @@
     "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/yarn-config"
   },
+  "license": "MIT",
   "type": "commonjs",
   "exports": {
     ".": {

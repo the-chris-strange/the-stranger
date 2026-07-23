@@ -26,4 +26,11 @@ export default defineConfig(
     },
     languageOptions: { parser: jsoncParser },
   },
+
+  {
+    files: ['src/lib/manifest.ts'],
+    rules: {
+      'perfectionist/sort-interfaces': 'off',
+    },
+  },
 )
