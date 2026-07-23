@@ -17,8 +17,8 @@ export class TSConfig implements TsConfigJson {
   #config: TSConfigType
   #options: TSConfigOptions
   #path: string
-  #tree?: Tree
   #types: Set<string>
+  #tree?: Tree
 
   /**
    * Construct a new TSConfig instance.

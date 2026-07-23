@@ -79,12 +79,7 @@ function isStringOrUndefined(value: unknown): value is string | undefined {
 type Author = string | PersonObject
 
 type JsonValue =
-  | boolean
-  | number
-  | string
-  | JsonValue[]
-  | { [key: string]: JsonValue }
-  | null
+  boolean | number | string | JsonValue[] | { [key: string]: JsonValue } | null
 
 interface NodeEngines {
   node?: string
@@ -102,10 +97,7 @@ interface PackageDirectories {
 }
 
 type PackageExport =
-  | string
-  | PackageExport[]
-  | { [conditionOrSubpath: string]: PackageExport }
-  | null
+  string | PackageExport[] | { [conditionOrSubpath: string]: PackageExport } | null
 
 interface PackageRuntime {
   name: string

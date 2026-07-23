@@ -4,10 +4,10 @@ import { getModuleRoot } from './get-module-root.js'
 
 export class OptionalImport<TModule = unknown> {
   readonly moduleSpecifier: string
+  private readonly moduleRoot: string
   private matchSubpaths?: boolean
   private missing?: boolean
   private module?: TModule
-  private readonly moduleRoot: string
   private nodeRequire?: NodeJS.Require
 
   constructor(specifier: string, options?: ImportResolverOptions) {
