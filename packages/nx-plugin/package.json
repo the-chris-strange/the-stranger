@@ -1,11 +1,12 @@
 {
   "name": "@the-stranger/nx-plugin",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/nx-plugin"
   },
+  "license": "MIT",
   "type": "commonjs",
   "exports": {
     ".": {
@@ -25,9 +26,10 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
+    "get-tsconfig": "^4.14.0",
     "sort-package-json": "3.6.1",
-    "tsconfig-type": "^1.29.0",
-    "tslib": "^2.8.1"
+    "tslib": "^2.8.1",
+    "type-fest": "^5.8.0"
   },
   "devDependencies": {
     "@nx/devkit": "22.5.2",

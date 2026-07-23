@@ -1,8 +1,7 @@
 import { type Tree, logger, OverwriteStrategy } from '@nx/devkit'
 
-import type { Tsconfig } from 'tsconfig-type'
-
-import type { ExtendRequired, PickNonNullable } from './type-utils'
+import type { TsConfigJson } from 'get-tsconfig'
+import type { Paths, SetRequired, SetRequiredDeep } from 'type-fest'
 
 import { FileNotFoundError } from './errors/file-not-found'
 import { exists } from './exists'
@@ -14,24 +13,26 @@ import { toArray } from './to-array'
 /**
  * Encapsulate operations on a `tsconfig.json` file.
  */
-export class TSConfig implements TSConfigType {
-  private $config: TSConfigType
-  private $types: Set<string>
+export class TSConfig implements TsConfigJson {
+  #config: TSConfigType
+  #options: TSConfigOptions
+  #path: string
+  #tree?: Tree
+  #types: Set<string>
 
   /**
    * Construct a new TSConfig instance.
-   * @param $path the path to the `tsconfig.json`
-   * @param $tree the NX virtual file system
-   * @param $options options that specify how to interact with the filesystem
+   * @param path the path to the `tsconfig.json`
+   * @param tree the NX virtual file system
+   * @param options options that specify how to interact with the filesystem
    */
-  constructor(
-    private $path: string,
-    private $tree?: Tree,
-    private $options: TSConfigOptions = {},
-  ) {
-    const config = maybeReadJson($path, $tree) ?? {}
-    this.$config = TSConfig.normalize(config)
-    this.$types = new Set(this.$config.compilerOptions.types)
+  constructor(path: string, tree?: Tree, options?: TSConfigOptions) {
+    this.#path = path
+    this.#tree = tree
+    this.#options = options ?? {}
+    const config = maybeReadJson(path, tree) ?? {}
+    this.#config = TSConfig.normalize(config)
+    this.#types = new Set(this.#config.compilerOptions.types)
   }
 
   /**
@@ -42,7 +43,7 @@ export class TSConfig implements TSConfigType {
    * @param config the input Tsconfig to normalize
    * @returns a new TSConfigType with normalized compiler options, array fields, and references
    */
-  static normalize(config: Tsconfig): TSConfigType {
+  static normalize(config: TsConfigJson): TSConfigType {
     const { compilerOptions, exclude, files, include, references, ...cfg } = config
     return {
       ...cfg,
@@ -64,23 +65,22 @@ export class TSConfig implements TSConfigType {
    * @param options the raw `compilerOptions` object
    * @returns the normalized `compilerOptions` object
    */
-  static normalizeCompilerOptions(options: Tsconfig['compilerOptions']) {
-    return Object.entries(options ?? {}).reduce<TSConfigType['compilerOptions']>(
-      (acc, [key, value]) => {
-        if (key === 'types') {
-          const types = new Set(toArray(value as CompilerOptions['types']))
-          if (types.size > 0) {
-            acc.types = [...types]
-          }
-        } else if (!isEmpty(value)) {
-          acc[key as keyof CompilerOptions] = Array.isArray(value)
-            ? value.filter(e => !isEmpty(e))
-            : (value as any)
+  static normalizeCompilerOptions(options: TsConfigJson['compilerOptions']) {
+    return Object.entries(options ?? {}).reduce<
+      NonNullable<TsConfigJson['compilerOptions']>
+    >((acc, [key, value]) => {
+      if (key === 'types') {
+        const types = new Set(toArray(value as CompilerOptions['types']))
+        if (types.size > 0) {
+          acc.types = [...types]
         }
-        return acc
-      },
-      {},
-    )
+      } else if (!isEmpty(value)) {
+        acc[key as keyof CompilerOptions] = Array.isArray(value)
+          ? value.filter(e => !isEmpty(e))
+          : (value as any)
+      }
+      return acc
+    }, {})
   }
 
   /**
@@ -92,7 +92,7 @@ export class TSConfig implements TSConfigType {
    * @param value a single path string, an array of path strings, or an array of tsconfig reference objects
    * @returns an array of TSConfigReference objects normalized for use in a tsconfig `references` section
    */
-  static normalizeReferences(value: string | string[] | Tsconfig['references']) {
+  static normalizeReferences(value: string | string[] | TsConfigJson['references']) {
     const refs: TSConfigReference[] = []
     if (typeof value === 'string') {
       refs.push({ path: value })
@@ -124,51 +124,57 @@ export class TSConfig implements TSConfigType {
   }
 
   /**
-   * Add references to the {@link Tsconfig.references} array.
+   * Add references to the {@link TsConfigJson.references} array.
    * @param values references to add to the config
    */
   addReferences(...values: (string | TSConfigReference)[]) {
     for (const value of values) {
       const ref = typeof value === 'string' ? { path: value } : value
-      if (!this.$config.references.some(e => e.path === ref.path)) {
-        this.$config.references.push(ref)
+      if (!this.#config.references.some(e => e.path === ref.path)) {
+        this.#config.references.push(ref)
       }
     }
   }
 
   /**
-   * Add types to {@link Tsconfig.compilerOptions}.
+   * Add types to {@link TsConfigJson.compilerOptions}.
    * @param types the types to add
    */
   addTypes(...types: string[]) {
     for (const type of types.filter(e => !isEmpty(e))) {
-      this.$types.add(type)
+      this.#types.add(type)
     }
   }
 
-  apply(config: Tsconfig) {
-    Object.assign(this.$config, TSConfig.normalize(config))
+  apply(config: TsConfigJson) {
+    Object.assign(this.#config, TSConfig.normalize(config))
   }
 
   /**
-   * Remove types from the `types` option of {@link Tsconfig.compilerOptions}.
+   * Remove types from the `types` option of {@link TsConfigJson.compilerOptions}.
    * @param types the types to remove
    */
   removeTypes(...types: string[]) {
     for (const type of types) {
-      this.$types.delete(type)
+      this.#types.delete(type)
+    }
+  }
+
+  [Symbol.dispose]() {
+    if (this.#options.autoSave) {
+      this.write()
     }
   }
 
   /**
-   * Create a minimal JSON object from the config containing only keys with a truthy value, or those specified in {@link TSConfigOptions.includeProperties}.
+   * Create a minimal JSON object from the config containing only keys with a non-empty value, or those specified in {@link TSConfigOptions.includeProperties}.
    * @returns the plain JSON object
    */
-  toJSON(): Tsconfig {
-    const config: Tsconfig = Object.fromEntries(
-      Object.entries(this.$config).filter(
+  toJSON(): TsConfigJson {
+    const config: TsConfigJson = Object.fromEntries(
+      Object.entries(this.#config).filter(
         ([key, value]) =>
-          this.includeProperty(key as keyof Tsconfig) || !isEmpty(value),
+          this.includeProperty(key as TsConfigJsonProperties) || !isEmpty(value),
       ),
     )
 
@@ -180,9 +186,9 @@ export class TSConfig implements TSConfigType {
       this.extends = this.extends[0]
     }
 
-    if (this.$types.size > 0) {
+    if (this.#types.size > 0) {
       config.compilerOptions ??= {}
-      config.compilerOptions.types = [...this.$types]
+      config.compilerOptions.types = [...this.#types]
     }
 
     return config
@@ -199,72 +205,72 @@ export class TSConfig implements TSConfigType {
    * @param options options that specify how to interact with the filesystem
    */
   write(path?: string, tree?: Tree, options?: TSConfigOptions) {
-    this.$path = path ?? this.$path
-    this.$tree = tree ?? this.$tree
-    this.$options = options ?? this.$options
+    this.#path = path ?? this.#path
+    this.#tree = tree ?? this.#tree
+    this.#options = options ?? this.#options
 
-    const fileExists = exists(this.$path, this.$tree)
+    const fileExists = exists(this.#path, this.#tree)
 
     if (fileExists) {
       if (this.overwriteStrategy === OverwriteStrategy.ThrowIfExisting) {
-        throw new Error(`${this.$path} may not be overwritten`)
+        throw new Error(`${this.#path} may not be overwritten`)
       } else if (this.overwriteStrategy === OverwriteStrategy.KeepExisting) {
-        logger.warn(`Refusing to overwrite existing configuration file: ${this.$path}`)
+        logger.warn(`Refusing to overwrite existing configuration file: ${this.#path}`)
       }
     }
 
     if (!fileExists || this.overwriteStrategy === OverwriteStrategy.Overwrite) {
-      writeJson(this.$path, this.toJSON(), this.$tree)
+      writeJson(this.#path, this.toJSON(), this.#tree)
     }
   }
 
   get compilerOptions(): TSConfigType['compilerOptions'] {
-    return this.$config.compilerOptions
+    return this.#config.compilerOptions
   }
 
-  set compilerOptions(value: Tsconfig['compilerOptions']) {
-    this.$config.compilerOptions = TSConfig.normalizeCompilerOptions(value)
-    this.$types = new Set(this.$config.compilerOptions.types)
+  set compilerOptions(value: TsConfigJson['compilerOptions']) {
+    this.#config.compilerOptions = TSConfig.normalizeCompilerOptions(value)
+    this.#types = new Set(this.#config.compilerOptions.types)
   }
 
   get exclude(): TSConfigType['exclude'] {
-    return this.$config.exclude
+    return this.#config.exclude
   }
 
-  set exclude(value: string | Tsconfig['exclude']) {
-    this.$config.exclude = toArray(value)
+  set exclude(value: string | TsConfigJson['exclude']) {
+    this.#config.exclude = toArray(value)
   }
 
   get extends() {
-    return this.$config.extends
+    return this.#config.extends
   }
 
   set extends(value) {
-    this.$config.extends = value
+    this.#config.extends = value
   }
 
   get files(): TSConfigType['files'] {
-    return this.$config.files
+    return this.#config.files
   }
 
-  set files(value: string | Tsconfig['files']) {
-    this.$config.files = toArray(value)
+  set files(value: string | TsConfigJson['files']) {
+    this.#config.files = toArray(value)
   }
 
   get include(): TSConfigType['include'] {
-    return this.$config.include
+    return this.#config.include
   }
 
-  set include(value: string | Tsconfig['include']) {
-    this.$config.include = toArray(value)
+  set include(value: string | TsConfigJson['include']) {
+    this.#config.include = toArray(value)
   }
 
   get references(): TSConfigType['references'] {
-    return this.$config.references
+    return this.#config.references
   }
 
-  set references(value: string | string[] | Tsconfig['references']) {
-    this.$config.references = TSConfig.normalizeReferences(value)
+  set references(value: string | string[] | TsConfigJson['references']) {
+    this.#config.references = TSConfig.normalizeReferences(value)
   }
 
   /**
@@ -272,19 +278,19 @@ export class TSConfig implements TSConfigType {
    * @param property the property to test
    * @returns true if the property should be included in the output
    */
-  private includeProperty(property: keyof Tsconfig) {
-    return this.$options?.includeProperties?.includes(property)
+  private includeProperty(property: TsConfigJsonProperties) {
+    return this.#options?.includeProperties?.includes(property)
   }
 
   private get overwriteStrategy(): OverwriteStrategy {
-    return typeof this.$options?.overwriteStrategy === 'string'
-      ? this.$options.overwriteStrategy
-      : owStrategy(this.$options?.overwriteStrategy)
+    return typeof this.#options?.overwriteStrategy === 'string'
+      ? this.#options.overwriteStrategy
+      : owStrategy(this.#options?.overwriteStrategy)
   }
 
   private set overwriteStrategy(value: boolean | OverwriteStrategy | undefined) {
-    this.$options ??= {}
-    this.$options.overwriteStrategy = value
+    this.#options ??= {}
+    this.#options.overwriteStrategy = value
   }
 }
 
@@ -299,22 +305,27 @@ export function isProjectReference(value?: unknown): value is TSConfigReference 
 
 export interface TSConfigOptions {
   /**
-   * Select top-level properties that should be included in the tsconfig.json, even if they're empty.
+   * Save (write) the tsconfig.json file when the object is disposed.
    */
-  includeProperties?: (keyof Tsconfig)[]
+  autoSave?: boolean
+  /**
+   * Select properties that should be included when writing the tsconfig.json to disk, even if they're empty.
+   */
+  includeProperties?: TsConfigJsonProperties[]
   /**
    * Specify how to handle existing files.
    */
   overwriteStrategy?: boolean | OverwriteStrategy
 }
 
-export type TSConfigReference = TSConfigType['references'][number]
+export type TSConfigReference = Exclude<TsConfigJson['references'], undefined>[number]
 
-export type TSConfigType = ExtendRequired<
-  Omit<Tsconfig, 'compilerOptions'>,
-  'exclude' | 'extends' | 'files' | 'include' | 'references',
-  true
+export type TSConfigType = SetRequired<
+  Omit<TsConfigJson, 'compilerOptions'>,
+  'exclude' | 'extends' | 'files' | 'include' | 'references'
 > &
-  Required<PickNonNullable<Tsconfig, 'compilerOptions', true>>
+  SetRequiredDeep<Pick<TsConfigJson, 'compilerOptions'>, 'compilerOptions'>
 
-type CompilerOptions = Exclude<Tsconfig['compilerOptions'], null | undefined>
+type CompilerOptions = Exclude<TsConfigJson['compilerOptions'], null | undefined>
+
+type TsConfigJsonProperties = Paths<TsConfigJson>

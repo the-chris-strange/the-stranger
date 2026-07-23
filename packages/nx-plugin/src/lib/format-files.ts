@@ -7,8 +7,11 @@ import type { GeneratorSchema } from './generator-schema'
  * @param tree the NX virtual file system
  * @param options an options object
  */
-export async function formatFiles(tree: Tree, options?: GeneratorSchema) {
+export async function formatFiles(tree: Tree, options?: FormatFilesOptions) {
   if (options?.skipFormat === false) {
-    await nxFormatFiles(tree)
+    await nxFormatFiles(tree, options)
   }
 }
+
+export type FormatFilesOptions = Parameters<typeof nxFormatFiles>[1] &
+  Pick<GeneratorSchema, 'skipFormat'>

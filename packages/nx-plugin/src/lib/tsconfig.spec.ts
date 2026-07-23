@@ -3,7 +3,7 @@ import '../test/matchers/to-match-set'
 import { type Tree, logger, OverwriteStrategy } from '@nx/devkit'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { Tsconfig } from 'tsconfig-type'
+import type { TsConfigJson } from 'get-tsconfig'
 
 import { createTestTree } from '../test/utils/create-test-tree'
 import { readJson, writeJson } from './json'
@@ -11,17 +11,10 @@ import { type TSConfigOptions, TSConfig } from './tsconfig'
 
 describe('TSConfig', () => {
   const paths = {
-    compilerOptions: '$config.compilerOptions',
-    exclude: '$config.exclude',
-    extends: '$config.extends',
-    files: '$config.files',
-    include: '$config.include',
-    references: '$config.references',
     tsconfig: 'packages/test/tsconfig.json',
-    types: '$types',
   } as const
 
-  let config: Tsconfig
+  let config: TsConfigJson
   let tsconfig: TSConfig
   let tree: Tree
   let options: TSConfigOptions
@@ -58,164 +51,148 @@ describe('TSConfig', () => {
     }).not.toThrow()
   })
 
-  it('sets values for tree, path, and options', () => {
-    expect(tsconfig).toMatchObject({
-      $options: options,
-      $path: paths.tsconfig,
-      $tree: tree,
-    })
+  it('serializes the existing config', () => {
+    expect(tsconfig.toJSON()).toStrictEqual(config)
   })
 
   describe('getters and setters', () => {
     describe('.exclude getter', () => {
-      it('gets the value from the internal configuration', () => {
-        expect(tsconfig.exclude).toBe(tsconfig['$config']['exclude'])
+      it('gets the value from the configuration', () => {
+        expect(tsconfig.exclude).toStrictEqual(config.exclude)
       })
     })
 
     describe('.exclude setter', () => {
-      it('sets the value on the internal configuration', () => {
+      it('sets the value on the configuration', () => {
         const value = ['**/*.src.txt']
         tsconfig.exclude = value
-        expect(tsconfig['$config']['exclude']).toStrictEqual(value)
+        expect(tsconfig.exclude).toStrictEqual(value)
       })
 
       it('sets the value to an array if given a string', () => {
         const value = 'src/*'
         tsconfig.exclude = value
-        expect(tsconfig['$config']['exclude']).toStrictEqual([value])
+        expect(tsconfig.exclude).toStrictEqual([value])
       })
 
-      it.each([null, undefined])(
-        'sets the value to an empty array if given `%s`',
-        value => {
-          tsconfig.exclude = value
-          expect(tsconfig['$config']['exclude']).toHaveLength(0)
-        },
-      )
+      it('sets the value to an empty array if given null', () => {
+        tsconfig.exclude = null as any
+        expect(tsconfig.exclude).toHaveLength(0)
+      })
     })
 
     describe('.include getter', () => {
-      it('gets the value from the internal configuration', () => {
-        expect(tsconfig.include).toBe(tsconfig['$config']['include'])
+      it('gets the value from the configuration', () => {
+        expect(tsconfig.include).toStrictEqual(config.include)
       })
     })
 
     describe('.include setter', () => {
-      it('sets the value on the internal configuration', () => {
+      it('sets the value on the configuration', () => {
         const value = ['**/*.src.txt']
         tsconfig.include = value
-        expect(tsconfig).toHaveProperty(paths.include, value)
+        expect(tsconfig.include).toStrictEqual(value)
       })
 
       it('sets the value to an array if given a string', () => {
         const value = 'src/*'
         tsconfig.include = value
-        expect(tsconfig).toHaveProperty(paths.include, [value])
+        expect(tsconfig.include).toStrictEqual([value])
       })
 
-      it.each([null, undefined])(
-        'sets the value to an empty array if given `%s`',
-        value => {
-          tsconfig.include = value
-          expect(tsconfig['$config']['include']).toHaveLength(0)
-        },
-      )
+      it('sets the value to an empty array if given null', () => {
+        tsconfig.include = null as any
+        expect(tsconfig.include).toHaveLength(0)
+      })
     })
 
     describe('.files getter', () => {
-      it('gets the value from the internal configuration', () => {
-        expect(tsconfig.files).toBe(tsconfig['$config']['files'])
+      it('gets the value from the configuration', () => {
+        expect(tsconfig.files).toStrictEqual(config.files)
       })
     })
 
     describe('.files setter', () => {
-      it('sets the value on the internal configuration', () => {
+      it('sets the value on the configuration', () => {
         const value = ['**/*.src.txt']
         tsconfig.files = value
-        expect(tsconfig).toHaveProperty(paths.files, value)
+        expect(tsconfig.files).toStrictEqual(value)
       })
 
       it('sets the value to an array if given a string', () => {
         const value = 'src/*'
         tsconfig.files = value
-        expect(tsconfig).toHaveProperty(paths.files, [value])
+        expect(tsconfig.files).toStrictEqual([value])
       })
 
-      it.each([null, undefined])(
-        'sets the value to an empty array if given `%s`',
-        value => {
-          tsconfig.files = value
-          expect(tsconfig['$config']['files']).toHaveLength(0)
-        },
-      )
+      it('sets the value to an empty array if given null', () => {
+        tsconfig.files = null as any
+        expect(tsconfig.files).toHaveLength(0)
+      })
     })
 
     describe('.extends getter', () => {
-      it('gets the value from the internal configuration', () => {
-        expect(tsconfig.extends).toBe(tsconfig['$config']['extends'])
+      it('gets the value from the configuration', () => {
+        expect(tsconfig.extends).toStrictEqual(config.extends)
       })
     })
 
     describe('.extends setter', () => {
-      it('sets the value on the internal configuration', () => {
+      it('sets the value on the configuration', () => {
         const value = ['**/*.src.txt']
         tsconfig.extends = value
-        expect(tsconfig).toHaveProperty(paths.extends, value)
+        expect(tsconfig.extends).toStrictEqual(value)
       })
     })
 
     describe('.references getter', () => {
-      it('gets the value from the internal configuration', () => {
-        expect(tsconfig.references).toBe(tsconfig['$config']['references'])
+      it('gets the value from the configuration', () => {
+        expect(tsconfig.references).toStrictEqual(config.references)
       })
     })
 
     describe('.references setter', () => {
-      it('sets the value on the internal configuration', () => {
+      it('sets the value on the configuration', () => {
         const value = [{ path: './things.txt' }]
         tsconfig.references = value
-        expect(tsconfig).toHaveProperty(paths.references, value)
+        expect(tsconfig.references).toStrictEqual(value)
       })
 
       it('sets the value to an array of objects if given a string', () => {
         const value = './things.txt'
         tsconfig.references = value
-        expect(tsconfig).toHaveProperty(paths.references, [{ path: value }])
+        expect(tsconfig.references).toStrictEqual([{ path: value }])
       })
 
       it('sets the value to an array of objects if given an array of strings', () => {
         const value = ['./things.txt', './other-things.md']
         const expected = value.map(e => ({ path: e }))
         tsconfig.references = value
-        expect(tsconfig).toHaveProperty(paths.references, expected)
+        expect(tsconfig.references).toStrictEqual(expected)
       })
 
-      it('removes empty values', () => {
-        tsconfig.references = [null, { path: null }, {}, { path: '' }]
-        expect(tsconfig['$config']['references']).toHaveLength(0)
+      it('removes references with empty paths', () => {
+        tsconfig.references = [{ path: '' }]
+        expect(tsconfig.references).toHaveLength(0)
       })
 
-      it.each([null, undefined])(
-        'sets the value to an empty array if given `%s`',
-        value => {
-          tsconfig.references = value
-          expect(tsconfig['$config']['references']).toHaveLength(0)
-        },
-      )
+      it('sets the value to an empty array if given null', () => {
+        tsconfig.references = null as any
+        expect(tsconfig.references).toHaveLength(0)
+      })
     })
 
     describe('.compilerOptions getter', () => {
-      it('gets the value from the internal configuration', () => {
-        expect(tsconfig.compilerOptions).toBe(tsconfig['$config']['compilerOptions'])
+      it('gets the value from the configuration', () => {
+        expect(tsconfig.compilerOptions).toStrictEqual(config.compilerOptions)
       })
     })
 
     describe('.compilerOptions setter', () => {
-      it('sets the value on the internal configuration', () => {
+      it('sets the value on the configuration', () => {
         const value = { declaration: true }
         tsconfig.compilerOptions = value
-        expect(tsconfig).toHaveProperty(paths.compilerOptions, value)
+        expect(tsconfig.compilerOptions).toStrictEqual(value)
       })
     })
   })
@@ -224,44 +201,44 @@ describe('TSConfig', () => {
     it('adds types to the tsconfig file', () => {
       tsconfig.addTypes('type4', 'type5')
       const expected = ['type1', 'type2', 'type3', 'type4', 'type5']
-      expect(tsconfig[paths.types]).toMatchSet(expected)
+      expect(tsconfig.toJSON().compilerOptions?.types).toMatchSet(expected)
     })
 
     it("doesn't add duplicate types", () => {
       tsconfig.addTypes('type1', 'type4')
       const expected = ['type1', 'type2', 'type3', 'type4']
-      expect(tsconfig[paths.types]).toMatchSet(expected)
+      expect(tsconfig.toJSON().compilerOptions?.types).toMatchSet(expected)
     })
 
     it("doesn't add empty values", () => {
-      const spy = vi.spyOn(tsconfig[paths.types], 'add')
-      tsconfig.addTypes('', null as any, undefined as any)
-      expect(spy).not.toHaveBeenCalled()
+      const before = tsconfig.toJSON().compilerOptions?.types
+      tsconfig.addTypes('')
+      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
     })
 
     it('does nothing if given no arguments', () => {
-      const spy = vi.spyOn(tsconfig[paths.types], 'add')
+      const before = tsconfig.toJSON().compilerOptions?.types
       tsconfig.addTypes()
-      expect(spy).not.toHaveBeenCalled()
+      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
     })
   })
 
   describe('.removeTypes', () => {
     it('removes types from the tsconfig file', () => {
       tsconfig.removeTypes('type1', 'type3')
-      expect(tsconfig[paths.types]).toMatchSet(['type2'])
+      expect(tsconfig.toJSON().compilerOptions?.types).toMatchSet(['type2'])
     })
 
     it("does nothing if given a type that isn't included", () => {
-      const spy = vi.spyOn(tsconfig[paths.types], 'add')
+      const before = tsconfig.toJSON().compilerOptions?.types
       tsconfig.removeTypes('non-existent')
-      expect(spy).not.toHaveBeenCalled()
+      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
     })
 
     it('does nothing if given no arguments', () => {
-      const spy = vi.spyOn(tsconfig[paths.types], 'add')
+      const before = tsconfig.toJSON().compilerOptions?.types
       tsconfig.removeTypes()
-      expect(spy).not.toHaveBeenCalled()
+      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
     })
   })
 
@@ -275,7 +252,7 @@ describe('TSConfig', () => {
   })
 
   describe('.write', () => {
-    const readConfig = (path: string) => readJson<Tsconfig>(path, tree)
+    const readConfig = (path: string) => readJson<TsConfigJson>(path, tree)
 
     it("creates a new file if the path provided does't exist", () => {
       tree.delete(paths.tsconfig)
@@ -287,7 +264,7 @@ describe('TSConfig', () => {
     })
 
     it('persists changes to the tsconfig file', () => {
-      const options: Tsconfig['compilerOptions'] = {
+      const options: TsConfigJson['compilerOptions'] = {
         charset: 'utf8',
         checkJs: false,
         target: 'ES6',
@@ -310,14 +287,19 @@ describe('TSConfig', () => {
       const newTree = createTestTree('another-test')
       const path = 'packages/another-test/tsconfig.json'
       tsconfig.write(path, newTree)
-      expect(readJson<Tsconfig>(path, newTree)).toMatchObject(config)
+      expect(readJson<TsConfigJson>(path, newTree)).toMatchObject(config)
     })
 
     it('updates path and tree if provided', () => {
       const path = 'tsconfig.lib.json'
       const newTree = createTestTree()
       tsconfig.write(path, newTree)
-      expect(tsconfig).toMatchObject({ $path: path, $tree: newTree })
+      tsconfig.addTypes('new-type')
+      tsconfig.write()
+      expect(readJson<TsConfigJson>(path, newTree)).toHaveProperty(
+        'compilerOptions.types',
+        ['type1', 'type2', 'type3', 'new-type'],
+      )
     })
 
     it("throws if it can't overwrite an existing file", () => {
@@ -368,9 +350,9 @@ describe('TSConfig', () => {
     it('normalizes top-level properties', () => {
       config.compilerOptions!.plugins = [{ name: 'things' }]
       const cfg = structuredClone(config)
-      cfg.compilerOptions!.types!.push(null, 'type3')
-      cfg.compilerOptions!.emitBOM = null
-      cfg.compilerOptions!.plugins!.push({ name: null }, null)
+      cfg.compilerOptions!.types!.push(null as any, 'type3')
+      cfg.compilerOptions!.emitBOM = null as any
+      cfg.compilerOptions!.plugins!.push({ name: null as any }, null as any)
       expect(TSConfig.normalize(cfg)).toStrictEqual(config)
     })
 
@@ -379,7 +361,7 @@ describe('TSConfig', () => {
       expect(TSConfig.normalizeReferences([{ path: './bar' }])).toStrictEqual([
         { path: './bar' },
       ])
-      expect(TSConfig.normalizeReferences(null)).toStrictEqual([])
+      expect(TSConfig.normalizeReferences(null as any)).toStrictEqual([])
     })
   })
 })

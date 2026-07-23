@@ -1,13 +1,14 @@
 import { type Tree, readJson, writeJson } from '@nx/devkit'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type { TsConfigJson } from 'get-tsconfig'
 import type { PackageJson } from 'nx/src/utils/package-json'
-import type { Tsconfig } from 'tsconfig-type'
 
 import type { JestConfigSchema } from './schema'
 
 import { createTestTree } from '../../test/utils/create-test-tree'
 import { jestConfigGenerator } from './generator'
+
 vi.mock(import('./dependencies.ts'))
 
 describe('jest config generator', () => {
@@ -16,7 +17,7 @@ describe('jest config generator', () => {
 
   beforeEach(() => {
     tree = createTestTree('test')
-    writeJson<Tsconfig>(tree, 'packages/test/tsconfig.spec.json', {
+    writeJson<TsConfigJson>(tree, 'packages/test/tsconfig.spec.json', {
       compilerOptions: { types: [] },
     })
 
@@ -30,7 +31,7 @@ describe('jest config generator', () => {
   })
 
   it('removes jest globals from tsconfig', async () => {
-    const tsconfig: Tsconfig = {
+    const tsconfig: TsConfigJson = {
       compilerOptions: { types: ['jest', 'node'] },
     }
     tree.write('packages/test/tsconfig.spec.json', JSON.stringify(tsconfig))

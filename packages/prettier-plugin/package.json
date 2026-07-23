@@ -1,11 +1,12 @@
 {
   "name": "@the-stranger/prettier-plugin",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/prettier-plugin"
   },
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": {

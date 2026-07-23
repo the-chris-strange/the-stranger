@@ -1,11 +1,12 @@
 {
   "name": "@the-stranger/yarn-config",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/the-chris-strange/the-stranger.git",
     "directory": "packages/yarn-config"
   },
+  "license": "MIT",
   "type": "commonjs",
   "exports": {
     ".": {
