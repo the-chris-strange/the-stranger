@@ -120,12 +120,33 @@ describe('tsconfig generators', () => {
       tree,
     )
 
-  it('adds vitest/globals if `globals` option is true', () => {
+  it('keeps vitest/globals if `globals` option is true', () => {
     options.globals = true
 
     generateTsc(tree, options)
 
     const tsconfig = readConfig('tsconfig.spec.json')
-    expect(tsconfig.compilerOptions?.types).toContain('vitest/globals')
+    expect(tsconfig.compilerOptions?.types).toStrictEqual([
+      'vitest/globals',
+      'vitest/importMeta',
+      'vite/client',
+      'node',
+      'vitest',
+    ])
+  })
+
+  it('removes vitest globals and updates references without duplicates', () => {
+    generateTsc(tree, options)
+
+    expect(readConfig('tsconfig.spec.json')).toMatchObject({
+      compilerOptions: {
+        types: ['vitest/importMeta', 'vite/client', 'node', 'vitest'],
+      },
+      references: [{ path: './tsconfig.lib.json' }],
+    })
+    expect(readConfig('tsconfig.json').references).toStrictEqual([
+      { path: './tsconfig.lib.json' },
+      { path: './tsconfig.spec.json' },
+    ])
   })
 })

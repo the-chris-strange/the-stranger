@@ -2,7 +2,6 @@ import { type Tree, readJson, writeJson } from '@nx/devkit'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { TsConfigJson } from 'get-tsconfig'
-import type { PackageJson } from 'nx/src/utils/package-json'
 
 import type { JestConfigSchema } from './schema'
 
@@ -30,17 +29,17 @@ describe('jest config generator', () => {
     expect(tree.exists('packages/test/jest.config.ts')).toBe(true)
   })
 
-  it('removes jest globals from tsconfig', async () => {
+  it('removes jest globals while retaining other types in order', async () => {
     const tsconfig: TsConfigJson = {
-      compilerOptions: { types: ['jest', 'node'] },
+      compilerOptions: { types: ['node', 'jest', 'vite/client'] },
     }
     tree.write('packages/test/tsconfig.spec.json', JSON.stringify(tsconfig))
 
     await jestConfigGenerator(tree, options)
 
     expect(
-      readJson<PackageJson>(tree, 'packages/test/tsconfig.spec.json'),
-    ).toHaveProperty('compilerOptions.types', ['node'])
+      readJson<TsConfigJson>(tree, 'packages/test/tsconfig.spec.json'),
+    ).toHaveProperty('compilerOptions.types', ['node', 'vite/client'])
   })
 
   it('does not include preset if no preset exists for workspace', async () => {

@@ -4,7 +4,7 @@ import type { GeneratorSchema } from '../../lib/generator-schema'
 import type { ViteConfigSchema } from '../vite-config/schema'
 import type { VitestConfigSchema } from '../vitest-config/schema'
 
-export interface LibrarySchema extends GeneratorSchema, NxLibOptions, ViteOptions {
+export interface LibrarySchema extends ExternalSchema, GeneratorSchema {
   /**
    * The name of the new library.
    */
@@ -25,16 +25,11 @@ export interface LibrarySchema extends GeneratorSchema, NxLibOptions, ViteOption
    * Skip creating an ESLint configuration file for the project.
    */
   skipEslint?: boolean
-  /**
-   * Skip creating a Jest or Vitest configuration file for the project.
-   */
-  skipTestConfig?: boolean
 }
 
-type NxLibOptions = Pick<
+type ExternalSchema = Pick<
   LibraryGeneratorSchema,
   'bundler' | 'testEnvironment' | 'unitTestRunner'
->
-
-type ViteOptions = Pick<ViteConfigSchema, 'react' | 'rollupExternals' | 'swc'> &
+> &
+  Pick<ViteConfigSchema, 'react' | 'rollupExternals' | 'swc'> &
   Pick<VitestConfigSchema, 'globals'>

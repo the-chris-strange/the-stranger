@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "Library",
-  "title": "JavaScript/TypeScript library generator",
-  "description": "Generate a JavaScript or TypeScript library for this workspace.",
+  "title": "TypeScript library generator",
+  "description": "Generate a TypeScript library for that works with my projects.",
   "type": "object",
   "properties": {
     "name": {
@@ -24,12 +24,12 @@
       "description": "Test runner to use for unit tests.",
       "type": "string",
       "enum": ["none", "jest", "vitest"],
-      "default": "vitest"
+      "default": "none"
     },
     "testEnvironment": {
       "type": "string",
       "enum": ["jsdom", "node"],
-      "description": "The test environment to use if unitTestRunner is set to jest or vitest.",
+      "description": "The test environment to use if unitTestRunner is set.",
       "default": "node"
     },
     "skipEslint": {
@@ -39,10 +39,6 @@
     "skipCspell": {
       "type": "boolean",
       "description": "Skip creating a CSpell configuration file for the project."
-    },
-    "skipTestConfig": {
-      "type": "boolean",
-      "description": "Skip creating a Jest or Vitest configuration file for the project."
     },
     "globals": {
       "type": "boolean",

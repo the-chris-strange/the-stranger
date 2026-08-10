@@ -25,6 +25,11 @@
       "factory": "./src/generators/library/generator",
       "schema": "./src/generators/library/schema.json"
     },
+    "sync-vitest-configs": {
+      "description": "Keep workspace Vitest configurations in sync",
+      "factory": "./src/generators/sync-vitest-configs/generator",
+      "schema": "./src/generators/sync-vitest-configs/schema.json"
+    },
     "vite-config": {
       "description": "Generate a Vite configuration file",
       "factory": "./src/generators/vite-config/generator",

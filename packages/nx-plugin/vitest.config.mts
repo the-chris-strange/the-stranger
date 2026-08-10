@@ -7,15 +7,14 @@ const cacheDir = `../../node_modules/.vitest/${projectPath}` as const
 export default defineConfig(() => ({
   cacheDir,
 
-  root: __dirname,
+  root: import.meta.dirname,
 
   test: {
     coverage: {
-      exclude: ['src/test/**'],
-      provider: 'v8' as const,
-      reportsDirectory: `../../coverage/${projectPath}`,
+      exclude: ['src/test/**', 'src/**/*.d.ts'],
+      include: ['src/**/*.ts'],
+      reportsDirectory: `../../.test-output/coverage/${projectPath}`,
     },
-    environment: 'jsdom',
     globals: false,
     include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     name,

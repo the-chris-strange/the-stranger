@@ -27,11 +27,11 @@ export async function jestConfigGenerator(tree: Tree, options: JestConfigSchema)
 
   const projectConfig = readProjectConfiguration(tree, options.project)
 
-  const tsconfigPath = joinPathFragments(projectConfig.root, 'tsconfig.spec.json')
-  const tsconfig = new TSConfig(tsconfigPath, tree, {
-    overwriteStrategy: owStrategy(options.force),
-  })
   if (options.globals === false) {
+    const tsconfigPath = joinPathFragments(projectConfig.root, 'tsconfig.spec.json')
+    const tsconfig = new TSConfig(tsconfigPath, tree, {
+      overwriteStrategy: owStrategy(options.force),
+    })
     tsconfig.removeTypes('jest')
     tsconfig.write()
   }
@@ -44,8 +44,8 @@ export async function jestConfigGenerator(tree: Tree, options: JestConfigSchema)
     paths: {
       coverageDirectory: joinPathFragments(
         offset,
-        'quality-reports/packages',
-        projectConfig.name!,
+        '.test-output/coverage',
+        projectConfig.root,
       ),
       jestPreset: jestPreset ? joinPathFragments(offset, jestPreset) : undefined,
     },

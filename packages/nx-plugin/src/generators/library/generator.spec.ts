@@ -34,6 +34,7 @@ describe('library generator', () => {
   let cspellConfigSpy: MockInstance
   let jestConfigSpy: MockInstance
   let eslintConfigSpy: MockInstance
+  let nxLibSpy: MockInstance
 
   beforeAll(async () => {
     viteConfigSpy = vi.spyOn(
@@ -56,6 +57,7 @@ describe('library generator', () => {
       await import('../eslint-config/generator.js'),
       'eslintConfigGenerator',
     )
+    nxLibSpy = vi.spyOn(await import('@nx/js'), 'libraryGenerator')
   })
 
   beforeEach(() => {
@@ -78,15 +80,41 @@ describe('library generator', () => {
     vi.resetModules()
   })
 
-  it('runs the vite config generator if bundler is "vite"', async () => {
+  it('runs the vite config generator if bundler is `vite`', async () => {
     options.bundler = 'vite'
 
     await libraryGenerator(tree, options)
 
     expect(viteConfigSpy).toHaveBeenCalled()
+    expect(nxLibSpy).toHaveBeenCalledWith(
+      tree,
+      expect.not.objectContaining({ bundler: 'vite' }),
+    )
   })
 
-  it('runs the vitest config generator if unitTestRunner is "vitest"', async () => {
+  it.each([
+    'tsc',
+    'esbuild',
+    'rollup',
+    'swc',
+    'none',
+    undefined,
+  ] satisfies LibrarySchema['bundler'][])(
+    'defers to the nx library generator for build setup if the bundler is `%s`',
+    async bundler => {
+      options.bundler = bundler
+
+      await libraryGenerator(tree, options)
+
+      expect(viteConfigSpy).not.toHaveBeenCalled()
+      expect(nxLibSpy).toHaveBeenCalledWith(
+        tree,
+        expect.objectContaining({ bundler: bundler ?? 'tsc' }),
+      )
+    },
+  )
+
+  it('runs the vitest config generator if unitTestRunner is `vitest`', async () => {
     options.unitTestRunner = 'vitest'
 
     await libraryGenerator(tree, options)
@@ -94,17 +122,7 @@ describe('library generator', () => {
     expect(vitestConfigSpy).toHaveBeenCalled()
   })
 
-  it("doesn't run the vite or vitest config generators if not using vite or vitest", async () => {
-    options.bundler = 'tsc'
-    options.unitTestRunner = 'jest'
-
-    await libraryGenerator(tree, options)
-
-    expect(viteConfigSpy).not.toHaveBeenCalled()
-    expect(vitestConfigSpy).not.toHaveBeenCalled()
-  })
-
-  it('runs the jest config generator if unitTestRunner is "jest"', async () => {
+  it('runs the jest config generator if unitTestRunner is `jest`', async () => {
     options.unitTestRunner = 'jest'
 
     await libraryGenerator(tree, options)
@@ -112,13 +130,17 @@ describe('library generator', () => {
     expect(jestConfigSpy).toHaveBeenCalled()
   })
 
-  it("doesn't run vitest or jest config generators if skipTestConfig is true", async () => {
-    options.skipTestConfig = true
-    await libraryGenerator(tree, options)
+  it.each(['none', undefined] satisfies LibrarySchema['unitTestRunner'][])(
+    "doesn't run the vitest or jest config generators if unitTestRunner is `%s`",
+    async v => {
+      options.unitTestRunner = v
 
-    expect(vitestConfigSpy).not.toHaveBeenCalled()
-    expect(jestConfigSpy).not.toHaveBeenCalled()
-  })
+      await libraryGenerator(tree, options)
+
+      expect(jestConfigSpy).not.toHaveBeenCalled()
+      expect(vitestConfigSpy).not.toHaveBeenCalled()
+    },
+  )
 
   it("doesn't run eslint config generator if skipEslint is true", async () => {
     options.skipEslint = true

@@ -26,11 +26,11 @@ export function generateTsc(tree: Tree, options: ViteConfigSchema) {
     tscOptions,
   )
 
-  if (baseConfig.compilerOptions.module) {
-    delete baseConfig.compilerOptions.module
+  if (baseConfig.config.compilerOptions.module) {
+    delete baseConfig.config.compilerOptions.module
   }
 
-  buildConfig.compilerOptions.tsBuildInfoFile ??= joinPathFragments(
+  buildConfig.config.compilerOptions.tsBuildInfoFile ??= joinPathFragments(
     offset,
     'out-tsc',
     project.root,
@@ -38,17 +38,20 @@ export function generateTsc(tree: Tree, options: ViteConfigSchema) {
   )
 
   baseConfig.addReferences(`./${buildConfigName}`)
-  baseConfig.compilerOptions = undefined
+  baseConfig.config.compilerOptions = {}
 
-  delete buildConfig.compilerOptions.declaration
-  buildConfig.compilerOptions.outDir ??= joinPathFragments(offset, 'dist/out-tsc')
+  delete buildConfig.config.compilerOptions.declaration
+  buildConfig.config.compilerOptions.outDir ??= joinPathFragments(
+    offset,
+    'dist/out-tsc',
+  )
 
   if (options.target?.every(e => e.includes('node'))) {
     buildConfig.removeTypes('vite/client')
   }
 
   if (options.react) {
-    buildConfig.include.push('src/**/*.tsx')
+    buildConfig.config.include.push('src/**/*.tsx')
   }
 
   baseConfig.write()

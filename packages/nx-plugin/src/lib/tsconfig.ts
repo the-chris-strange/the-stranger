@@ -1,23 +1,24 @@
 import { type Tree, logger, OverwriteStrategy } from '@nx/devkit'
 
 import type { TsConfigJson } from 'get-tsconfig'
-import type { Paths, SetRequired, SetRequiredDeep } from 'type-fest'
+import type { LiteralUnion, Paths, SetFieldType, SetRequired } from 'type-fest'
 
 import { FileNotFoundError } from './errors/file-not-found'
 import { exists } from './exists'
 import { isEmpty } from './is-empty'
 import { maybeReadJson, writeJson } from './json'
 import { owStrategy } from './overwrite-strategy'
+import { parsePath } from './property-path/index'
 import { toArray } from './to-array'
 
 /**
  * Encapsulate operations on a `tsconfig.json` file.
  */
-export class TSConfig implements TsConfigJson {
-  #config: TSConfigType
+export class TSConfig {
+  readonly config: TSConfigType
+
   #options: TSConfigOptions
   #path: string
-  #types: Set<string>
   #tree?: Tree
 
   /**
@@ -30,9 +31,7 @@ export class TSConfig implements TsConfigJson {
     this.#path = path
     this.#tree = tree
     this.#options = options ?? {}
-    const config = maybeReadJson(path, tree) ?? {}
-    this.#config = TSConfig.normalize(config)
-    this.#types = new Set(this.#config.compilerOptions.types)
+    this.config = TSConfig.normalize(maybeReadJson(path, tree) ?? {})
   }
 
   /**
@@ -46,7 +45,7 @@ export class TSConfig implements TsConfigJson {
   static normalize(config: TsConfigJson): TSConfigType {
     const { compilerOptions, exclude, files, include, references, ...cfg } = config
     return {
-      ...cfg,
+      ...structuredClone(cfg),
       compilerOptions: TSConfig.normalizeCompilerOptions(compilerOptions),
       exclude: toArray(exclude),
       extends: toArray(config.extends),
@@ -58,54 +57,86 @@ export class TSConfig implements TsConfigJson {
 
   /**
    * Normalize a tsconfig `compilerOptions` object.
-   * - filter out keys with empty/nullish values (using {@link isEmpty})
-   * - remove empty elements from array values
-   * - deduplicate `types`
-   * - non-array, non-empty values are preserved verbatim
    * @param options the raw `compilerOptions` object
    * @returns the normalized `compilerOptions` object
    */
-  static normalizeCompilerOptions(options: TsConfigJson['compilerOptions']) {
+  static normalizeCompilerOptions(
+    options: TsConfigJson['compilerOptions'],
+  ): NonNullable<TsConfigJson['compilerOptions']> {
     return Object.entries(options ?? {}).reduce<
       NonNullable<TsConfigJson['compilerOptions']>
-    >((acc, [key, value]) => {
-      if (key === 'types') {
-        const types = new Set(toArray(value as CompilerOptions['types']))
-        if (types.size > 0) {
-          acc.types = [...types]
+    >((normalized, [key, value]) => {
+      if (key === 'paths') {
+        const paths = TSConfig.normalizePaths(value as CompilerOptions['paths'])
+        if (!isEmpty(paths)) {
+          normalized.paths = paths
+        }
+      } else if (key === 'types') {
+        const types = TSConfig.normalizeTypes(value as CompilerOptions['types'])
+        if (types.length > 0) {
+          normalized.types = types
         }
       } else if (!isEmpty(value)) {
-        acc[key as keyof CompilerOptions] = Array.isArray(value)
-          ? value.filter(e => !isEmpty(e))
-          : (value as any)
+        normalized[key as keyof CompilerOptions] = Array.isArray(value)
+          ? value.filter(entry => !isEmpty(entry)).map(entry => structuredClone(entry))
+          : (structuredClone(value) as any)
       }
-      return acc
+      return normalized
     }, {})
   }
 
   /**
-   * Normalize tsconfig `references` into a flat array of {@link TSConfigReference} objects.
-   * - filter out empty entries
-   * - convert string entries to TSConfigReference objects
-   * - preserves valid project reference objects
-   * - returns an empty array for any unsupported input shapes
-   * @param value a single path string, an array of path strings, or an array of tsconfig reference objects
-   * @returns an array of TSConfigReference objects normalized for use in a tsconfig `references` section
+   * Normalize compiler option path aliases.
+   * @param paths the raw compilerOptions.paths object
+   * @returns path aliases with empty values removed and targets deduplicated
    */
-  static normalizeReferences(value: string | string[] | TsConfigJson['references']) {
-    const refs: TSConfigReference[] = []
-    if (typeof value === 'string') {
-      refs.push({ path: value })
-    } else if (Array.isArray(value)) {
-      for (const v of value.filter(e => !isEmpty(e))) {
-        if (typeof v === 'string') {
-          refs.push({ path: v })
-        } else if (isProjectReference(v)) {
-          refs.push(v)
+  static normalizePaths(paths: CompilerOptions['paths']) {
+    return Object.entries(paths ?? {}).reduce<Record<string, string[]>>(
+      (normalized, [name, values]) => {
+        const targets = TSConfig.normalizeTypes(values)
+        if (!isEmpty(name) && targets.length > 0) {
+          normalized[name] = targets
         }
+        return normalized
+      },
+      {},
+    )
+  }
+
+  /**
+   * Normalize tsconfig `references`.
+   * @param value references to normalize
+   * @returns valid references deduplicated by path
+   */
+  static normalizeReferences(
+    value:
+      readonly (string | TSConfigReference)[] | string | TsConfigJson['references'],
+  ) {
+    const references = new Map<string, TSConfigReference>()
+
+    for (const candidate of toArray(value as string | TSConfigReference)) {
+      const reference =
+        typeof candidate === 'string'
+          ? { path: candidate }
+          : isProjectReference(candidate)
+            ? structuredClone(candidate)
+            : undefined
+
+      if (reference && !isEmpty(reference.path) && !references.has(reference.path)) {
+        references.set(reference.path, reference)
       }
     }
-    return refs
+
+    return [...references.values()]
+  }
+
+  /**
+   * Normalize an ordered string collection.
+   * @param values values to normalize
+   * @returns non-empty values deduplicated in first-seen order
+   */
+  static normalizeTypes(values: string | string[] | null | undefined) {
+    return [...new Set(toArray(values).filter(value => !isEmpty(value)))]
   }
 
   /**
@@ -124,39 +155,137 @@ export class TSConfig implements TsConfigJson {
   }
 
   /**
-   * Add references to the {@link TsConfigJson.references} array.
-   * @param values references to add to the config
+   * Add targets to a compiler option path alias.
+   * @param name the path alias
+   * @param paths targets to add
+   */
+  addPath(name: string, ...paths: string[]) {
+    if (isEmpty(name)) return
+
+    const existing = this.config.compilerOptions.paths?.[name] ?? []
+    const targets = TSConfig.normalizeTypes([...existing, ...paths])
+    if (targets.length === 0) return
+
+    this.config.compilerOptions.paths ??= {}
+    this.config.compilerOptions.paths[name] = targets
+  }
+
+  /**
+   * Add references, preserving the first reference for each path.
+   * @param values references to add
    */
   addReferences(...values: (string | TSConfigReference)[]) {
-    for (const value of values) {
-      const ref = typeof value === 'string' ? { path: value } : value
-      if (!this.#config.references.some(e => e.path === ref.path)) {
-        this.#config.references.push(ref)
-      }
-    }
+    this.config.references = TSConfig.normalizeReferences([
+      ...this.config.references,
+      ...values,
+    ])
   }
 
   /**
-   * Add types to {@link TsConfigJson.compilerOptions}.
-   * @param types the types to add
+   * Add types to `compilerOptions.types`.
+   * @param types types to add
    */
   addTypes(...types: string[]) {
-    for (const type of types.filter(e => !isEmpty(e))) {
-      this.#types.add(type)
+    const normalized = TSConfig.normalizeTypes([
+      ...(this.config.compilerOptions.types ?? []),
+      ...types,
+    ])
+    if (normalized.length > 0) {
+      this.config.compilerOptions.types = normalized
     }
   }
 
+  /**
+   * Deeply patch the working config. Plain objects merge and arrays replace.
+   * @param config patch to apply
+   */
   apply(config: TsConfigJson) {
-    Object.assign(this.#config, TSConfig.normalize(config))
+    const normalized = TSConfig.normalize(mergeDeep(this.config, config))
+
+    for (const key of Object.keys(this.config)) {
+      Reflect.deleteProperty(this.config, key)
+    }
+    Object.assign(this.config, normalized)
   }
 
   /**
-   * Remove types from the `types` option of {@link TsConfigJson.compilerOptions}.
-   * @param types the types to remove
+   * Remove a compiler option path alias.
+   * @param name the path alias
+   */
+  removePath(name: string) {
+    const paths = this.config.compilerOptions.paths
+    if (!paths) return
+
+    Reflect.deleteProperty(paths, name)
+    if (isEmpty(paths)) {
+      delete this.config.compilerOptions.paths
+    }
+  }
+
+  /**
+   * Remove references by path.
+   * @param paths reference paths to remove
+   */
+  removeReferences(...paths: string[]) {
+    const removed = new Set(TSConfig.normalizeTypes(paths))
+    this.config.references = this.config.references.filter(
+      reference => !removed.has(reference.path),
+    )
+  }
+
+  /**
+   * Remove types from `compilerOptions.types`.
+   * @param types types to remove
    */
   removeTypes(...types: string[]) {
-    for (const type of types) {
-      this.#types.delete(type)
+    const removed = new Set(TSConfig.normalizeTypes(types))
+    const remaining = (this.config.compilerOptions.types ?? []).filter(
+      type => !removed.has(type),
+    )
+
+    if (remaining.length > 0) {
+      this.config.compilerOptions.types = remaining
+    } else {
+      delete this.config.compilerOptions.types
+    }
+  }
+
+  /**
+   * Replace the targets for a compiler option path alias.
+   * @param name the path alias
+   * @param paths replacement targets
+   */
+  setPath(name: string, ...paths: string[]) {
+    if (isEmpty(name)) return
+
+    const targets = TSConfig.normalizeTypes(paths)
+    if (targets.length === 0) {
+      this.removePath(name)
+      return
+    }
+
+    this.config.compilerOptions.paths ??= {}
+    this.config.compilerOptions.paths[name] = targets
+  }
+
+  /**
+   * Replace all references.
+   * @param values replacement references
+   */
+  setReferences(...values: (string | TSConfigReference)[]) {
+    this.config.references = TSConfig.normalizeReferences(values)
+  }
+
+  /**
+   * Replace `compilerOptions.types`.
+   * @param types replacement types
+   */
+  setTypes(...types: string[]) {
+    const normalized = TSConfig.normalizeTypes(types)
+    if (normalized.length > 0) {
+      this.config.compilerOptions.types = normalized
+    } else {
+      delete this.config.compilerOptions.types
     }
   }
 
@@ -167,28 +296,24 @@ export class TSConfig implements TsConfigJson {
   }
 
   /**
-   * Create a minimal JSON object from the config containing only keys with a non-empty value, or those specified in {@link TSConfigOptions.includeProperties}.
+   * Create a detached, minimal JSON object from the working config.
    * @returns the plain JSON object
    */
   toJSON(): TsConfigJson {
-    const config: TsConfigJson = Object.fromEntries(
-      Object.entries(this.#config).filter(
-        ([key, value]) =>
-          this.includeProperty(key as TsConfigJsonProperties) || !isEmpty(value),
-      ),
+    const source = structuredClone(this.config)
+    const includedProperties = (this.#options.includeProperties ?? []).map(property =>
+      parsePropertyPath(property),
     )
+    const normalized = TSConfig.normalize(source)
 
-    if (this.includeProperty('references') || this.references) {
-      config.references = this.references
+    for (const path of includedProperties) {
+      copyPropertyAtPath(source, normalized, path)
     }
 
-    if (Array.isArray(this.extends) && this.extends.length === 1) {
-      this.extends = this.extends[0]
-    }
+    const config = pruneEmpty(normalized, includedProperties) as TsConfigJson
 
-    if (this.#types.size > 0) {
-      config.compilerOptions ??= {}
-      config.compilerOptions.types = [...this.#types]
+    if (Array.isArray(config.extends) && config.extends.length === 1) {
+      config.extends = config.extends[0]
     }
 
     return config
@@ -224,73 +349,10 @@ export class TSConfig implements TsConfigJson {
     }
   }
 
-  get compilerOptions(): TSConfigType['compilerOptions'] {
-    return this.#config.compilerOptions
-  }
-
-  set compilerOptions(value: TsConfigJson['compilerOptions']) {
-    this.#config.compilerOptions = TSConfig.normalizeCompilerOptions(value)
-    this.#types = new Set(this.#config.compilerOptions.types)
-  }
-
-  get exclude(): TSConfigType['exclude'] {
-    return this.#config.exclude
-  }
-
-  set exclude(value: string | TsConfigJson['exclude']) {
-    this.#config.exclude = toArray(value)
-  }
-
-  get extends() {
-    return this.#config.extends
-  }
-
-  set extends(value) {
-    this.#config.extends = value
-  }
-
-  get files(): TSConfigType['files'] {
-    return this.#config.files
-  }
-
-  set files(value: string | TsConfigJson['files']) {
-    this.#config.files = toArray(value)
-  }
-
-  get include(): TSConfigType['include'] {
-    return this.#config.include
-  }
-
-  set include(value: string | TsConfigJson['include']) {
-    this.#config.include = toArray(value)
-  }
-
-  get references(): TSConfigType['references'] {
-    return this.#config.references
-  }
-
-  set references(value: string | string[] | TsConfigJson['references']) {
-    this.#config.references = TSConfig.normalizeReferences(value)
-  }
-
-  /**
-   * Check whether a value should be included in the JSON object to which this class serializes.
-   * @param property the property to test
-   * @returns true if the property should be included in the output
-   */
-  private includeProperty(property: TsConfigJsonProperties) {
-    return this.#options?.includeProperties?.includes(property)
-  }
-
   private get overwriteStrategy(): OverwriteStrategy {
-    return typeof this.#options?.overwriteStrategy === 'string'
+    return typeof this.#options.overwriteStrategy === 'string'
       ? this.#options.overwriteStrategy
-      : owStrategy(this.#options?.overwriteStrategy)
-  }
-
-  private set overwriteStrategy(value: boolean | OverwriteStrategy | undefined) {
-    this.#options ??= {}
-    this.#options.overwriteStrategy = value
+      : owStrategy(this.#options.overwriteStrategy)
   }
 }
 
@@ -309,7 +371,7 @@ export interface TSConfigOptions {
    */
   autoSave?: boolean
   /**
-   * Select properties that should be included when writing the tsconfig.json to disk, even if they're empty.
+   * Select properties that should be included when writing the tsconfig.json to disk, even if they're empty. Paths use the property-path parser syntax and may be rooted with `$`.
    */
   includeProperties?: TsConfigJsonProperties[]
   /**
@@ -318,14 +380,118 @@ export interface TSConfigOptions {
   overwriteStrategy?: boolean | OverwriteStrategy
 }
 
-export type TSConfigReference = Exclude<TsConfigJson['references'], undefined>[number]
+export type TSConfigReference = TSConfigType['references'][number]
 
 export type TSConfigType = SetRequired<
-  Omit<TsConfigJson, 'compilerOptions'>,
-  'exclude' | 'extends' | 'files' | 'include' | 'references'
-> &
-  SetRequiredDeep<Pick<TsConfigJson, 'compilerOptions'>, 'compilerOptions'>
+  SetFieldType<TsConfigJson, 'extends', string[]>,
+  'compilerOptions' | 'exclude' | 'extends' | 'files' | 'include' | 'references'
+>
+
+function copyPropertyAtPath(
+  source: object,
+  target: object,
+  path: readonly PropertyKey[],
+) {
+  if (path.length === 0) return
+
+  let sourceValue: unknown = source
+  let targetValue: unknown = target
+
+  for (const [index, key] of path.entries()) {
+    if (
+      !isObjectContainer(sourceValue) ||
+      !Object.hasOwn(sourceValue, key) ||
+      !isObjectContainer(targetValue)
+    ) {
+      return
+    }
+
+    const targetContainer = targetValue as Record<PropertyKey, unknown>
+
+    if (index === path.length - 1) {
+      targetContainer[key] = structuredClone(
+        (sourceValue as Record<PropertyKey, unknown>)[key],
+      )
+      return
+    }
+
+    sourceValue = (sourceValue as Record<PropertyKey, unknown>)[key]
+    if (!isObjectContainer(targetContainer[key])) {
+      targetContainer[key] = typeof path[index + 1] === 'number' ? [] : {}
+    }
+    targetValue = targetContainer[key]
+  }
+}
+
+function isObjectContainer(value: unknown): value is object {
+  return value !== null && typeof value === 'object'
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (value === null || typeof value !== 'object') return false
+  const prototype = Object.getPrototypeOf(value)
+  return prototype === Object.prototype || prototype === null
+}
+
+function mergeDeep<T extends object>(value: T, patch: object): T {
+  const merged = structuredClone(value) as Record<string, unknown>
+
+  for (const [key, patchValue] of Object.entries(patch)) {
+    const currentValue = merged[key]
+    merged[key] =
+      isPlainObject(currentValue) && isPlainObject(patchValue)
+        ? mergeDeep(currentValue, patchValue)
+        : structuredClone(patchValue)
+  }
+
+  return merged as T
+}
+
+function parsePropertyPath(source: string): PropertyPath {
+  return parsePath(source).segments.map(segment =>
+    segment.type === 'index' ? segment.index : segment.key,
+  )
+}
+
+function pruneEmpty(
+  value: unknown,
+  includedProperties: readonly PropertyPath[],
+  path: readonly PropertyKey[] = [],
+): unknown {
+  if (Array.isArray(value)) {
+    return structuredClone(value)
+  }
+
+  if (!isPlainObject(value)) {
+    return structuredClone(value)
+  }
+
+  const pruned: Record<string, unknown> = {}
+  for (const [key, childValue] of Object.entries(value)) {
+    const childPath = [...path, key]
+    const child = pruneEmpty(childValue, includedProperties, childPath)
+    const includesDescendant = includedProperties.some(included =>
+      startsWithPath(included, childPath),
+    )
+
+    if (includesDescendant || !isEmpty(child)) {
+      pruned[key] = child
+    }
+  }
+
+  return pruned
+}
+
+function startsWithPath(path: PropertyPath, prefix: readonly PropertyKey[]) {
+  return (
+    path.length >= prefix.length && prefix.every((key, index) => path[index] === key)
+  )
+}
 
 type CompilerOptions = Exclude<TsConfigJson['compilerOptions'], null | undefined>
 
-type TsConfigJsonProperties = Paths<TsConfigJson>
+type PropertyKey = number | string
+
+type PropertyPath = readonly PropertyKey[]
+
+type TsConfigJsonProperties = LiteralUnion<Paths<TsConfigJson>, string>

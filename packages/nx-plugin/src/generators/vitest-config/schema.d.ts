@@ -11,8 +11,13 @@ export interface VitestConfigSchema extends GeneratorSchema {
    */
   project: string
   /**
-   * Specify a path to write coverage reports, relative to the workspace root.
-   * @default '.reports/coverage'
+   * Directory for the vitest cache, relative to workspace root.
+   * @default node_modules/.vitest
+   */
+  cachePath?: string
+  /**
+   * Directory to write coverage reports, relative to workspace root.
+   * @default '.test-output/coverage'
    */
   coveragePath?: string
   /**

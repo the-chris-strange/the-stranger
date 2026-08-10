@@ -1,6 +1,6 @@
-import { type Tree } from '@nx/devkit'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type { Tree } from '@nx/devkit'
 import type { TsConfigJson } from 'get-tsconfig'
 
 import type { ViteConfigSchema } from './schema'
@@ -55,7 +55,7 @@ describe('tsconfig generators', () => {
         compilerOptions: {
           declaration: true,
           outDir: '../../dist/out-tsc',
-          types: ['node', 'vite/client'],
+          types: ['node', 'vite/client', 'custom'],
         },
         exclude: [
           'vite.config.ts',
@@ -127,8 +127,6 @@ describe('tsconfig generators', () => {
 
     await viteConfigGenerator(tree, options)
 
-    console.log(readConfig('packages/test/tsconfig.lib.json'))
-
     const tsconfig = readConfig('tsconfig.lib.json')
     expect(tsconfig.include).toContain('src/**/*.tsx')
   })
@@ -144,9 +142,21 @@ describe('tsconfig generators', () => {
 
   it('removes vite/client from build types if only targeting node', async () => {
     options.target = ['node24']
+
     await viteConfigGenerator(tree, options)
-    expect(readConfig('tsconfig.lib.json').compilerOptions?.types).not.toContain(
-      'vite/client',
-    )
+
+    expect(readConfig('tsconfig.lib.json').compilerOptions?.types).toStrictEqual([
+      'node',
+      'custom',
+    ])
+  })
+
+  it('does not duplicate an existing build reference', async () => {
+    await viteConfigGenerator(tree, options)
+
+    expect(readConfig('tsconfig.json').references).toStrictEqual([
+      { path: './tsconfig.lib.json' },
+      { path: './tsconfig.spec.json' },
+    ])
   })
 })

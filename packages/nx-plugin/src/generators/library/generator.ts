@@ -11,7 +11,6 @@ import { viteConfigGenerator } from '../vite-config/generator'
 import { vitestConfigGenerator } from '../vitest-config/generator'
 import { addDependencies } from './dependencies'
 import { updateManifest } from './manifest'
-import { normalizeOptions } from './options'
 
 /**
  * Generate a new library in the `packages` directory with the given name, along with ESLint and CSpell configurations and a test configuration for the specified test runner.
@@ -19,78 +18,85 @@ import { normalizeOptions } from './options'
  * @param options configuration options
  */
 export async function libraryGenerator(tree: Tree, options: LibrarySchema) {
-  const config = normalizeOptions(options)
-  const force = config.force !== false
-  const project = config.name
+  const force = options.force !== false
+  const {
+    bundler = 'tsc',
+    name: project,
+    react,
+    rollupExternals,
+    skipCspell,
+    skipDependencies,
+    skipEslint,
+    swc,
+    testEnvironment,
+    unitTestRunner,
+  } = options
 
   await nxLibraryGenerator(tree, {
-    bundler: config.bundler,
-    directory: joinPathFragments('packages', config.name),
-    linter: config.skipEslint ? 'none' : 'eslint',
-    name: config.name,
-    testEnvironment: config.testEnvironment,
-    unitTestRunner: config.unitTestRunner,
+    bundler: bundler === 'vite' ? 'none' : bundler,
+    directory: joinPathFragments('packages', project),
+    linter: 'none',
+    name: project,
+    unitTestRunner: 'none',
   })
 
-  const projectConfig = readProjectConfiguration(tree, config.name)
+  const projectConfig = readProjectConfiguration(tree, project)
 
-  if (!config.skipEslint) {
-    await eslintConfigGenerator(tree, {
-      force,
-      project,
-      skipDependencies: config.skipDependencies,
-      skipFormat: true,
-    })
-  }
-
-  if (!config.skipCspell) {
-    await cspellConfigGenerator(tree, {
-      force,
-      project,
-      skipDependencies: config.skipDependencies,
-      skipFormat: true,
-    })
-  }
-
-  if (config.bundler === 'vite') {
+  if (bundler === 'vite') {
     await viteConfigGenerator(tree, {
       force,
       project,
-      react: config.react,
-      rollupExternals: config.rollupExternals,
-      skipDependencies: config.skipDependencies,
+      react,
+      rollupExternals,
+      skipDependencies,
       skipFormat: true,
-      swc: config.swc,
+      swc,
     })
   }
 
-  if (!config.skipTestConfig) {
-    if (config.unitTestRunner === 'vitest') {
-      await vitestConfigGenerator(tree, {
-        force,
-        globals: config.globals,
-        project,
-        skipDependencies: config.skipDependencies,
-        skipFormat: true,
-        testEnvironment: config.testEnvironment,
-      })
-    } else if (config.unitTestRunner === 'jest') {
-      await jestConfigGenerator(tree, {
-        force,
-        globals: config.globals,
-        project,
-        skipDependencies: config.skipDependencies,
-        skipFormat: true,
-        testEnvironment: config.testEnvironment,
-      })
-    }
+  if (unitTestRunner === 'vitest') {
+    await vitestConfigGenerator(tree, {
+      force,
+      globals: options.globals,
+      project,
+      skipDependencies,
+      skipFormat: true,
+      testEnvironment,
+    })
+  } else if (unitTestRunner === 'jest') {
+    await jestConfigGenerator(tree, {
+      force,
+      globals: options.globals,
+      project,
+      skipDependencies,
+      skipFormat: true,
+      testEnvironment,
+    })
+  }
+
+  if (!skipEslint) {
+    await eslintConfigGenerator(tree, {
+      force,
+      project,
+      skipDependencies,
+      skipFormat: true,
+    })
+  }
+
+  if (!skipCspell) {
+    await cspellConfigGenerator(tree, {
+      force,
+      project,
+      skipDependencies,
+      skipFormat: true,
+    })
   }
 
   if (!options.skipDependencies) {
-    addDependencies(tree, { ...config, directory: projectConfig.root })
+    addDependencies(tree, { ...options, directory: projectConfig.root })
   }
 
-  updateManifest(tree, config, projectConfig)
+  updateManifest(tree, options, projectConfig)
 
   await formatFiles(tree, options)
 }

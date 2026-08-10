@@ -1,31 +1,31 @@
-import '../test/matchers/to-match-set'
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 
 import { type Tree, logger, OverwriteStrategy } from '@nx/devkit'
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { TsConfigJson } from 'get-tsconfig'
 
 import { createTestTree } from '../test/utils/create-test-tree'
-import { readJson, writeJson } from './json'
+import { FileNotFoundError } from './errors/file-not-found'
+import { readJson } from './json'
 import { type TSConfigOptions, TSConfig } from './tsconfig'
 
 describe('TSConfig', () => {
-  const paths = {
-    tsconfig: 'packages/test/tsconfig.json',
-  } as const
+  const path = 'packages/test/tsconfig.json'
 
   let config: TsConfigJson
-  let tsconfig: TSConfig
-  let tree: Tree
   let options: TSConfigOptions
-
-  beforeAll(() => {
-    tree = createTestTree('test')
-  })
+  let tree: Tree
+  let tsconfig: TSConfig
 
   beforeEach(() => {
     config = {
       compilerOptions: {
+        paths: {
+          '@test/*': ['src/*'],
+        },
         types: ['type1', 'type2', 'type3'],
       },
       exclude: ['src/**/*.ts'],
@@ -35,333 +35,504 @@ describe('TSConfig', () => {
       references: [{ path: './tsconfig.spec.json' }, { path: './tsconfig.lib.json' }],
     }
     options = { overwriteStrategy: OverwriteStrategy.Overwrite }
-    tree.write(paths.tsconfig, JSON.stringify(config))
-    tsconfig = new TSConfig(paths.tsconfig, tree, options)
+    tree = createTestTree('test')
+    tree.write(path, JSON.stringify(config))
+    tsconfig = new TSConfig(path, tree, options)
   })
 
-  it('can be constructed for a new file', () => {
-    expect(() => {
-      new TSConfig('tsconfig.json', tree)
-    }).not.toThrow()
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
-  it('can be constructed from an existing file', () => {
-    expect(() => {
-      new TSConfig(paths.tsconfig, tree)
-    }).not.toThrow()
-  })
+  it('constructs a new document when the file does not exist', () => {
+    const newConfig = new TSConfig('tsconfig.new.json', tree)
 
-  it('serializes the existing config', () => {
-    expect(tsconfig.toJSON()).toStrictEqual(config)
-  })
-
-  describe('getters and setters', () => {
-    describe('.exclude getter', () => {
-      it('gets the value from the configuration', () => {
-        expect(tsconfig.exclude).toStrictEqual(config.exclude)
-      })
-    })
-
-    describe('.exclude setter', () => {
-      it('sets the value on the configuration', () => {
-        const value = ['**/*.src.txt']
-        tsconfig.exclude = value
-        expect(tsconfig.exclude).toStrictEqual(value)
-      })
-
-      it('sets the value to an array if given a string', () => {
-        const value = 'src/*'
-        tsconfig.exclude = value
-        expect(tsconfig.exclude).toStrictEqual([value])
-      })
-
-      it('sets the value to an empty array if given null', () => {
-        tsconfig.exclude = null as any
-        expect(tsconfig.exclude).toHaveLength(0)
-      })
-    })
-
-    describe('.include getter', () => {
-      it('gets the value from the configuration', () => {
-        expect(tsconfig.include).toStrictEqual(config.include)
-      })
-    })
-
-    describe('.include setter', () => {
-      it('sets the value on the configuration', () => {
-        const value = ['**/*.src.txt']
-        tsconfig.include = value
-        expect(tsconfig.include).toStrictEqual(value)
-      })
-
-      it('sets the value to an array if given a string', () => {
-        const value = 'src/*'
-        tsconfig.include = value
-        expect(tsconfig.include).toStrictEqual([value])
-      })
-
-      it('sets the value to an empty array if given null', () => {
-        tsconfig.include = null as any
-        expect(tsconfig.include).toHaveLength(0)
-      })
-    })
-
-    describe('.files getter', () => {
-      it('gets the value from the configuration', () => {
-        expect(tsconfig.files).toStrictEqual(config.files)
-      })
-    })
-
-    describe('.files setter', () => {
-      it('sets the value on the configuration', () => {
-        const value = ['**/*.src.txt']
-        tsconfig.files = value
-        expect(tsconfig.files).toStrictEqual(value)
-      })
-
-      it('sets the value to an array if given a string', () => {
-        const value = 'src/*'
-        tsconfig.files = value
-        expect(tsconfig.files).toStrictEqual([value])
-      })
-
-      it('sets the value to an empty array if given null', () => {
-        tsconfig.files = null as any
-        expect(tsconfig.files).toHaveLength(0)
-      })
-    })
-
-    describe('.extends getter', () => {
-      it('gets the value from the configuration', () => {
-        expect(tsconfig.extends).toStrictEqual(config.extends)
-      })
-    })
-
-    describe('.extends setter', () => {
-      it('sets the value on the configuration', () => {
-        const value = ['**/*.src.txt']
-        tsconfig.extends = value
-        expect(tsconfig.extends).toStrictEqual(value)
-      })
-    })
-
-    describe('.references getter', () => {
-      it('gets the value from the configuration', () => {
-        expect(tsconfig.references).toStrictEqual(config.references)
-      })
-    })
-
-    describe('.references setter', () => {
-      it('sets the value on the configuration', () => {
-        const value = [{ path: './things.txt' }]
-        tsconfig.references = value
-        expect(tsconfig.references).toStrictEqual(value)
-      })
-
-      it('sets the value to an array of objects if given a string', () => {
-        const value = './things.txt'
-        tsconfig.references = value
-        expect(tsconfig.references).toStrictEqual([{ path: value }])
-      })
-
-      it('sets the value to an array of objects if given an array of strings', () => {
-        const value = ['./things.txt', './other-things.md']
-        const expected = value.map(e => ({ path: e }))
-        tsconfig.references = value
-        expect(tsconfig.references).toStrictEqual(expected)
-      })
-
-      it('removes references with empty paths', () => {
-        tsconfig.references = [{ path: '' }]
-        expect(tsconfig.references).toHaveLength(0)
-      })
-
-      it('sets the value to an empty array if given null', () => {
-        tsconfig.references = null as any
-        expect(tsconfig.references).toHaveLength(0)
-      })
-    })
-
-    describe('.compilerOptions getter', () => {
-      it('gets the value from the configuration', () => {
-        expect(tsconfig.compilerOptions).toStrictEqual(config.compilerOptions)
-      })
-    })
-
-    describe('.compilerOptions setter', () => {
-      it('sets the value on the configuration', () => {
-        const value = { declaration: true }
-        tsconfig.compilerOptions = value
-        expect(tsconfig.compilerOptions).toStrictEqual(value)
-      })
+    expect(newConfig.config).toStrictEqual({
+      compilerOptions: {},
+      exclude: [],
+      extends: [],
+      files: [],
+      include: [],
+      references: [],
     })
   })
 
-  describe('.addTypes', () => {
-    it('adds types to the tsconfig file', () => {
-      tsconfig.addTypes('type4', 'type5')
-      const expected = ['type1', 'type2', 'type3', 'type4', 'type5']
-      expect(tsconfig.toJSON().compilerOptions?.types).toMatchSet(expected)
+  it('exposes one stable mutable document to direct edits, focused methods, and apply', () => {
+    const document = tsconfig.config
+
+    document.compilerOptions.noEmit = true
+    tsconfig.addTypes('type4')
+    tsconfig.apply({
+      compilerOptions: { declaration: true },
+      include: ['generated/**/*.ts'],
     })
 
-    it("doesn't add duplicate types", () => {
-      tsconfig.addTypes('type1', 'type4')
-      const expected = ['type1', 'type2', 'type3', 'type4']
-      expect(tsconfig.toJSON().compilerOptions?.types).toMatchSet(expected)
+    expect(tsconfig.config).toBe(document)
+    expect(document).toMatchObject({
+      compilerOptions: {
+        declaration: true,
+        noEmit: true,
+        types: ['type1', 'type2', 'type3', 'type4'],
+      },
+      include: ['generated/**/*.ts'],
+    })
+    expect(tsconfig.toJSON()).toMatchObject({
+      compilerOptions: {
+        declaration: true,
+        noEmit: true,
+        types: ['type1', 'type2', 'type3', 'type4'],
+      },
+    })
+  })
+
+  describe('paths', () => {
+    it('adds unique path targets in first-seen order', () => {
+      tsconfig.addPath('@test/*', 'src/*', '', 'generated/*', 'src/*')
+      tsconfig.addPath('@new/*', '', 'new/*', 'new/*')
+
+      expect(tsconfig.config.compilerOptions.paths).toStrictEqual({
+        '@new/*': ['new/*'],
+        '@test/*': ['src/*', 'generated/*'],
+      })
     })
 
-    it("doesn't add empty values", () => {
-      const before = tsconfig.toJSON().compilerOptions?.types
-      tsconfig.addTypes('')
-      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
+    it('ignores empty aliases and additive inputs', () => {
+      const before = structuredClone(tsconfig.config.compilerOptions.paths)
+
+      tsconfig.addPath('', 'ignored/*')
+      tsconfig.addPath('@empty/*', '', '')
+      tsconfig.addPath('@test/*')
+
+      expect(tsconfig.config.compilerOptions.paths).toStrictEqual(before)
     })
 
-    it('does nothing if given no arguments', () => {
-      const before = tsconfig.toJSON().compilerOptions?.types
+    it('sets and removes aliases', () => {
+      tsconfig.setPath('@test/*', 'replacement/*', '', 'replacement/*', 'second/*')
+      tsconfig.setPath('@new/*', 'new/*')
+
+      expect(tsconfig.config.compilerOptions.paths).toStrictEqual({
+        '@new/*': ['new/*'],
+        '@test/*': ['replacement/*', 'second/*'],
+      })
+
+      tsconfig.removePath('@new/*')
+      tsconfig.setPath('@test/*')
+
+      expect(tsconfig.config.compilerOptions.paths).toBeUndefined()
+    })
+
+    it('does nothing when removing a missing alias', () => {
+      const before = structuredClone(tsconfig.config.compilerOptions.paths)
+
+      tsconfig.removePath('@missing/*')
+
+      expect(tsconfig.config.compilerOptions.paths).toStrictEqual(before)
+    })
+  })
+
+  describe('references', () => {
+    it('adds references by path in first-seen order', () => {
+      tsconfig.addReferences(
+        './tsconfig.spec.json',
+        { path: '' },
+        { path: './tsconfig.e2e.json', prepend: true },
+        './tsconfig.e2e.json',
+      )
+
+      expect(tsconfig.config.references).toStrictEqual([
+        { path: './tsconfig.spec.json' },
+        { path: './tsconfig.lib.json' },
+        { path: './tsconfig.e2e.json', prepend: true },
+      ])
+    })
+
+    it('sets references and removes them by path', () => {
+      tsconfig.setReferences(
+        './tsconfig.app.json',
+        { path: './tsconfig.app.json', prepend: true },
+        '',
+        './tsconfig.e2e.json',
+      )
+
+      expect(tsconfig.config.references).toStrictEqual([
+        { path: './tsconfig.app.json' },
+        { path: './tsconfig.e2e.json' },
+      ])
+
+      tsconfig.removeReferences('', './missing.json', './tsconfig.app.json')
+
+      expect(tsconfig.config.references).toStrictEqual([
+        { path: './tsconfig.e2e.json' },
+      ])
+    })
+
+    it('supports empty additive, replacement, and removal inputs', () => {
+      const before = structuredClone(tsconfig.config.references)
+
+      tsconfig.addReferences()
+      tsconfig.removeReferences()
+      expect(tsconfig.config.references).toStrictEqual(before)
+
+      tsconfig.setReferences()
+      expect(tsconfig.config.references).toStrictEqual([])
+    })
+  })
+
+  describe('types', () => {
+    it('adds unique types in first-seen order', () => {
+      tsconfig.addTypes('type2', '', 'type4', 'type1', 'type5', 'type4')
+
+      expect(tsconfig.config.compilerOptions.types).toStrictEqual([
+        'type1',
+        'type2',
+        'type3',
+        'type4',
+        'type5',
+      ])
+    })
+
+    it('sets and removes types', () => {
+      tsconfig.setTypes('type4', '', 'type4', 'type2')
+      expect(tsconfig.config.compilerOptions.types).toStrictEqual(['type4', 'type2'])
+
+      tsconfig.removeTypes('', 'missing', 'type4')
+      expect(tsconfig.config.compilerOptions.types).toStrictEqual(['type2'])
+
+      tsconfig.removeTypes('type2')
+      expect(tsconfig.config.compilerOptions.types).toBeUndefined()
+    })
+
+    it('supports empty additive, replacement, and removal inputs', () => {
+      const before = structuredClone(tsconfig.config.compilerOptions.types)
+
       tsconfig.addTypes()
-      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
-    })
-  })
-
-  describe('.removeTypes', () => {
-    it('removes types from the tsconfig file', () => {
-      tsconfig.removeTypes('type1', 'type3')
-      expect(tsconfig.toJSON().compilerOptions?.types).toMatchSet(['type2'])
-    })
-
-    it("does nothing if given a type that isn't included", () => {
-      const before = tsconfig.toJSON().compilerOptions?.types
-      tsconfig.removeTypes('non-existent')
-      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
-    })
-
-    it('does nothing if given no arguments', () => {
-      const before = tsconfig.toJSON().compilerOptions?.types
       tsconfig.removeTypes()
-      expect(tsconfig.toJSON().compilerOptions?.types).toStrictEqual(before)
+      expect(tsconfig.config.compilerOptions.types).toStrictEqual(before)
+
+      tsconfig.setTypes()
+      expect(tsconfig.config.compilerOptions.types).toBeUndefined()
     })
   })
 
-  describe('.addReferences', () => {
-    it('adds references to the configuration', () => {
-      const paths = ['./thing1.txt', './thing2.md']
-      const expected = [...config.references!, ...paths.map(e => ({ path: e }))]
-      tsconfig.addReferences(paths[0], { path: paths[1] })
-      expect(tsconfig.references).toStrictEqual(expected)
-    })
-  })
-
-  describe('.write', () => {
-    const readConfig = (path: string) => readJson<TsConfigJson>(path, tree)
-
-    it("creates a new file if the path provided does't exist", () => {
-      tree.delete(paths.tsconfig)
-
-      tsconfig = new TSConfig(paths.tsconfig, tree)
-      tsconfig.write()
-
-      expect(tree.exists(paths.tsconfig)).toBe(true)
-    })
-
-    it('persists changes to the tsconfig file', () => {
-      const options: TsConfigJson['compilerOptions'] = {
-        charset: 'utf8',
-        checkJs: false,
-        target: 'ES6',
-        types: ['type1', 'type2'],
-      }
-      tsconfig.compilerOptions = options
-      tsconfig.write()
-
-      expect(readConfig(paths.tsconfig)).toHaveProperty('compilerOptions', options)
-    })
-
-    it('writes to a different file if provided', () => {
-      const path = 'tsconfig.app.json'
-      tsconfig.write(path)
-
-      expect(readConfig(path)).toMatchObject(config)
-    })
-
-    it('writes to a different file tree if provided', () => {
-      const newTree = createTestTree('another-test')
-      const path = 'packages/another-test/tsconfig.json'
-      tsconfig.write(path, newTree)
-      expect(readJson<TsConfigJson>(path, newTree)).toMatchObject(config)
-    })
-
-    it('updates path and tree if provided', () => {
-      const path = 'tsconfig.lib.json'
-      const newTree = createTestTree()
-      tsconfig.write(path, newTree)
-      tsconfig.addTypes('new-type')
-      tsconfig.write()
-      expect(readJson<TsConfigJson>(path, newTree)).toHaveProperty(
-        'compilerOptions.types',
-        ['type1', 'type2', 'type3', 'new-type'],
-      )
-    })
-
-    it("throws if it can't overwrite an existing file", () => {
-      writeJson(paths.tsconfig, config, tree)
-      expect(() => {
-        tsconfig.write(paths.tsconfig, tree, {
-          overwriteStrategy: OverwriteStrategy.ThrowIfExisting,
-        })
-      }).toThrow()
-    })
-
-    it('writes a warning to console if overwrite strategy is KeepExisting', () => {
-      const spy = vi.spyOn(logger, 'warn')
-      tsconfig.write(paths.tsconfig, tree, {
-        overwriteStrategy: OverwriteStrategy.KeepExisting,
-      })
-      expect(spy).toHaveBeenCalledExactlyOnceWith(
-        `Refusing to overwrite existing configuration file: ${paths.tsconfig}`,
-      )
-    })
-  })
-
-  describe('TSConfig.read', () => {
-    it('reads a config file from the file system', () => {
-      expect(TSConfig.read(paths.tsconfig, tree)).toBeDefined()
-    })
-
-    it('throws if path does not exist', () => {
-      tree.delete(paths.tsconfig)
-      expect(() => TSConfig.read(paths.tsconfig, tree)).toThrow()
-    })
-  })
-
-  describe('TSConfig.normalize', () => {
-    beforeEach(() => {
-      config = {
+  describe('.apply', () => {
+    it('deeply merges objects and path aliases while replacing arrays', () => {
+      tsconfig.apply({
         compilerOptions: {
+          declaration: true,
+          paths: {
+            '@new/*': ['new/*'],
+            '@test/*': ['replacement/*', 'replacement/*'],
+          },
+        },
+        include: ['generated/**/*.ts'],
+        references: [{ path: './tsconfig.generated.json' }],
+      })
+
+      expect(tsconfig.config).toMatchObject({
+        compilerOptions: {
+          declaration: true,
+          paths: {
+            '@new/*': ['new/*'],
+            '@test/*': ['replacement/*'],
+          },
           types: ['type1', 'type2', 'type3'],
         },
-        exclude: ['src/**/*.ts'],
-        extends: ['../../tsconfig.json'],
-        files: ['src/**/*.spec.ts'],
-        include: ['src/**/*.spec.ts'],
-        references: [{ path: './tsconfig.spec.json' }, { path: './tsconfig.lib.json' }],
+        include: ['generated/**/*.ts'],
+        references: [{ path: './tsconfig.generated.json' }],
+      })
+    })
+
+    it('normalizes the merged document', () => {
+      tsconfig.apply({
+        compilerOptions: {
+          paths: { '@empty/*': ['', ''] },
+          types: ['type3', '', 'type4', 'type4'],
+        },
+        references: [
+          { path: './tsconfig.lib.json' },
+          { path: '' },
+          { path: './tsconfig.lib.json' },
+        ],
+      })
+
+      expect(tsconfig.config.compilerOptions.paths).toStrictEqual({
+        '@test/*': ['src/*'],
+      })
+      expect(tsconfig.config.compilerOptions.types).toStrictEqual(['type3', 'type4'])
+      expect(tsconfig.config.references).toStrictEqual([
+        { path: './tsconfig.lib.json' },
+      ])
+    })
+  })
+
+  describe('serialization', () => {
+    it('returns a detached result without mutating the working document', () => {
+      const before = structuredClone(tsconfig.config)
+      const json = tsconfig.toJSON()
+
+      json.compilerOptions!.types!.push('detached')
+      json.references!.push({ path: './detached.json' })
+
+      expect(tsconfig.config).toStrictEqual(before)
+      expect(tsconfig.config.compilerOptions.types).not.toContain('detached')
+      expect(tsconfig.config.references).not.toContainEqual({
+        path: './detached.json',
+      })
+    })
+
+    it('preserves arbitrary tsconfig fields and prunes empty values', () => {
+      const document = tsconfig.config as typeof tsconfig.config & {
+        customField?: { empty?: string; enabled: boolean }
       }
+      document.customField = { empty: '', enabled: false }
+      document.compilerOptions.paths!['@empty/*'] = []
+      document.include = []
+
+      expect(tsconfig.toJSON()).toMatchObject({
+        compilerOptions: {
+          paths: { '@test/*': ['src/*'] },
+        },
+        customField: { enabled: false },
+      })
+      expect(tsconfig.toJSON()).not.toHaveProperty('include')
+      expect(tsconfig.toJSON()).not.toHaveProperty('compilerOptions.paths.@empty/*')
     })
 
-    it('normalizes top-level properties', () => {
-      config.compilerOptions!.plugins = [{ name: 'things' }]
-      const cfg = structuredClone(config)
-      cfg.compilerOptions!.types!.push(null as any, 'type3')
-      cfg.compilerOptions!.emitBOM = null as any
-      cfg.compilerOptions!.plugins!.push({ name: null as any }, null as any)
-      expect(TSConfig.normalize(cfg)).toStrictEqual(config)
+    it('retains requested empty properties', () => {
+      tsconfig = new TSConfig('empty.json', tree, {
+        includeProperties: ['compilerOptions.types', 'files', 'include'],
+      })
+      tsconfig.config.compilerOptions.types = []
+
+      expect(tsconfig.toJSON()).toStrictEqual({
+        compilerOptions: { types: [] },
+        files: [],
+        include: [],
+      })
     })
 
-    it('normalizes paths to array of {path}', () => {
-      expect(TSConfig.normalizeReferences('./foo')).toStrictEqual([{ path: './foo' }])
-      expect(TSConfig.normalizeReferences([{ path: './bar' }])).toStrictEqual([
-        { path: './bar' },
+    it('retains empty properties selected with rooted and quoted paths', () => {
+      tsconfig = new TSConfig('empty.json', tree, {
+        includeProperties: ['$.compilerOptions.paths["@scope/empty"]'],
+      })
+      tsconfig.config.compilerOptions.paths = {
+        '@scope/empty': [],
+      }
+
+      expect(tsconfig.toJSON()).toStrictEqual({
+        compilerOptions: {
+          paths: {
+            '@scope/empty': [],
+          },
+        },
+      })
+    })
+
+    it('rejects invalid included property paths', () => {
+      tsconfig = new TSConfig('empty.json', tree, {
+        includeProperties: ['compilerOptions.[types]'],
+      })
+
+      expect(() => tsconfig.toJSON()).toThrow(SyntaxError)
+    })
+
+    it('serializes a single extends entry as a string', () => {
+      expect(tsconfig.toJSON().extends).toBe('../../tsconfig.json')
+      expect(tsconfig.toString()).toBe(JSON.stringify(tsconfig.toJSON()))
+
+      tsconfig.config.extends = ['../../base.json', '../../strict.json']
+      expect(tsconfig.toJSON().extends).toStrictEqual([
+        '../../base.json',
+        '../../strict.json',
+      ])
+    })
+  })
+
+  describe('normalization', () => {
+    it('normalizes paths and ordered string collections', () => {
+      expect(
+        TSConfig.normalizePaths({
+          '': ['ignored/*'],
+          '@empty/*': ['', ''],
+          '@test/*': ['src/*', '', 'generated/*', 'src/*'],
+        }),
+      ).toStrictEqual({
+        '@test/*': ['src/*', 'generated/*'],
+      })
+      expect(TSConfig.normalizeTypes(['type2', '', 'type1', 'type2'])).toStrictEqual([
+        'type2',
+        'type1',
+      ])
+      expect(TSConfig.normalizeTypes(null)).toStrictEqual([])
+    })
+
+    it('normalizes references by path while preserving the first reference', () => {
+      expect(
+        TSConfig.normalizeReferences([
+          { path: './first.json', prepend: true },
+          { path: '' },
+          { path: './first.json' },
+          { path: './second.json' },
+        ]),
+      ).toStrictEqual([
+        { path: './first.json', prepend: true },
+        { path: './second.json' },
+      ])
+      expect(TSConfig.normalizeReferences('./single.json')).toStrictEqual([
+        { path: './single.json' },
       ])
       expect(TSConfig.normalizeReferences(null as any)).toStrictEqual([])
+    })
+
+    it('preserves valid null normalization cases', () => {
+      const normalized = TSConfig.normalize({
+        compilerOptions: {
+          emitBOM: null as any,
+          plugins: [{ name: 'plugin' }, { name: null as any }, null as any],
+          types: ['type1', null as any, 'type1'],
+        },
+        exclude: null as any,
+        files: null as any,
+        include: null as any,
+        references: null as any,
+      })
+
+      expect(normalized).toStrictEqual({
+        compilerOptions: { plugins: [{ name: 'plugin' }], types: ['type1'] },
+        exclude: [],
+        extends: [],
+        files: [],
+        include: [],
+        references: [],
+      })
+    })
+  })
+
+  describe('Tree persistence', () => {
+    const readTreeConfig = (filePath: string, targetTree = tree) =>
+      readJson<TsConfigJson>(filePath, targetTree)
+
+    it('creates and writes a new file', () => {
+      const newPath = 'packages/test/tsconfig.new.json'
+      const newConfig = new TSConfig(newPath, tree)
+      newConfig.addTypes('node')
+      newConfig.write()
+
+      expect(readTreeConfig(newPath)).toStrictEqual({
+        compilerOptions: { types: ['node'] },
+      })
+    })
+
+    it('reads existing files strictly', () => {
+      expect(TSConfig.read(path, tree).toJSON()).toStrictEqual(tsconfig.toJSON())
+      expect(() => TSConfig.read('missing.json', tree)).toThrow(FileNotFoundError)
+    })
+
+    it('honors overwrite strategies', () => {
+      expect(() =>
+        tsconfig.write(path, tree, {
+          overwriteStrategy: OverwriteStrategy.ThrowIfExisting,
+        }),
+      ).toThrow(`${path} may not be overwritten`)
+
+      const warn = vi.spyOn(logger, 'warn')
+      tsconfig.addTypes('not-written')
+      tsconfig.write(path, tree, {
+        overwriteStrategy: OverwriteStrategy.KeepExisting,
+      })
+
+      expect(warn).toHaveBeenCalledExactlyOnceWith(
+        `Refusing to overwrite existing configuration file: ${path}`,
+      )
+      expect(readTreeConfig(path).compilerOptions?.types).not.toContain('not-written')
+    })
+
+    it('rebinds subsequent writes to an alternate path and Tree', () => {
+      const alternateTree = createTestTree('alternate')
+      const alternatePath = 'packages/alternate/tsconfig.json'
+
+      tsconfig.write(alternatePath, alternateTree)
+      tsconfig.addTypes('rebound')
+      tsconfig.write()
+
+      expect(
+        readTreeConfig(alternatePath, alternateTree).compilerOptions?.types,
+      ).toStrictEqual(['type1', 'type2', 'type3', 'rebound'])
+      expect(readTreeConfig(path).compilerOptions?.types).toStrictEqual([
+        'type1',
+        'type2',
+        'type3',
+      ])
+    })
+
+    it('automatically saves when disposed', () => {
+      const autoPath = 'packages/test/tsconfig.auto.json'
+      const autoConfig = new TSConfig(autoPath, tree, { autoSave: true })
+      autoConfig.addTypes('node')
+
+      autoConfig[Symbol.dispose]()
+
+      expect(readTreeConfig(autoPath)).toStrictEqual({
+        compilerOptions: { types: ['node'] },
+      })
+    })
+  })
+
+  describe('filesystem persistence', () => {
+    let tempRoot: string
+
+    beforeEach(() => {
+      tempRoot = mkdtempSync(join(tmpdir(), 'nx-plugin-tsconfig-'))
+    })
+
+    afterEach(() => {
+      rmSync(tempRoot, { force: true, recursive: true })
+    })
+
+    it('creates, reads, and updates a real file', () => {
+      const filePath = join(tempRoot, 'tsconfig.json')
+      const diskConfig = new TSConfig(filePath)
+      diskConfig.config.compilerOptions.target = 'ES2022'
+      diskConfig.addTypes('node')
+      diskConfig.write()
+
+      expect(TSConfig.read(filePath).toJSON()).toStrictEqual({
+        compilerOptions: { target: 'ES2022', types: ['node'] },
+      })
+
+      diskConfig.setTypes('vitest')
+      diskConfig.write(undefined, undefined, {
+        overwriteStrategy: OverwriteStrategy.Overwrite,
+      })
+
+      expect(readJson<TsConfigJson>(filePath).compilerOptions?.types).toStrictEqual([
+        'vitest',
+      ])
+    })
+
+    it('strictly rejects a missing real file', () => {
+      expect(() => TSConfig.read(join(tempRoot, 'missing.json'))).toThrow(
+        FileNotFoundError,
+      )
+    })
+
+    it('rebinds and automatically saves a real file', () => {
+      const initialPath = join(tempRoot, 'tsconfig.initial.json')
+      const alternatePath = join(tempRoot, 'tsconfig.alternate.json')
+      const diskConfig = new TSConfig(initialPath, undefined, {
+        autoSave: true,
+        overwriteStrategy: OverwriteStrategy.Overwrite,
+      })
+
+      diskConfig.addTypes('node')
+      diskConfig.write(alternatePath)
+      diskConfig.addTypes('vitest')
+      diskConfig[Symbol.dispose]()
+
+      expect(
+        readJson<TsConfigJson>(alternatePath).compilerOptions?.types,
+      ).toStrictEqual(['node', 'vitest'])
+      expect(() => readJson<TsConfigJson>(initialPath)).toThrow(FileNotFoundError)
     })
   })
 })

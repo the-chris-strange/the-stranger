@@ -1,6 +1,6 @@
 import { type Tree, joinPathFragments } from '@nx/devkit'
 
-import type { NormalizedSchema } from './options'
+import type { LibrarySchema } from './schema'
 
 import { addDependenciesToProject } from '../../lib/add-dependencies'
 
@@ -12,6 +12,6 @@ export function addDependencies(tree: Tree, config: DependencyConfig) {
   addDependenciesToProject(tree, [], deps, pkg)
 }
 
-export interface DependencyConfig extends NormalizedSchema {
+export interface DependencyConfig extends LibrarySchema {
   directory: string
 }

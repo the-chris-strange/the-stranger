@@ -1,6 +1,5 @@
+import { type Tree, readJson, readNxJson, writeJson } from '@nx/devkit'
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
-
-import type { Tree } from '@nx/devkit'
 
 import type { VitestConfigSchema } from './schema'
 
@@ -31,6 +30,38 @@ describe('vitest config generator', () => {
   it('creates a config by default', async () => {
     await vitestConfigGenerator(tree, options)
     expect(tree.exists('packages/test/vitest.config.mts')).toBe(true)
+  })
+
+  it('registers the Vitest sync generator on the inferred test target', async () => {
+    await vitestConfigGenerator(tree, options)
+
+    expect(
+      readJson(tree, 'packages/test/project.json').targets.test.syncGenerators,
+    ).toStrictEqual(['@the-stranger/nx-plugin:sync-vitest-configs'])
+  })
+
+  it('does not register the Vitest sync generator twice', async () => {
+    await vitestConfigGenerator(tree, options)
+    await vitestConfigGenerator(tree, options)
+
+    expect(
+      readJson(tree, 'packages/test/project.json').targets.test.syncGenerators,
+    ).toStrictEqual(['@the-stranger/nx-plugin:sync-vitest-configs'])
+  })
+
+  it('registers the sync generator globally when project.json is unavailable', async () => {
+    tree.delete('packages/test/project.json')
+    writeJson(tree, 'packages/test/package.json', { name: 'test' })
+    writeJson(tree, 'package.json', {
+      ...readJson<Record<string, unknown>>(tree, 'package.json'),
+      workspaces: ['packages/*'],
+    })
+
+    await vitestConfigGenerator(tree, options)
+
+    expect(readNxJson(tree)?.sync?.globalGenerators).toStrictEqual([
+      '@the-stranger/nx-plugin:sync-vitest-configs',
+    ])
   })
 
   it("doesn't generate tsconfigs if skipTsconfigs is true", async () => {
