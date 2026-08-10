@@ -2,19 +2,15 @@ import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Tree } from '@nx/devkit'
 
-import type { ESLintConfigSchema } from './schema'
-
 import { createTestTree } from '../../test/utils/create-test-tree'
-import { eslintConfigGenerator, FILE_EXTENSIONS } from './generator'
+import { eslintConfigGenerator } from './generator'
 
 vi.mock(import('../../lib/add-dependencies.ts'))
 
 describe('eslint config generator', () => {
   let tree: Tree
-  let options: ESLintConfigSchema
 
   beforeEach(() => {
-    options = { force: true, project: 'test', skipFormat: true }
     tree = createTestTree('test')
   })
 
@@ -23,54 +19,153 @@ describe('eslint config generator', () => {
     vi.resetModules()
   })
 
-  it('runs successfully', async () => {
-    tree.write('eslint.config.mjs', '')
+  it('generates a workspace config when no project is provided', async () => {
+    tree.write('eslint.config.cjs', 'module.exports = []')
 
-    await expect(eslintConfigGenerator(tree, options)).resolves.not.toThrow()
-  })
+    await eslintConfigGenerator(tree, {
+      force: true,
+      skipDependencies: true,
+      skipFormat: true,
+    })
 
-  it.each(FILE_EXTENSIONS)('runs successfully with %s extension', async ext => {
-    tree.write(`eslint.config.${ext}`, '')
-    options.fileExtension = ext
-
-    await eslintConfigGenerator(tree, options)
-
-    expect(tree.exists(`packages/test/eslint.config.${ext}`)).toBe(true)
-  })
-
-  it('detects the file extension from the root config', async () => {
-    tree.write('eslint.config.cjs', '')
-    const spy = vi.spyOn(tree, 'write')
-
-    await eslintConfigGenerator(tree, options)
-
-    expect(spy).toHaveBeenCalledExactlyOnceWith(
-      'packages/test/eslint.config.cjs',
-      expect.any(String),
+    expect(tree.exists('eslint.config.mjs')).toBe(true)
+    expect(tree.exists('eslint.config.cjs')).toBe(false)
+    expect(tree.read('eslint.config.mjs', 'utf8')).toContain(
+      "import { configure } from '@the-stranger/eslint-config'",
     )
   })
 
-  it('detects the file extension when given a base config to extend', async () => {
-    tree.write('eslint.config.ts', '')
-    options.extend = 'eslint.config.ts'
-    const spy = vi.spyOn(tree, 'write')
+  it('generates a project config when a project is provided', async () => {
+    await eslintConfigGenerator(tree, {
+      force: true,
+      project: 'test',
+      skipDependencies: true,
+      skipFormat: true,
+    })
 
-    await eslintConfigGenerator(tree, options)
+    const config = tree.read('packages/test/eslint.config.mjs', 'utf8')
 
-    expect(spy).toHaveBeenCalledExactlyOnceWith(
-      'packages/test/eslint.config.ts',
-      expect.any(String),
+    expect(config).toContain(
+      "import { dependencyChecks } from '@the-stranger/eslint-config/nx'",
+    )
+    expect(config).toContain("import baseConfig from '../../eslint.config.mjs'")
+    expect(config).toContain('dependencyChecks(dependencyChecksOptions)')
+    expect(config).toContain('"checkVersionMismatches": false')
+  })
+
+  it('supports explicit workspace config type even when a project is provided', async () => {
+    await eslintConfigGenerator(tree, {
+      configType: 'workspace',
+      force: true,
+      project: 'test',
+      skipDependencies: true,
+      skipFormat: true,
+    })
+
+    expect(tree.exists('eslint.config.mjs')).toBe(true)
+    expect(tree.exists('packages/test/eslint.config.mjs')).toBe(false)
+  })
+
+  it('serializes configure options and additional configs in workspace configs', async () => {
+    const additionalConfigs = [
+      "{ name: 'custom/rules', files: ['**/*.custom.js'], rules: {} }",
+      { files: ['**/*.generated.js'], rules: { semi: 'off' } },
+    ]
+
+    await eslintConfigGenerator(tree, {
+      additionalConfigs,
+      configureOptions: {
+        json: false,
+        tests: {
+          unitTestRunner: 'jest',
+        },
+      },
+      force: true,
+      skipDependencies: true,
+      skipFormat: true,
+    })
+
+    const config = tree.read('eslint.config.mjs', 'utf8')
+
+    expect(config).toContain('"json": false')
+    expect(config).toContain('"unitTestRunner": "jest"')
+    expect(config).toContain(additionalConfigs[0])
+    expect(config).toContain('"**/*.generated.js"')
+  })
+
+  it('uses extend as the project base config when provided', async () => {
+    await eslintConfigGenerator(tree, {
+      extend: '../../eslint.base.config.mjs',
+      force: true,
+      project: 'test',
+      skipDependencies: true,
+      skipFormat: true,
+    })
+
+    expect(tree.read('packages/test/eslint.config.mjs', 'utf8')).toContain(
+      "import baseConfig from '../../eslint.base.config.mjs'",
     )
   })
 
-  it('throws if there is no base config to extend', async () => {
-    await expect(eslintConfigGenerator(tree, options)).rejects.toThrow()
+  it('throws if project config type is requested without a project', async () => {
+    await expect(
+      eslintConfigGenerator(tree, {
+        configType: 'project',
+        skipDependencies: true,
+        skipFormat: true,
+      }),
+    ).rejects.toThrow('Project config generation requires a project name.')
   })
 
-  it('throws if attempting to extend an invalid base config file', async () => {
-    tree.write('eslint.config.rs', '')
-    options.extend = 'eslint.config.rs'
+  it('throws if additional configs are provided for a project config', async () => {
+    await expect(
+      eslintConfigGenerator(tree, {
+        additionalConfigs: ['{ rules: {} }'],
+        project: 'test',
+        skipDependencies: true,
+        skipFormat: true,
+      }),
+    ).rejects.toThrow('additionalConfigs is only supported for workspace configs.')
+  })
 
-    await expect(eslintConfigGenerator(tree, options)).rejects.toThrow()
+  it('adds vitest ignored files to project dependency checks when vitest is detected', async () => {
+    tree.write('packages/test/vitest.config.mts', '')
+
+    await eslintConfigGenerator(tree, {
+      force: true,
+      project: 'test',
+      skipDependencies: true,
+      skipFormat: true,
+    })
+
+    expect(tree.read('packages/test/eslint.config.mjs', 'utf8')).toContain(
+      '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
+    )
+  })
+
+  it('does not overwrite an existing config without force', async () => {
+    tree.write('eslint.config.mjs', 'export default []')
+
+    await expect(
+      eslintConfigGenerator(tree, {
+        skipDependencies: true,
+        skipFormat: true,
+      }),
+    ).rejects.toThrow()
+    expect(tree.read('eslint.config.mjs', 'utf8')).toBe('export default []')
+  })
+
+  it('overwrites an existing config with force', async () => {
+    tree.write('eslint.config.mjs', 'export default []')
+
+    await eslintConfigGenerator(tree, {
+      force: true,
+      skipDependencies: true,
+      skipFormat: true,
+    })
+
+    expect(tree.read('eslint.config.mjs', 'utf8')).toContain(
+      "import { configure } from '@the-stranger/eslint-config'",
+    )
   })
 })

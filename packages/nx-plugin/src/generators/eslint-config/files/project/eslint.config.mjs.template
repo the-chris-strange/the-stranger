@@ -1,0 +1,11 @@
+import { dependencyChecks } from '@the-stranger/eslint-config/nx'
+
+import baseConfig from '<%= paths.baseConfig %>'
+
+const dependencyChecksOptions = <%- dependencyChecksOptions %>
+
+export default [
+  ...baseConfig,
+
+  dependencyChecks(dependencyChecksOptions),
+]

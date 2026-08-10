@@ -1,0 +1,9 @@
+import { configure } from '@the-stranger/eslint-config'
+
+export default configure(
+  <%- configureOptions %>,
+<% for (const config of additionalConfigs) { -%>
+
+  <%- config %>,
+<% } -%>
+)

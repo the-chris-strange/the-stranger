@@ -1,6 +1,16 @@
-import type { LibraryGeneratorSchema } from '@nx/devkit'
-
 import type { GeneratorSchema } from '../../lib/generator-schema'
+
+/**
+ * Options accepted by `configure()` from `@the-stranger/eslint-config`.
+ */
+export interface ConfigureOptions {
+  json?: boolean | JsonOptions
+  nx?: boolean | object[]
+  source?: boolean | SourceCodeOptions
+  tests?: false | TestFileOptions
+  toml?: boolean
+  yaml?: boolean | YamlOptions
+}
 
 /**
  * Options to pass to the `@nx/dependency-checks` rule. Behaviors that differ from the default options are documented here. Additionally, these options are intentionally not available when invoking this generator from the command line.
@@ -49,22 +59,85 @@ export interface DependencyCheckOptions {
 /**
  * Options for the ESLint configuration generator.
  */
-export interface ESLintConfigSchema
-  extends DependencyCheckOptions, GeneratorSchema, TestRunnerOption {
+export interface ESLintConfigSchema extends DependencyCheckOptions, GeneratorSchema {
   /**
-   * The name of the project in which to generate an eslint config.
+   * JavaScript expressions or config objects to append as additional `configure()` arguments. Only supported for workspace configs.
    */
-  project: string
+  additionalConfigs?: (object | string)[]
+  /**
+   * Generate a workspace-level config or a project-level config. Defaults to `project` when {@link project} is provided, otherwise `workspace`.
+   */
+  configType?: ConfigType
+  /**
+   * Options to pass as the first argument to `configure()`.
+   */
+  configureOptions?: ConfigureOptions
   /**
    * Specify a configuration file to extend. If unspecified, the configuration file at the root of the workspace is used.
    */
   extend?: string
   /**
-   * The file extension to use for the generated config. The file extension of the workspace's root eslint.config file is used by default.
+   * The name of the project in which to generate an eslint config.
    */
-  fileExtension?: ConfigFileExtension
+  project?: string
 }
 
-type ConfigFileExtension = 'cjs' | 'mjs' | 'ts'
+type ConfigType = 'project' | 'workspace'
 
-type TestRunnerOption = Partial<Pick<LibraryGeneratorSchema, 'unitTestRunner'>>
+interface JavascriptOptions {
+  browser?: boolean
+  node?: boolean
+}
+
+interface JsonOptions {
+  sort?: boolean | JsonSortOptions
+}
+
+interface JsonSortOptions {
+  nx?: boolean
+  tsconfig?: boolean
+  vscode?: boolean
+}
+
+interface ReactOptions {
+  astro?: boolean
+  typeChecked?: boolean
+  typescript?: boolean
+}
+
+interface SourceCodeOptions {
+  agentSkills?: boolean
+  js?: boolean | JavascriptOptions
+  jsdoc?: boolean
+  node?: boolean
+  promise?: boolean
+  react?: boolean | ReactOptions
+  regexp?: boolean
+  sort?: boolean
+  ts?: boolean | TypescriptOptions
+  unicorn?: boolean
+}
+
+interface TestFileOptions {
+  disallowedWords?: string[]
+  e2eTestRunner?: 'cypress' | 'playwright'
+  unitTestRunner?: 'jest' | 'vitest'
+}
+
+interface TypescriptOptions {
+  strict?: boolean
+  typeChecked?: boolean
+  typescript?: boolean
+}
+
+interface YamlOptions {
+  sort?: boolean | YamlSortOptions
+}
+
+interface YamlSortOptions {
+  cspellConfig?: boolean
+  dependabotConfig?: boolean
+  githubActions?: boolean
+  markdownlintConfig?: boolean
+  yarnrc?: boolean
+}
