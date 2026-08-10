@@ -5,8 +5,8 @@
     { "path": "./packages/eslint-plugin" },
     { "path": "./packages/eslint-utils" },
     { "path": "./packages/nx-plugin" },
-    { "path": "./tools/nx-plugin/" },
     { "path": "./packages/prettier-plugin" },
-    { "path": "./packages/yarn-config" }
+    { "path": "./packages/yarn-config" },
+    { "path": "./tools/nx-plugin/" }
   ]
 }

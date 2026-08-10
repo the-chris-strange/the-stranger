@@ -14,7 +14,7 @@ Generate a correctly implemented error class.
 
 ### ESLint config
 
-Generate an [ESLint](https://eslint.org) configuration file for a project.
+Generate a standardized [ESLint](https://eslint.org) configuration file for a workspace or project.
 
 ### Jest config
 
@@ -23,6 +23,12 @@ Generate a [Jest](https://jestjs.io) configuration file for a project.
 ### Library
 
 Generate a JavaScript/TypeScript library.
+
+### Sync Vitest configs
+
+Keep [Vitest](https://vitest.dev) root & project configuration in sync by replacing
+deprecated `vitest.workspace.ts` or `vitest.workspace.mts` files with a
+`vitest.config` project definition.
 
 ### Vite config
 

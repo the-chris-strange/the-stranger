@@ -15,6 +15,7 @@ build/Release
 dist
 tmp
 out-tsc
+test-output
 *.tgz
 
 # dependencies
@@ -48,9 +49,10 @@ storybook-static
 
 # nx
 .nx/cache
-.nx/workspace-data
+.nx/polygraph
 .nx/installation
 .nx/schemas
+.nx/workspace-data
 .cursor/rules/nx-rules.mdc
 !.github
 .github/instructions/nx.instructions.md
@@ -72,6 +74,5 @@ Thumbs.db
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
 
-.nx/polygraph
 .claude/worktrees
 .claude/settings.local.json

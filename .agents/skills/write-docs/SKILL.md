@@ -49,7 +49,7 @@ Each worker should edit directly in its assigned forked workspace and report cha
 - They must run the narrowest relevant validation command when feasible and report exact commands and outcomes.
 - They must stop and report if accurate documentation requires inventing behavior or making broad source changes.
 
-Assign non-overlapping ownership, such as separate README files, separate exported entry points, separate JSDoc files, or README versus API docs.
+Assign non-overlapping ownership, such as separate README files, separate exported entry points, separate source files, or README versus API docs.
 
 ## Documentation Priorities
 
@@ -65,6 +65,8 @@ Avoid documenting private implementation trivia, obvious code, unverified comman
 ## Workspace Style
 
 Keep README files concise. Existing package READMEs usually start with the package name, a short purpose statement, and only the sections needed for real usage, such as Installation, Usage, Configurations, Building, and Running Unit Tests.
+
+Do not use the word `tooling` in README files or other documentation. Name the specific tools, commands, or setup instead; `tooling` makes prose sound like a [tool](https://www.urbandictionary.com/define.php?term=tool).
 
 Keep JSDoc imperative and compact. In TypeScript, omit types from `@param` and `@returns` tags because the code already carries them. Use examples only when purpose or usage is not obvious.
 
