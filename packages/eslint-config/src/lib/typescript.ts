@@ -3,6 +3,7 @@ import {
   type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
+  namer,
 } from '@the-stranger/eslint-utils'
 import jsdocPlugin from 'eslint-plugin-jsdoc'
 import tseslintPlugin from 'typescript-eslint'
@@ -10,7 +11,6 @@ import tseslintPlugin from 'typescript-eslint'
 import type { ConfigOptions } from './options.js'
 
 import { languageOptions } from './configs/language-options.js'
-import { namer } from './namer.js'
 import { typeCheckedRules } from './rulesets/type-checked.js'
 import { typescriptRules } from './rulesets/typescript.js'
 

@@ -3,6 +3,7 @@ import {
   type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
+  namer,
   setSeverity,
 } from '@the-stranger/eslint-utils'
 import prettierConfig from 'eslint-config-prettier'
@@ -18,7 +19,6 @@ import type { ConfigOptions } from './options.js'
 import type { Rules } from './rulesets/rules.js'
 
 import { configureJs } from './javascript.js'
-import { namer } from './namer.js'
 import { configureNx } from './nx.js'
 import { configureReact } from './react.js'
 import { agentSkillsRules } from './rulesets/agent-skills.js'

@@ -3,6 +3,7 @@ import {
   type ConfigWithExtends,
   FilePatterns,
   getFilePatterns,
+  namer,
 } from '@the-stranger/eslint-utils'
 import astroPlugin from 'eslint-plugin-astro'
 import jsxAllyPlugin from 'eslint-plugin-jsx-a11y-x'
@@ -12,7 +13,6 @@ import unicornPlugin from 'eslint-plugin-unicorn'
 import type { ConfigOptions } from './options.js'
 
 import { languageOptions } from './configs/language-options.js'
-import { namer } from './namer.js'
 import { reactRules } from './rulesets/react.js'
 
 export function configureReact({ react }: ConfigOptions['source']) {

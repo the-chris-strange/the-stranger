@@ -1,10 +1,8 @@
+import { type ConfigWithExtends, namer } from '@the-stranger/eslint-utils'
 import { type Config, defineConfig, globalIgnores } from 'eslint/config'
-
-import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
 import { tomlConfig } from './configs/toml.js'
 import { configureJson } from './json.js'
-import { namer } from './namer.js'
 import { type Options, resolveOptions } from './options.js'
 import { configureSource } from './source.js'
 import { configureTests } from './tests.js'
@@ -41,12 +39,12 @@ export function configure(
         'pnpm-workspace.yaml',
         'tmp',
       ],
-      namer('global ignores'),
+      namer('global-ignore'),
     ),
 
     {
       linterOptions: { reportUnusedDisableDirectives: 'error' },
-      name: namer('linter options'),
+      name: namer('linter-options'),
     },
 
     ...configArray,

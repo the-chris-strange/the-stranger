@@ -13,7 +13,7 @@ export interface ConfigOptions {
   json: SortOptions<JsonSortOptions>
   source: SourceCodeOptions
   yaml: SortOptions<YamlSortOptions>
-  nx?: boolean | ConfigWithExtends[]
+  nx?: boolean | ConfigWithExtends[] | NxOptions
   tests?: TestFileOptions
   toml?: boolean
 }
@@ -145,6 +145,13 @@ interface JsonSortOptions {
 
 type MakeOptions<T extends object> = {
   [K in keyof T]?: (T[K] extends object ? MakeOptions<T[K]> : T[K]) | boolean
+}
+
+interface NxOptions {
+  /**
+   * Configure the `@nx/module-boundaries` rule.
+   */
+  moduleBoundaries?: boolean
 }
 
 interface ReactOptions {

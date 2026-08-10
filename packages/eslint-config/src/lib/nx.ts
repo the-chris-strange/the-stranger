@@ -3,6 +3,7 @@ import {
   type ConfigWithExtends,
   FilePatterns,
   getFilePatterns,
+  namer,
 } from '@the-stranger/eslint-utils'
 import * as jsoncParser from 'jsonc-eslint-parser'
 
@@ -10,32 +11,32 @@ import type { Config } from 'eslint/config'
 
 import type { ConfigOptions } from './options.js'
 
-import { namer } from './namer.js'
-
 export function configureNx(nx: ConfigOptions['nx']): ConfigWithExtends[] {
-  if (nx === false || nx === undefined) {
+  if (!nx || (Array.isArray(nx) && nx.length === 0)) {
     return []
   }
 
-  const configs = [
+  const configs: ConfigWithExtends[] = [
     {
       name: namer('nx'),
       plugins: { '@nx': nxPlugin as unknown as Plugin },
     },
-
-    moduleBoundaries({
-      allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
-      depConstraints: [
-        {
-          onlyDependOnLibsWithTags: ['*'],
-          sourceTag: '*',
-        },
-      ],
-    }),
   ]
 
   if (Array.isArray(nx)) {
     configs.push(...nx)
+  } else if (nx === true || nx.moduleBoundaries) {
+    configs.push(
+      moduleBoundaries({
+        allow: [String.raw`^.*/eslint(\.base)?\.config\.[cm]?[jt]s$`],
+        depConstraints: [
+          {
+            onlyDependOnLibsWithTags: ['*'],
+            sourceTag: '*',
+          },
+        ],
+      }),
+    )
   }
 
   return configs
@@ -72,6 +73,24 @@ export function moduleBoundaries(options?: ModuleBoundaryOptions): ConfigWithExt
     plugins: { '@nx': nxPlugin as unknown as Plugin },
     rules: {
       '@nx/enforce-module-boundaries': ['error', options ?? {}],
+    },
+  }
+}
+
+/**
+ * Create a config object that enables the `@nx/nx-plugin-checks` rule.
+ * @returns the config object
+ */
+export function pluginChecks(): ConfigWithExtends {
+  return {
+    files: ['**/package.json', '**/generators.json', '**/executors.json'],
+    languageOptions: {
+      parser: jsoncParser,
+    },
+    name: namer('nx/nx-plugin-checks'),
+    plugins: { '@nx': nxPlugin as unknown as Plugin },
+    rules: {
+      '@nx/nx-plugin-checks': 'error',
     },
   }
 }

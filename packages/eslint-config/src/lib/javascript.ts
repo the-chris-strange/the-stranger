@@ -2,12 +2,11 @@ import {
   type ConfigWithExtends,
   FilePatterns,
   getFilePatterns,
+  namer,
 } from '@the-stranger/eslint-utils'
 import globals from 'globals'
 
 import type { ConfigOptions } from './options.js'
-
-import { namer } from './namer.js'
 
 export function configureJs({ js }: ConfigOptions['source']): ConfigWithExtends[] {
   if (!Object.values(js).includes(true)) {

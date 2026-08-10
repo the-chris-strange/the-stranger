@@ -1,6 +1,4 @@
-import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
-
-import { namer } from '../../namer.js'
+import { type ConfigWithExtends, namer } from '@the-stranger/eslint-utils'
 
 const targetKeyOrder = [
   'cache',
@@ -48,9 +46,10 @@ export const nxJsonSortConfig: ConfigWithExtends[] = [
         { order: targetKeyOrder, pathPattern: '^targets.+' },
         {
           order: [
-            'name',
             '$schema',
+            'name',
             'projectType',
+            'root',
             'sourceRoot',
             'tags',
             'targets',

@@ -3,6 +3,7 @@ import {
   type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
+  namer,
 } from '@the-stranger/eslint-utils'
 import vitestPlugin from '@vitest/eslint-plugin'
 import cypressPlugin from 'eslint-plugin-cypress'
@@ -13,7 +14,6 @@ import unicornPlugin from 'eslint-plugin-unicorn'
 import type { ConfigOptions } from './options.js'
 import type { Rules } from './rulesets/rules.js'
 
-import { namer } from './namer.js'
 import { playwrightRules } from './rulesets/playwright.js'
 import { jestTestFileRules, vitestTestFileRules } from './rulesets/tests.js'
 import { typeCheckedTestFileRules } from './rulesets/type-checked.js'

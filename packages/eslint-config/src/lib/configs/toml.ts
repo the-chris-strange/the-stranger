@@ -1,8 +1,5 @@
+import { type ConfigWithExtends, namer } from '@the-stranger/eslint-utils'
 import tomlPlugin from 'eslint-plugin-toml'
-
-import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
-
-import { namer } from '../namer.js'
 
 export const tomlConfig: ConfigWithExtends[] = [
   {

@@ -1,6 +1,5 @@
+import { type ConfigWithExtends, namer } from '@the-stranger/eslint-utils'
 import ymlPlugin from 'eslint-plugin-yml'
-
-import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
 
 import type { ConfigOptions } from './options.js'
 
@@ -11,7 +10,6 @@ import {
   markdownlintYamlSortConfig,
   yarnrcYamlSortConfig,
 } from './configs/yaml/index.js'
-import { namer } from './namer.js'
 
 export function configureYaml({ yaml }: ConfigOptions) {
   if (!Object.values(yaml.sort).includes(true)) {

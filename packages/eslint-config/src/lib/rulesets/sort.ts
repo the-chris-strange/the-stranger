@@ -6,11 +6,17 @@ export const sortRules = {
     {
       groups: [
         'static-property',
+        'optional-static-property',
         'property',
+        'optional-property',
         'protected-static-property',
+        'optional-protected-static-property',
         'protected-property',
+        'optional-protected-property',
         'private-static-property',
+        'optional-private-static-property',
         'private-property',
+        'optional-private-property',
         'constructor',
         'index-signature',
         'static-accessor-property',

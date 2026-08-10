@@ -1,6 +1,4 @@
-import type { ConfigWithExtends } from '@the-stranger/eslint-utils'
-
-import { namer } from '../../namer.js'
+import { type ConfigWithExtends, namer } from '@the-stranger/eslint-utils'
 
 export const dependabotYamlSortConfig = [
   {
