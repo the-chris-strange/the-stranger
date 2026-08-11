@@ -1,11 +1,7 @@
 import { type ParsedPath, type ParsePathOptions, PathParser } from './parser'
 import { PropertyPathSyntaxError } from './property-path-syntax-error'
 
-export function parsePath(source: string, options?: Partial<ParsePathOptions>) {
-  return new PathParser(source, options).parse()
-}
-
-export function safeParsePath(
+export function maybeParsePath(
   source: string,
   options?: Partial<ParsePathOptions>,
 ): ParsePathResult {
@@ -24,6 +20,10 @@ export function safeParsePath(
       success: false,
     }
   }
+}
+
+export function parsePath(source: string, options?: Partial<ParsePathOptions>) {
+  return new PathParser(source, options).parse()
 }
 
 export interface ParsePathFailure {

@@ -8,7 +8,7 @@ import { exists } from './exists'
 import { isEmpty } from './is-empty'
 import { maybeReadJson, writeJson } from './json'
 import { owStrategy } from './overwrite-strategy'
-import { parsePath } from './property-path/index'
+import { parsePath } from './property-path/parse-path'
 import { toArray } from './to-array'
 
 /**
