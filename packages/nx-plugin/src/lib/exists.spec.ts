@@ -1,8 +1,8 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 
-import { type Tree } from '@nx/devkit'
+import { type Tree, workspaceRoot } from '@nx/devkit'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { createTestTree } from '../test/utils/create-test-tree'
@@ -25,6 +25,12 @@ describe('exists', () => {
     tree.write('project.json', '{}')
 
     expect(exists('project.json', tree)).toBe(true)
+  })
+
+  it('finds files in the vfs given an absolute path', () => {
+    tree.root = workspaceRoot
+    const p = resolve(workspaceRoot, 'nx.json')
+    expect(exists(p)).toBe(true)
   })
 
   it('returns false for missing tree files', () => {

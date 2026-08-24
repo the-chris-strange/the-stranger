@@ -2,7 +2,7 @@ import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-import { type Tree } from '@nx/devkit'
+import { type Tree, workspaceRoot } from '@nx/devkit'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { createTestTree } from '../test/utils/create-test-tree'
@@ -21,7 +21,7 @@ describe('maybeReadJson', () => {
     tree = createTestTree()
   })
 
-  it('reads JSON from a tree', () => {
+  it('reads a json file from the vfs', () => {
     tree.write('config.json', JSON.stringify({ enabled: true, name: 'test' }))
 
     expect(maybeReadJson<TestJson>('config.json', tree)).toStrictEqual({
@@ -54,13 +54,23 @@ describe('readJson', () => {
     rmSync(tempRoot, { force: true, recursive: true })
   })
 
-  it('reads JSON from a tree', () => {
-    tree.write('config.json', JSON.stringify({ name: 'tree' }))
+  it('reads a json file from the vfs', () => {
+    const expected = { name: 'tree' }
+    tree.write('config.json', JSON.stringify(expected))
 
-    expect(readJson<TestJson>('config.json', tree)).toStrictEqual({ name: 'tree' })
+    expect(readJson('config.json', tree)).toStrictEqual(expected)
   })
 
-  it('reads JSON from disk', () => {
+  it('reads a json file from the vfs given an absolute path', () => {
+    tree.root = workspaceRoot
+    const treePath = 'packages/nx-plugin/config.json'
+    const expected = { name: 'tree' }
+    tree.write(treePath, JSON.stringify(expected))
+
+    expect(readJson(join(workspaceRoot, treePath), tree)).toStrictEqual(expected)
+  })
+
+  it('reads a json file from disk', () => {
     const filepath = join(tempRoot, 'config.json')
     writeJson(filepath, { name: 'disk' })
 

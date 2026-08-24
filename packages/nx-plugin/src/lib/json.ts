@@ -1,3 +1,5 @@
+import { isAbsolute, relative } from 'node:path'
+
 import {
   type JsonParseOptions,
   type JsonSerializeOptions,
@@ -26,10 +28,11 @@ export function maybeReadJson<T extends object>(
   try {
     return readJson<T>(path, tree, options)
   } catch (error) {
-    if (error instanceof FileNotFoundError) {
-      return
+    if (!(error instanceof FileNotFoundError)) {
+      throw error
     }
-    throw error
+
+    return
   }
 }
 
@@ -47,11 +50,14 @@ export function readJson<T extends object = any>(
   tree?: Tree,
   options?: JsonParseOptions,
 ) {
-  if (!exists(path, tree)) {
+  const treePath = tree && isAbsolute(path) ? relative(tree.root, path) : path
+
+  if (!exists(treePath, tree)) {
     throw new FileNotFoundError(path)
   }
+
   return tree
-    ? readJsonFromTree<T>(tree, path, options)
+    ? readJsonFromTree<T>(tree, treePath, options)
     : readJsonFile<T>(path, options)
 }
 
