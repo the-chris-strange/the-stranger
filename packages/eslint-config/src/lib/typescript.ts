@@ -41,6 +41,7 @@ export function configureTs({
 
   if (jsdoc) {
     config.extends.push(jsdocConfigs['flat/recommended-typescript'])
+    Object.assign(config.rules, { 'jsdoc/require-yields-type': 'off' })
   }
 
   return [config]
