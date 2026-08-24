@@ -671,30 +671,6 @@ export class PathParser {
   }
 }
 
-export type EscapeSequenceKind =
-  | 'backslash'
-  | 'backspace'
-  | 'carriage-return'
-  | 'double-quote'
-  | 'form-feed'
-  | 'hexadecimal'
-  | 'horizontal-tab'
-  | 'line-feed'
-  | 'null'
-  | 'single-quote'
-  | 'unicode-code-point'
-  | 'unicode'
-  | 'vertical-tab'
-
-export interface EscapeSequenceNode {
-  readonly kind: EscapeSequenceKind
-  readonly raw: string
-  readonly span: SourceSpan
-  readonly type: 'escape-sequence'
-  readonly value: string
-  readonly codePoint?: number
-}
-
 export interface IndexSegment {
   readonly index: number
   readonly notation: 'bracket-index'
@@ -720,9 +696,6 @@ export interface ParsePathOptions {
 
 export type PathSegment = IndexSegment | PropertySegment
 
-export type PropertyNotation =
-  'bare' | 'bracket-bare' | 'bracket-quoted' | 'dot-bare' | 'dot-quoted' | 'quoted'
-
 export interface PropertySegment {
   readonly key: string
   readonly notation: PropertyNotation
@@ -732,26 +705,10 @@ export interface PropertySegment {
   readonly string?: StringLiteralNode
 }
 
-export interface RootNode {
-  readonly span: SourceSpan
-  readonly type: 'root'
-}
-
 export interface SourceSpan {
   readonly end: number
   readonly start: number
 }
-
-export interface StringLiteralNode {
-  readonly contentSpan: SourceSpan
-  readonly escapes: readonly EscapeSequenceNode[]
-  readonly quote: StringQuote
-  readonly span: SourceSpan
-  readonly type: 'string-literal'
-  readonly value: string
-}
-
-export type StringQuote = '"' | "'"
 
 function createSpan(start: number, end: number): SourceSpan {
   return { end, start }
@@ -830,4 +787,47 @@ function isWhitespace(character: string | undefined) {
   )
 }
 
+type EscapeSequenceKind =
+  | 'backslash'
+  | 'backspace'
+  | 'carriage-return'
+  | 'double-quote'
+  | 'form-feed'
+  | 'hexadecimal'
+  | 'horizontal-tab'
+  | 'line-feed'
+  | 'null'
+  | 'single-quote'
+  | 'unicode-code-point'
+  | 'unicode'
+  | 'vertical-tab'
+
+interface EscapeSequenceNode {
+  readonly kind: EscapeSequenceKind
+  readonly raw: string
+  readonly span: SourceSpan
+  readonly type: 'escape-sequence'
+  readonly value: string
+  readonly codePoint?: number
+}
+
+type PropertyNotation =
+  'bare' | 'bracket-bare' | 'bracket-quoted' | 'dot-bare' | 'dot-quoted' | 'quoted'
+
+interface RootNode {
+  readonly span: SourceSpan
+  readonly type: 'root'
+}
+
 type SimpleEscape = Pick<EscapeSequenceNode, 'kind' | 'value'>
+
+interface StringLiteralNode {
+  readonly contentSpan: SourceSpan
+  readonly escapes: readonly EscapeSequenceNode[]
+  readonly quote: StringQuote
+  readonly span: SourceSpan
+  readonly type: 'string-literal'
+  readonly value: string
+}
+
+type StringQuote = '"' | "'"
