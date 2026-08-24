@@ -1,9 +1,5 @@
+export { getProperty } from './get-property'
 export { maybeParsePath, parsePath } from './parse-path'
 export { PathParser } from './parser'
-export {
-  getPropertyAtPath,
-  setPropertyPath,
-  splitPropertyPath,
-  type PropertyPath,
-  type PropertyPathSegment,
-} from './property-access'
+export { setProperty } from './set-property'
+export type { PropertyPath, PropertyPathSegment } from './types'
