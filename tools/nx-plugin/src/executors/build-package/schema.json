@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "version": 2,
+  "title": "Build Package",
+  "description": "Builds a TypeScript package and makes its project-local dist metadata resolve files relative to dist.",
+  "type": "object",
+  "properties": {
+    "assets": {
+      "type": "array",
+      "description": "Static assets copied into the build output.",
+      "default": [],
+      "items": {
+        "$ref": "#/definitions/assetPattern"
+      }
+    },
+    "clean": {
+      "type": "boolean",
+      "description": "Remove previous output before build.",
+      "default": true
+    },
+    "generatePackageJson": {
+      "type": "boolean",
+      "description": "Generate and finalize package.json in the build output.",
+      "default": true
+    },
+    "main": {
+      "type": "string",
+      "description": "The main TypeScript entry point."
+    },
+    "outputPath": {
+      "type": "string",
+      "description": "The project-local distribution directory."
+    },
+    "rootDir": {
+      "type": "string",
+      "description": "The TypeScript source root."
+    },
+    "tsConfig": {
+      "type": "string",
+      "description": "The TypeScript configuration file."
+    },
+    "transformers": {
+      "type": "array",
+      "description": "TypeScript transformer plugins.",
+      "default": [],
+      "items": {
+        "$ref": "#/definitions/transformerPattern"
+      }
+    },
+    "watch": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "definitions": {
+    "assetPattern": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "glob": { "type": "string" },
+            "input": { "type": "string" },
+            "ignore": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "output": { "type": "string" },
+            "includeIgnoredFiles": { "type": "boolean", "default": false }
+          },
+          "additionalProperties": false,
+          "required": ["glob", "input", "output"]
+        },
+        { "type": "string" }
+      ]
+    },
+    "transformerPattern": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "options": { "type": "object", "additionalProperties": true }
+          },
+          "additionalProperties": false,
+          "required": ["name"]
+        }
+      ]
+    }
+  },
+  "additionalProperties": true,
+  "required": ["main", "outputPath", "tsConfig"]
+}

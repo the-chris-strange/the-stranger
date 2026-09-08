@@ -1,5 +1,15 @@
 {
   "executors": {
+    "build-package": {
+      "description": "Build a package with TypeScript and finalize its project-local distribution metadata",
+      "implementation": "./src/executors/build-package/executor",
+      "schema": "./src/executors/build-package/schema.json"
+    },
+    "release": {
+      "description": "Version and publish workspace packages with Nx Release",
+      "implementation": "./src/executors/release/executor",
+      "schema": "./src/executors/release/schema.json"
+    },
     "workspace-dependencies": {
       "description": "Resolve workspace dependencies to concrete versions",
       "implementation": "./src/executors/workspace-dependencies/executor",

@@ -1,26 +1,25 @@
 {
-  "name": "eslint-config",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "eslint-config",
   "projectType": "library",
   "sourceRoot": "packages/eslint-config/src",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc"
+      "executor": "@the-stranger/nx-plugin-internal:build-package"
     },
-    "nx-release-publish": {
-      "dependsOn": ["write-directive-header", "resolve-workspace-dependencies"]
+    "prepare-publish": {
+      "dependsOn": ["nx-plugin-internal:build", "write-directive-header", "^prepare-publish"]
     },
-    "resolve-workspace-dependencies": {},
     "watch-tests": {},
     "write-directive-header": {
       "cache": true,
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "nx-plugin-internal:build"],
       "executor": "@the-stranger/nx-plugin-internal:write-file-header",
-      "inputs": ["{workspaceRoot}/dist/packages/eslint-config/src/index.d.ts"],
-      "outputs": ["{workspaceRoot}/dist/packages/eslint-config/src/index.d.ts"],
+      "inputs": ["{projectRoot}/dist/index.d.ts"],
+      "outputs": ["{projectRoot}/dist/index.d.ts"],
       "options": {
-        "files": ["dist/packages/eslint-config/src/index.d.ts"],
+        "files": ["packages/eslint-config/dist/index.d.ts"],
         "header": [
           "// this directive is necessary until an official type declaration becomes available for `eslint-plugin-promise`",
           "/// <reference path=\"./types.d.ts\" preserve=\"true\" />"

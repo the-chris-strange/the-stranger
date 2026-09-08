@@ -1,6 +1,5 @@
 import {
   type ConfigWithExtends,
-  type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
   namer,
@@ -42,7 +41,9 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
 
   const plugins: Exclude<ConfigWithExtends['plugins'], undefined> = {}
   const baseConfig = {
-    extends: [tseslintPlugin.configs['recommended']] as InfiniteConfigArray[],
+    extends: [tseslintPlugin.configs['recommended']] as NonNullable<
+      ConfigWithExtends['extends']
+    >,
     files: getFilePatterns(FilePatterns.source),
     name: namer('source/base'),
     plugins,

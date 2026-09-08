@@ -1,4 +1,4 @@
-import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema'
+import type { LibraryGeneratorSchema } from '@nx/js/internal'
 
 import type { GeneratorSchema } from '../../lib/generator-schema'
 import type { ViteConfigSchema } from '../vite-config/schema'

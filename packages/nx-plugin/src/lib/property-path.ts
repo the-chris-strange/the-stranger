@@ -116,7 +116,7 @@ export function* splitPropertyPath(path: string) {
       // Numeric index, e.g. [0] or [-1]
       const start = i
       while (i < length && /[-0-9]/.test(path[i])) i += 1
-      yield Number.parseInt(path.slice(start, i), 10)
+      yield Math.trunc(Number(path.slice(start, i)))
       i += 1 // skip closing ]
       continue
     }
@@ -125,7 +125,9 @@ export function* splitPropertyPath(path: string) {
     const start = i
     while (i < length && !['.', '[', ']'].includes(path[i])) i += 1
     const token = path.slice(start, i)
-    const maybeNumber = Number.parseInt(token, 10)
-    yield Number.isNaN(maybeNumber) || `${maybeNumber}` !== token ? token : maybeNumber
+    const maybeNumber = Math.trunc(Number(token))
+    yield Number.isNaN(maybeNumber) || String(maybeNumber) !== token
+      ? token
+      : maybeNumber
   }
 }

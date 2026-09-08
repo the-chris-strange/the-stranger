@@ -1,6 +1,5 @@
 import {
   type ConfigWithExtends,
-  type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
   namer,
@@ -25,7 +24,7 @@ export function configureTs({
   }
 
   const config = {
-    extends: [] as InfiniteConfigArray[],
+    extends: [] as NonNullable<ConfigWithExtends['extends']>,
     files: getFilePatterns(FilePatterns.ts),
     languageOptions,
     name: namer('typescript/base'),

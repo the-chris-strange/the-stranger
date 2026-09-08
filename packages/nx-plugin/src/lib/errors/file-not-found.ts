@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/custom-error-definition */
+
 /**
  * Error thrown when a file cannot be found at the specified path.
  * @example

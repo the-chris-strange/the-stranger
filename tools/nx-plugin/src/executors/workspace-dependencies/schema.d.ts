@@ -12,4 +12,9 @@ export interface WorkspaceDependenciesSchema {
    * The source manifest file where the workspace dependencies are declared. If not specified, the executor will use the manifest in the project root.
    */
   source?: string
+  /**
+   * Copy the publish manifest, README, Markdown docs, workspace license, and runtime dist files to the destination before resolving dependencies.
+   * @default false
+   */
+  stage?: boolean
 }

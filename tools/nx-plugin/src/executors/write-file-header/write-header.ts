@@ -22,9 +22,11 @@ export async function writeHeader(filepath: string, header: Buffer<ArrayBuffer>)
     await rename(tmpFile, filepath)
   } catch (err) {
     logger.error(err)
-    await unlink(tmpFile).catch(error => {
+    try {
+      await unlink(tmpFile)
+    } catch (error) {
       logger.error(error)
-    })
+    }
     throw err
   }
 }

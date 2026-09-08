@@ -1,17 +1,14 @@
 {
-  "name": "eslint-plugin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "eslint-plugin",
   "projectType": "library",
   "sourceRoot": "packages/eslint-plugin/src",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc"
+      "executor": "@the-stranger/nx-plugin-internal:build-package"
     },
-    "nx-release-publish": {
-      "dependsOn": ["resolve-workspace-dependencies"]
-    },
-    "resolve-workspace-dependencies": {},
+    "prepare-publish": {},
     "watch-tests": {}
   }
 }

@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "analytics": true,
   "generators": {
     "@nx/js": {
       "library": {
@@ -77,7 +78,7 @@
         "stageChanges": false,
         "tag": true
       },
-      "manifestRootsToUpdate": ["{projectRoot}", "{workspaceRoot}/dist/{projectRoot}"],
+      "manifestRootsToUpdate": ["{projectRoot}"],
       "preserveLocalDependencyProtocols": true,
       "specifierSource": "conventional-commits",
       "versionPrefix": "^"
@@ -87,39 +88,34 @@
     "disabledTaskSyncGenerators": ["@nx/js:typescript-sync"]
   },
   "targetDefaults": {
-    "build": {
+    "@the-stranger/nx-plugin-internal:build-package": {
       "cache": true,
       "dependsOn": ["^build"],
-      "executor": "@nx/js:tsc",
-      "inputs": ["default", "^productionCode"],
-      "outputs": ["{options.outputPath}/"],
+      "inputs": ["default", "^production"],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "assets": [
-          "{projectRoot}/*.md",
           {
-            "glob": "**/*.md",
-            "input": "{projectRoot}/docs",
-            "output": "./docs"
-          },
-          {
-            "glob": "LICENSE",
-            "input": "{workspaceRoot}",
-            "output": ""
-          },
-          {
-            "glob": "package.json",
-            "input": "{projectRoot}",
+            "glob": "**/!(*.ts)",
+            "ignore": ["**/__snapshots__/**"],
+            "input": "{projectRoot}/src",
             "output": "."
           },
           {
             "glob": "**/*.d.ts",
             "input": "{projectRoot}/src",
-            "output": "./src"
+            "output": "."
+          },
+          {
+            "glob": "{executors,generators}.json",
+            "input": "{projectRoot}",
+            "output": "."
           }
         ],
         "generatePackageJson": true,
         "main": "{projectRoot}/src/index.ts",
-        "outputPath": "{workspaceRoot}/dist/{projectRoot}",
+        "outputPath": "{projectRoot}/dist",
+        "rootDir": "{projectRoot}/src",
         "tsConfig": "{projectRoot}/tsconfig.lib.json"
       }
     },
@@ -129,7 +125,9 @@
         "default",
         "eslintConfigs",
         "{workspaceRoot}/tools/eslint-rules/**/*",
-        { "externalDependencies": ["eslint"] }
+        {
+          "externalDependencies": ["eslint"]
+        }
       ],
       "options": {
         "cwd": "{projectRoot}"
@@ -139,32 +137,44 @@
           "fix": true
         },
         "warnings": {
-          "maxWarnings": 0
+          "max-warnings": 0
         }
       }
     },
     "nx-release-publish": {
-      "dependsOn": ["^nx-release-publish", "build"],
+      "dependsOn": ["prepare-publish"],
       "options": {
-        "packageRoot": "{workspaceRoot}/dist/{projectRoot}"
+        "access": "public",
+        "packageRoot": "{workspaceRoot}/tmp/publish/{projectRoot}"
       }
     },
-    "resolve-workspace-dependencies": {
-      "dependsOn": ["nx-plugin-internal:build", "build", "^resolve-workspace-dependencies"],
+    "prepare-publish": {
+      "cache": true,
+      "dependsOn": ["nx-plugin-internal:build", "build", "^prepare-publish"],
       "executor": "@the-stranger/nx-plugin-internal:workspace-dependencies",
+      "inputs": ["default", "{workspaceRoot}/LICENSE"],
+      "outputs": ["{workspaceRoot}/tmp/publish/{projectRoot}"],
       "options": {
-        "destination": "{workspaceRoot}/dist/{projectRoot}/package.json",
-        "source": "{projectRoot}/package.json"
+        "destination": "{workspaceRoot}/tmp/publish/{projectRoot}",
+        "source": "{projectRoot}",
+        "stage": true
       }
     },
     "test": {
+      "dependsOn": ["^build"],
       "inputs": [
         "default",
         "noEslintConfigs",
         "^productionCode",
-        { "externalDependencies": ["vitest"] },
-        { "env": "CI" },
-        { "env": "GITHUB_ACTIONS" }
+        {
+          "externalDependencies": ["vitest"]
+        },
+        {
+          "env": "CI"
+        },
+        {
+          "env": "GITHUB_ACTIONS"
+        }
       ],
       "outputs": [
         "{workspaceRoot}/coverage/{projectRoot}",
@@ -178,18 +188,6 @@
           "coverage": true
         }
       }
-    },
-    "typecheck": {
-      "dependsOn": ["build", "^typecheck"],
-      "inputs": [
-        "{projectRoot}/src/**/*.ts",
-        { "dependentTasksOutputFiles": "**/*.d.?([cm])ts" },
-        { "externalDependencies": ["typescript"] }
-      ],
-      "outputs": [
-        "{workspaceRoot}/out-tsc/{projectRoot}/tsconfig.?(*.)tsbuildinfo",
-        "{workspaceRoot}/out-tsc/{projectRoot}/**/*.d.?([cm])ts?(.map)"
-      ]
     },
     "watch-tests": {
       "cache": false,

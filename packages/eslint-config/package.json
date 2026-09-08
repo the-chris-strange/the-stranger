@@ -10,60 +10,64 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./src/index.d.ts",
-      "import": "./src/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./nx": {
-      "types": "./src/nx.d.ts",
-      "import": "./src/nx.js"
+      "types": "./dist/nx.d.ts",
+      "import": "./dist/nx.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./src/index.js",
-  "module": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "docs"
+  ],
   "dependencies": {
-    "@eslint-react/eslint-plugin": "^2.13.0",
+    "@eslint-react/eslint-plugin": "^5.18.6",
     "@the-stranger/eslint-utils": "workspace:^",
-    "@typescript-eslint/parser": "^8.65.0",
-    "@vitest/eslint-plugin": "^1.6.23",
-    "astro-eslint-parser": "^1.4.0",
+    "@typescript-eslint/parser": "^8.68.0",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "astro-eslint-parser": "^3.1.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-astro": "^1.7.0",
-    "eslint-plugin-cypress": "^6.4.3",
-    "eslint-plugin-jest": "^29.15.5",
-    "eslint-plugin-jsdoc": "^62.9.0",
-    "eslint-plugin-jsonc": "^3.3.0",
+    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-cypress": "^7.0.1",
+    "eslint-plugin-jest": "^29.16.5",
+    "eslint-plugin-jsdoc": "^64.2.1",
+    "eslint-plugin-jsonc": "^3.4.2",
     "eslint-plugin-jsx-a11y-x": "^0.2.0",
-    "eslint-plugin-n": "^17.24.0",
-    "eslint-plugin-perfectionist": "^5.10.0",
-    "eslint-plugin-playwright": "^2.10.5",
-    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-n": "^18.3.0",
+    "eslint-plugin-perfectionist": "^5.10.1",
+    "eslint-plugin-playwright": "^2.11.0",
+    "eslint-plugin-promise": "^7.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-regexp": "^3.1.1",
-    "eslint-plugin-toml": "^1.4.0",
-    "eslint-plugin-unicorn": "^63.0.0",
-    "eslint-plugin-yml": "^3.6.0",
-    "globals": "^17.7.0",
-    "jsonc-eslint-parser": "^3.1.0",
+    "eslint-plugin-regexp": "^3.2.0",
+    "eslint-plugin-toml": "^1.5.0",
+    "eslint-plugin-unicorn": "^74.0.0",
+    "eslint-plugin-yml": "^3.8.1",
+    "globals": "^17.11.0",
+    "jsonc-eslint-parser": "^3.3.0",
     "toml-eslint-parser": "^1.0.3",
     "tslib": "^2.8.1",
-    "typescript-eslint": "^8.65.0",
+    "typescript-eslint": "^8.68.0",
     "yaml-eslint-parser": "^2.1.0"
   },
   "devDependencies": {
-    "@nx/eslint-plugin": "22.5.2",
+    "@nx/eslint-plugin": "23.1.2",
     "@types/node": "^24.13.3",
-    "@vitest/coverage-v8": "4.1.10",
-    "eslint": "^9.39.5",
-    "eslint-plugin-eslint-plugin": "^7.5.0",
-    "jsonc-eslint-parser": "^3.1.0",
-    "typescript": "^5.9.3",
-    "vitest": "4.1.10"
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "^10.9.1",
+    "eslint-plugin-eslint-plugin": "^7.6.2",
+    "jsonc-eslint-parser": "^3.3.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
   },
   "peerDependencies": {
-    "@nx/eslint-plugin": ">=21 <23",
-    "eslint": "^9"
+    "@nx/eslint-plugin": ">=21 <24",
+    "eslint": "^9 || ^10"
   },
   "peerDependenciesMeta": {
     "@nx/eslint-plugin": {

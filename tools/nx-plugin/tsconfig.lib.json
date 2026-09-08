@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "../../out-tsc",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "tsBuildInfoFile": "../../out-tsc/tools/nx-plugin/tsconfig.lib.tsbuildinfo",
     "types": ["node"]
   },

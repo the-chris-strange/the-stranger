@@ -48,7 +48,7 @@ export default defineConfig({
 Install [@nx/eslint-plugin] to enable the Nx preset:
 
 ```bash
-npm install --save-dev @nx/eslint-plugin@^21
+npm install --save-dev @nx/eslint-plugin@^23
 ```
 
 Then, in your ESLint config, extend the Nx preset:

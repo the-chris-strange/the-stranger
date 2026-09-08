@@ -24,7 +24,7 @@ const jiti = createJiti(import.meta.url, {
       'packages/eslint-plugin/src/index.ts',
     ),
   },
-  interopDefault: false,
+  interopDefault: true,
   tsconfigPaths: true,
 })
 

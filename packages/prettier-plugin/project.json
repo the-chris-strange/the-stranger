@@ -1,13 +1,14 @@
 {
-  "name": "prettier-plugin",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "prettier-plugin",
   "projectType": "library",
   "sourceRoot": "packages/prettier-plugin/src",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc"
+      "executor": "@the-stranger/nx-plugin-internal:build-package"
     },
+    "prepare-publish": {},
     "watch-tests": {}
   }
 }

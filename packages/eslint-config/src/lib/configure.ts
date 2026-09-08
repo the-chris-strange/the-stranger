@@ -32,6 +32,7 @@ export function configure(
         '.nx',
         '.pnp.*',
         '.yarn',
+        '**/dist/**',
         'coverage',
         'dist',
         'out-tsc',

@@ -1,5 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
+  "compilerOptions": { "ignoreDeprecations": "6.0" },
   "references": [
     { "path": "./packages/eslint-config" },
     { "path": "./packages/eslint-plugin" },

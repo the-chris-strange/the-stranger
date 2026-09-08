@@ -21,6 +21,7 @@ export default defineConfig(
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
+          runtimeHelpers: ['tslib'],
         },
       ],
     },

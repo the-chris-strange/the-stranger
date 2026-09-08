@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "verbatimModuleSyntax": false },
+  "compilerOptions": { "ignoreDeprecations": "6.0", "verbatimModuleSyntax": false },
   "files": ["package.json"],
   "references": [{ "path": "./tsconfig.lib.json" }, { "path": "./tsconfig.spec.json" }]
 }

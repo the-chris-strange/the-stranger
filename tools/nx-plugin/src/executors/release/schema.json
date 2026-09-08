@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "version": 2,
+  "title": "Release",
+  "description": "Version and publish workspace packages with Nx Release.",
+  "type": "object",
+  "properties": {
+    "dryRun": {
+      "type": "boolean",
+      "description": "Preview the resolved versions without changing files, requesting an npm OTP, or publishing."
+    },
+    "firstRelease": {
+      "type": "boolean",
+      "description": "Treat the release as the first release for the selected projects."
+    },
+    "groups": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Release only these release groups."
+    },
+    "preid": {
+      "type": "string",
+      "description": "Prerelease identifier, such as next or beta."
+    },
+    "projects": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Release only these projects."
+    },
+    "specifier": {
+      "type": "string",
+      "description": "Explicit semver version or relative bump, such as patch."
+    },
+    "verbose": {
+      "type": "boolean",
+      "description": "Print additional Nx Release output."
+    }
+  }
+}

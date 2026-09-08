@@ -2,7 +2,8 @@
   "extends": ["./tsconfig.json"],
   "compilerOptions": {
     "declarationMap": false,
-    "outDir": "../../dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "tsBuildInfoFile": "../../out-tsc/packages/eslint-plugin/tsconfig.lib.tsbuildinfo",
     "types": ["node"],
     "verbatimModuleSyntax": true

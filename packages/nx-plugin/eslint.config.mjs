@@ -20,6 +20,7 @@ export default defineConfig(
             '{projectRoot}/vite.config.{js,ts,mjs,mts}',
             '{projectRoot}/vitest.config.{js,ts,mjs,mts}',
           ],
+          runtimeHelpers: ['tslib'],
         },
       ],
     },
@@ -41,18 +42,12 @@ export default defineConfig(
   },
 
   {
-    files: ['src/index.ts'],
-    rules: {
-      'unicorn/no-empty-file': 'off',
-    },
-  },
-
-  {
     files: [TEST_FILES, 'src/test/**/*.ts'],
     rules: {
       '@typescript-eslint/no-empty-interface': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
+      'unicorn/require-array-sort-compare': 'off',
     },
   },
 )

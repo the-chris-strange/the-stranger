@@ -1,6 +1,6 @@
 {
-  "name": "root",
   "$schema": "node_modules/nx/schemas/project-schema.json",
+  "name": "root",
   "targets": {
     "constraints": {
       "cache": true,
@@ -53,6 +53,10 @@
         "port": 4873,
         "storage": "node_modules/.local-registry/storage"
       }
+    },
+    "release": {
+      "cache": false,
+      "executor": "@the-stranger/nx-plugin-internal:release"
     }
   },
   "includedScripts": []

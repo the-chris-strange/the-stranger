@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/custom-error-definition */
+
 import type { SourceSpan } from './parser'
 
 /**

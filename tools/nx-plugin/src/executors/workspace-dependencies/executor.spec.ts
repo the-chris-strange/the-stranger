@@ -1,4 +1,4 @@
-import { rm } from 'node:fs/promises'
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 
 import { type ExecutorContext, workspaceRoot } from '@nx/devkit'
@@ -155,4 +155,54 @@ describe('inter-project dependency resolver executor', () => {
       expect(destinationManifest.dependencies?.[projectNames.b]).toBe(v + '1.0.0')
     },
   )
+
+  it('stages project-local distribution files before resolving dependencies', async () => {
+    const stagedPackage = join(rootDir, 'publish', projectNames.a)
+    await mkdir(join(projectADir, 'dist'), { recursive: true })
+    await mkdir(join(projectADir, 'docs', 'guides'), { recursive: true })
+    await writeFile(join(projectADir, 'dist/index.js'), 'export default true\n')
+    await writeFile(join(projectADir, 'dist/package.json'), '{}\n')
+    await writeFile(join(projectADir, 'README.md'), '# Project A\n')
+    await writeFile(join(projectADir, 'docs/guides/usage.md'), '# Usage\n')
+    await writeFile(join(projectADir, 'docs/internal.txt'), 'not public\n')
+    await writePackageJson(manifests[projectNames.a], {
+      dependencies: { [projectNames.b]: 'workspace:^' },
+      executors: './executors.json',
+      generators: './generators.json',
+      name: projectNames.a,
+      version: '0.1.0',
+    })
+
+    const output = await executor(
+      {
+        destination: relative(workspaceRoot, stagedPackage),
+        source: projectARoot,
+        stage: true,
+      },
+      context,
+    )
+
+    expect(output.success).toBe(true)
+    await expect(readFile(join(stagedPackage, 'dist/index.js'), 'utf8')).resolves.toBe(
+      'export default true\n',
+    )
+    await expect(readFile(join(stagedPackage, 'README.md'), 'utf8')).resolves.toBe(
+      '# Project A\n',
+    )
+    await expect(
+      readFile(join(stagedPackage, 'docs/guides/usage.md'), 'utf8'),
+    ).resolves.toBe('# Usage\n')
+    await expect(
+      readFile(join(stagedPackage, 'dist/package.json'), 'utf8'),
+    ).rejects.toThrow()
+    await expect(
+      readFile(join(stagedPackage, 'docs/internal.txt'), 'utf8'),
+    ).rejects.toThrow()
+    const stagedManifest = await readPackageJson(stagedPackage)
+    expect(stagedManifest.dependencies?.[projectNames.b]).toBe('^1.0.0')
+    expect(stagedManifest.executors).toBe('./dist/executors.json')
+    expect(stagedManifest.generators).toBe('./dist/generators.json')
+    const sourceManifest = await readPackageJson(manifests[projectNames.a])
+    expect(sourceManifest.dependencies?.[projectNames.b]).toBe('workspace:^')
+  })
 })

@@ -19,7 +19,7 @@ export function isEmpty(value: unknown, depth = 3e3): boolean {
     }
   }
 
-  let iterator: Iterable<unknown> | undefined = undefined
+  let iterator: Iterable<unknown> | undefined
 
   if (Array.isArray(value) || value instanceof Set) {
     iterator = value[Symbol.iterator]()

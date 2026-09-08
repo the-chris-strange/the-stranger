@@ -24,7 +24,7 @@ const jiti = createJiti(import.meta.url, {
       'packages/eslint-plugin/src/index.ts',
     ),
   },
-  interopDefault: false,
+  interopDefault: true,
   tsconfigPaths: true,
 })
 
@@ -41,9 +41,11 @@ const wsPlugin = await jiti.import('@the-stranger/eslint-plugin')
 
 const configureOptions = {
   json: {
-    nx: true,
-    tsconfig: true,
-    vscode: true,
+    sort: {
+      nx: true,
+      tsconfig: true,
+      vscode: true,
+    },
   },
   nx: true,
   source: {
@@ -55,7 +57,11 @@ const configureOptions = {
     jsdoc: true,
     node: true,
     promise: true,
-    react: false,
+    react: {
+      astro: false,
+      typeChecked: false,
+      typescript: false,
+    },
     regexp: true,
     sort: true,
     ts: {
@@ -70,11 +76,13 @@ const configureOptions = {
     unitTestRunner: 'vitest',
   },
   yaml: {
-    cspellConfig: true,
-    dependabotConfig: true,
-    githubActions: true,
-    markdownlintConfig: true,
-    yarnrc: true,
+    sort: {
+      cspellConfig: true,
+      dependabotConfig: true,
+      githubActions: true,
+      markdownlintConfig: true,
+      yarnrc: true,
+    },
   },
 }
 

@@ -18,6 +18,11 @@
       "enum": ["", "^", "~"],
       "default": "^",
       "description": "The prefix to use when writing resolved versions to the destination manifest."
+    },
+    "stage": {
+      "type": "boolean",
+      "default": false,
+      "description": "Copy the publish manifest, README, Markdown docs, workspace license, and runtime dist files to the destination before resolving dependencies."
     }
   },
   "required": []

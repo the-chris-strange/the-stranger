@@ -772,8 +772,8 @@ function isLineTerminator(character: string) {
   return (
     character === '\n' ||
     character === '\r' ||
-    character === '\u2028' ||
-    character === '\u2029'
+    character === '\u{2028}' ||
+    character === '\u{2029}'
   )
 }
 

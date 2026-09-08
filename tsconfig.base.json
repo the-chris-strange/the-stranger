@@ -22,6 +22,7 @@
     "experimentalDecorators": false,
     "explainFiles": false,
     "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "6.0",
     "importHelpers": true,
     "incremental": true,
     "isolatedModules": false,
@@ -43,6 +44,7 @@
     "sourceMap": false,
     "strict": true,
     "target": "ES2024",
+    "types": ["*"],
     "verbatimModuleSyntax": false
   },
   "exclude": ["node_modules", "tmp", "dist", "out-tsc", ".cache", ".yarn", ".nx", ".husky", ".github"]

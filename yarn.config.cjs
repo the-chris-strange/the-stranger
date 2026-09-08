@@ -1,13 +1,12 @@
 // @ts-check
 
-const { defineConfig } = require('@yarnpkg/types')
-
 const {
   setNodeEngine,
   enforceConsistentProjectDependencies,
   setRepository,
   setLicense,
-} = require('./dist/packages/yarn-config')
+} = require('@the-stranger/yarn-config')
+const { defineConfig } = require('@yarnpkg/types')
 
 module.exports = defineConfig({
   async constraints({ Yarn }) {
