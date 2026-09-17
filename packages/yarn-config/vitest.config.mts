@@ -4,14 +4,15 @@ const name = 'yarn-config' as const
 const projectPath = `packages/${name}` as const
 const cacheDir = `../../node_modules/.vitest/${projectPath}` as const
 
-export default defineConfig(() => ({
+export default defineConfig({
   cacheDir,
 
   root: import.meta.dirname,
 
   test: {
     coverage: {
-      provider: 'v8' as const,
+      exclude: ['src/test/**', 'src/**/*.d.ts'],
+      include: ['src/**/*.ts'],
       reportsDirectory: `../../coverage/${projectPath}`,
     },
     environment: 'node',
@@ -27,4 +28,4 @@ export default defineConfig(() => ({
     },
     watch: false,
   },
-}))
+})

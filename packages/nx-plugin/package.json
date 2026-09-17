@@ -27,7 +27,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "docs"
+    "docs",
+    "!*.tsbuildinfo"
   ],
   "dependencies": {
     "get-tsconfig": "^4.14.3",

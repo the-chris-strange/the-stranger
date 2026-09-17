@@ -24,7 +24,8 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
-    "docs"
+    "docs",
+    "!*.tsbuildinfo"
   ],
   "dependencies": {
     "@the-stranger/eslint-config": "workspace:^",

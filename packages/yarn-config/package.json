@@ -20,7 +20,7 @@
   "files": [
     "dist",
     "docs",
-    "!**/*.tsbuildinfo"
+    "!*.tsbuildinfo"
   ],
   "dependencies": {
     "@yarnpkg/types": "4.0.1",

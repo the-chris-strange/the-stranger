@@ -21,7 +21,7 @@
   "files": [
     "dist",
     "docs",
-    "!**/*.tsbuildinfo"
+    "!*.tsbuildinfo"
   ],
   "dependencies": {
     "prettier-plugin-packagejson": "^3.0.2",

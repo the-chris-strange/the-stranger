@@ -4,7 +4,7 @@
     "declarationMap": false,
     "outDir": "./dist",
     "rootDir": "./src",
-    "tsBuildInfoFile": "../../out-tsc/packages/eslint-plugin/tsconfig.lib.tsbuildinfo",
+    "tsBuildInfoFile": "./dist/tsconfig.lib.tsbuildinfo",
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
