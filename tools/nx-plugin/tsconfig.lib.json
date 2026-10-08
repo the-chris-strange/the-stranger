@@ -25,6 +25,8 @@
   ],
   "references": [
     { "path": "../../packages/nx-plugin/tsconfig.lib.json" },
-    { "path": "../../packages/eslint-config/tsconfig.lib.json" }
+    { "path": "../../packages/eslint-config/tsconfig.lib.json" },
+    { "path": "../../packages/eslint-plugin/tsconfig.lib.json" },
+    { "path": "../../packages/yarn-config/tsconfig.lib.json" }
   ]
 }

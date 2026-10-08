@@ -45,6 +45,7 @@ ignoreWords:
   - dcignore
   - nxignore
 words:
+  - archi
   - dotenvx
   - globbify
   - lestranger

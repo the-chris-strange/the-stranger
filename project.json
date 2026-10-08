@@ -22,6 +22,18 @@
         }
       }
     },
+    "cruise-deps": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/.dependency-cruiser.cjs",
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/yarn.lock",
+        "{workspaceRoot}/packages/*/package.json",
+        { "externalDependencies": ["dependency-cruiser"] }
+      ],
+      "options": { "command": "dependency-cruiser ." }
+    },
     "lint": {
       "executor": "nx:run-commands",
       "inputs": [

@@ -1,4 +1,4 @@
-import { type PromiseExecutor } from '@nx/devkit'
+import type { PromiseExecutor } from '@nx/devkit'
 
 import type { WriteFileHeaderExecutorSchema } from './schema'
 

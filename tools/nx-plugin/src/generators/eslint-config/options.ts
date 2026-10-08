@@ -1,6 +1,6 @@
-import { type ConfigOptions } from '@the-stranger/eslint-config'
+import type { ConfigOptions } from '@the-stranger/eslint-config'
 
-import { type EslintConfigSchema } from './schema'
+import type { EslintConfigSchema } from './schema'
 
 export function normalizeOptions(options: EslintConfigSchema): NormalizedOptions {
   const defaultOptions = {
