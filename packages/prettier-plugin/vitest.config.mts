@@ -19,7 +19,6 @@ export default defineConfig({
     globals: false,
     include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     name,
-    passWithNoTests: true,
     typecheck: {
       include: [
         'src/**/*.{test,spec}-d.?(c|m)[jt]s?(x)',

@@ -11,7 +11,6 @@ const jiti = createJiti(import.meta.url, {
   },
 })
 
-/** @type {import('@the-stranger/prettier-plugin')} */
-const config = await jiti.import('@the-stranger/prettier-plugin', { default: true })
+const { config } = await jiti.import('@the-stranger/prettier-plugin')
 
 export default config

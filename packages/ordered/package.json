@@ -1,0 +1,49 @@
+{
+  "name": "@the-stranger/ordered",
+  "version": "0.0.1",
+  "description": "Sort JSON, YAML, and Markdown frontmatter with per-path ordering rules.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/the-chris-strange/the-stranger.git",
+    "directory": "packages/ordered"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./package-json": {
+      "types": "./dist/lib/package-json.d.ts",
+      "import": "./dist/lib/package-json.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "docs",
+    "!*.tsbuildinfo"
+  ],
+  "dependencies": {
+    "git-hooks-list": "^4.1.1",
+    "semver": "^7.8.5",
+    "tslib": "^2.8.1",
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.5",
+    "@types/semver": "^7.8.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "^10.10.0",
+    "jsonc-eslint-parser": "^3.3.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "engines": {
+    "node": "^24"
+  }
+}

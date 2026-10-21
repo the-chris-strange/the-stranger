@@ -2,10 +2,12 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": { "ignoreDeprecations": "6.0" },
   "references": [
+    { "path": "./packages/chaotic" },
     { "path": "./packages/eslint-config" },
     { "path": "./packages/eslint-plugin" },
     { "path": "./packages/eslint-utils" },
     { "path": "./packages/nx-plugin" },
+    { "path": "./packages/ordered" },
     { "path": "./packages/prettier-plugin" },
     { "path": "./packages/yarn-config" },
     { "path": "./tools/nx-plugin/" }

@@ -4,7 +4,14 @@ import { join } from 'node:path'
 
 type JsonObject = Record<string, unknown>
 
-const packagePathFields = ['exports', 'main', 'module', 'types', 'typings'] as const
+const packagePathFields = [
+  'bin',
+  'exports',
+  'main',
+  'module',
+  'types',
+  'typings',
+] as const
 
 export async function finalizeBuildMetadata(outputPath: string) {
   const manifestPath = join(outputPath, 'package.json')

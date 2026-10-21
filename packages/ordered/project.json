@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "ordered",
+  "projectType": "library",
+  "sourceRoot": "packages/ordered/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@the-stranger/nx-plugin-internal:build-package"
+    },
+    "prepare-publish": {},
+    "watch-tests": {}
+  }
+}

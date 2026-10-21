@@ -5,7 +5,7 @@ import {
   type Tree,
   readProjectConfiguration,
 } from '@nx/devkit'
-import sortPackageJson from 'sort-package-json'
+import { sortPackageJson } from '@the-stranger/ordered/package-json'
 
 import type { PackageJson } from 'nx/src/utils/package-json'
 

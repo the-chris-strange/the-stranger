@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "chaotic",
+  "projectType": "library",
+  "sourceRoot": "packages/chaotic/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@the-stranger/nx-plugin-internal:build-package"
+    },
+    "prepare-publish": {},
+    "test": {
+      "dependsOn": ["build", "^build"]
+    },
+    "watch-tests": {}
+  }
+}

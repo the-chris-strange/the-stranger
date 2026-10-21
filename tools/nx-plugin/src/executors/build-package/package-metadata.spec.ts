@@ -51,6 +51,21 @@ describe('package metadata finalization', () => {
     expect(manifest).not.toHaveProperty('files')
   })
 
+  it.each([
+    ['./dist/bin/cli.mjs', './bin/cli.mjs'],
+    [{ example: './dist/bin/cli.mjs' }, { example: './bin/cli.mjs' }],
+  ])(
+    'makes executable paths relative to the dist package root',
+    async (bin, expected) => {
+      await writeFile(join(outputPath, 'package.json'), JSON.stringify({ bin }))
+      await finalizeBuildMetadata(outputPath)
+      const manifest = JSON.parse(
+        await readFile(join(outputPath, 'package.json'), 'utf8'),
+      )
+      expect(manifest.bin).toStrictEqual(expected)
+    },
+  )
+
   it('makes copied Nx collection paths relative to dist', async () => {
     await writeFile(join(outputPath, 'package.json'), '{}')
     await writeFile(

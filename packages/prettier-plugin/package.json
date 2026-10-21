@@ -13,7 +13,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.js"
+    }
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -24,7 +28,7 @@
     "!*.tsbuildinfo"
   ],
   "dependencies": {
-    "prettier-plugin-packagejson": "^3.0.2",
+    "@the-stranger/ordered": "workspace:^",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
@@ -37,7 +41,7 @@
     "vitest": "4.1.11"
   },
   "peerDependencies": {
-    "prettier": "^3"
+    "prettier": "^3.7"
   },
   "engines": {
     "node": "^24"

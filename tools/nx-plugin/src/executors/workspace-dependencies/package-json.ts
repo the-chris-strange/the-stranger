@@ -4,7 +4,7 @@ import { basename, dirname, join } from 'node:path'
 
 import { logger, parseJson, serializeJson } from '@nx/devkit'
 import { FileNotFoundError } from '@the-stranger/nx-plugin'
-import sortPackageJson from 'sort-package-json'
+import { sortPackageJson } from '@the-stranger/ordered/package-json'
 
 import type { PackageJson } from 'nx/src/utils/package-json'
 
@@ -42,7 +42,7 @@ export async function writePackageJson(filepath: string, content: PackageJson) {
   }
 
   try {
-    await writeFile(filepath, sortPackageJson(serializeJson(content)))
+    await writeFile(filepath, serializeJson(sortPackageJson(content)))
   } catch (error) {
     logger.error(error)
     throw error
