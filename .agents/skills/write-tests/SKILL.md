@@ -1,6 +1,10 @@
 ---
+description: Coordinate practical unit and end-to-end test writing in this Nx
+  workspace. Use when the user asks to add, write, improve, or increase unit
+  tests, e2e tests, integration coverage, regression tests, or test coverage for
+  project code. Uses an orchestrator agent to plan and manage testing work, and
+  worker sub-agents to implement disjoint test-writing tasks.
 name: write-tests
-description: Coordinate practical unit and end-to-end test writing in this Nx workspace. Use when the user asks to add, write, improve, or increase unit tests, e2e tests, integration coverage, regression tests, or test coverage for project code. Uses an orchestrator agent to plan and manage testing work, and worker sub-agents to implement disjoint test-writing tasks.
 ---
 
 # Write Tests

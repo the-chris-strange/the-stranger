@@ -1,6 +1,11 @@
 ---
+description: Coordinate practical documentation writing in this Nx workspace.
+  Use when the user asks to add, write, improve, update, or review README files,
+  API documentation, public usage docs, contributor-facing docstrings, JSDoc
+  comments, generated docs guidance, or documentation coverage. Uses an
+  orchestrator agent to plan documentation work and dedicated worker sub-agents
+  for README, docstring/JSDoc, and API documentation tasks.
 name: write-docs
-description: Coordinate practical documentation writing in this Nx workspace. Use when the user asks to add, write, improve, update, or review README files, API documentation, public usage docs, contributor-facing docstrings, JSDoc comments, generated docs guidance, or documentation coverage. Uses an orchestrator agent to plan documentation work and dedicated worker sub-agents for README, docstring/JSDoc, and API documentation tasks.
 ---
 
 # Write Docs

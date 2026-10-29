@@ -10,6 +10,6 @@
     { "path": "./packages/ordered" },
     { "path": "./packages/prettier-plugin" },
     { "path": "./packages/yarn-config" },
-    { "path": "./tools/nx-plugin/" }
+    { "path": "./tools/nx-plugin" }
   ]
 }
