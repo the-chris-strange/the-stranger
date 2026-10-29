@@ -11,9 +11,13 @@ export function setProjectVersion(
   yarn: Yarn,
   ...versions: ProjectVersion[]
 ) {
-  const projectVersion = versions.find(e => ws.ident && e.name.endsWith(ws.ident))
-  if (projectVersion?.version) {
-    ws.set('version', projectVersion.version)
+  const projectVersion =
+    versions.find(e => e.name === ws.ident) ??
+    versions.find(
+      e => !e.name.startsWith('@') && e.name === ws.ident?.split('/').at(-1),
+    )
+  if (projectVersion) {
+    if (projectVersion.version !== undefined) ws.set('version', projectVersion.version)
   } else {
     const rootWs = yarn.workspace({ cwd: '.' }) ?? undefined
     const wsVersion = rootWs?.manifest?.version

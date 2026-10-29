@@ -1,4 +1,4 @@
-import nxPlugin from '@nx/eslint-plugin'
+import { createRequire } from 'node:module'
 import {
   type ConfigWithExtends,
   FilePatterns,
@@ -11,6 +11,28 @@ import type { Config } from 'eslint/config'
 
 import type { ConfigOptions } from './options.js'
 
+const require = createRequire(import.meta.url)
+
+function getNxPlugin(): Plugin {
+  try {
+    require.resolve('@nx/eslint-plugin')
+  } catch (error) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 'MODULE_NOT_FOUND'
+    ) {
+      throw new Error('Install @nx/eslint-plugin to enable Nx lint rules.', {
+        cause: error,
+      })
+    }
+    throw error
+  }
+  const plugin = require('@nx/eslint-plugin') as { default?: Plugin } & Plugin
+  return plugin.default ?? plugin
+}
+
 export function configureNx(nx: ConfigOptions['nx']): ConfigWithExtends[] {
   if (!nx || (Array.isArray(nx) && nx.length === 0)) {
     return []
@@ -19,7 +41,7 @@ export function configureNx(nx: ConfigOptions['nx']): ConfigWithExtends[] {
   const configs: ConfigWithExtends[] = [
     {
       name: namer('nx'),
-      plugins: { '@nx': nxPlugin as unknown as Plugin },
+      plugins: { '@nx': getNxPlugin() },
     },
   ]
 
@@ -54,7 +76,7 @@ export function dependencyChecks(options?: DependencyCheckOptions): ConfigWithEx
       parser: jsoncParser,
     },
     name: namer('nx/dependency-checks'),
-    plugins: { '@nx': nxPlugin as unknown as Plugin },
+    plugins: { '@nx': getNxPlugin() },
     rules: {
       '@nx/dependency-checks': ['error', options],
     },
@@ -70,7 +92,7 @@ export function moduleBoundaries(options?: ModuleBoundaryOptions): ConfigWithExt
   return {
     files: getFilePatterns(FilePatterns.js, FilePatterns.ts, FilePatterns.react),
     name: namer('nx/module-boundaries'),
-    plugins: { '@nx': nxPlugin as unknown as Plugin },
+    plugins: { '@nx': getNxPlugin() },
     rules: {
       '@nx/enforce-module-boundaries': ['error', options ?? {}],
     },
@@ -88,7 +110,7 @@ export function pluginChecks(): ConfigWithExtends {
       parser: jsoncParser,
     },
     name: namer('nx/nx-plugin-checks'),
-    plugins: { '@nx': nxPlugin as unknown as Plugin },
+    plugins: { '@nx': getNxPlugin() },
     rules: {
       '@nx/nx-plugin-checks': 'error',
     },

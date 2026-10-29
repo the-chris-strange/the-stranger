@@ -5,11 +5,18 @@ import { getManifest } from './manifest'
 /**
  * Define the engines.node field of a workspace's package.json. If the field is defined in the root manifest, the version specified therein is enforced. If the field isn't defined, no constraint is required.
  * @param ws a project in the workspace
- * @param yarn the yarn context
+ * @param yarn the Yarn context to inherit from, or an explicit Node.js range
  * @param options constraint options
  */
-export function setNodeEngine(ws: Workspace, yarn: Yarn, options?: ConstraintOptions) {
-  const version = getManifest(yarn.workspace({ cwd: '.' })).engines?.node
+export function setNodeEngine(
+  ws: Workspace,
+  yarn: Yarn | string,
+  options?: ConstraintOptions,
+) {
+  const version =
+    typeof yarn === 'string'
+      ? yarn
+      : getManifest(yarn.workspace({ cwd: '.' })).engines?.node
   const include = getManifest(ws).private !== true || options?.includePrivate
 
   if (version && include) {

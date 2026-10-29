@@ -26,10 +26,6 @@ export function generateTsc(tree: Tree, options: ViteConfigSchema) {
     tscOptions,
   )
 
-  if (baseConfig.config.compilerOptions.module) {
-    delete baseConfig.config.compilerOptions.module
-  }
-
   buildConfig.config.compilerOptions.tsBuildInfoFile ??= joinPathFragments(
     offset,
     'out-tsc',
@@ -38,7 +34,6 @@ export function generateTsc(tree: Tree, options: ViteConfigSchema) {
   )
 
   baseConfig.addReferences(`./${buildConfigName}`)
-  baseConfig.config.compilerOptions = {}
 
   delete buildConfig.config.compilerOptions.declaration
   buildConfig.config.compilerOptions.outDir ??= joinPathFragments(

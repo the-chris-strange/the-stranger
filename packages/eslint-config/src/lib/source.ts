@@ -12,7 +12,6 @@ import perfectionistPlugin from 'eslint-plugin-perfectionist'
 import promisePlugin from 'eslint-plugin-promise'
 import rePlugin from 'eslint-plugin-regexp'
 import unicornPlugin from 'eslint-plugin-unicorn'
-import tseslintPlugin from 'typescript-eslint'
 
 import type { ConfigOptions } from './options.js'
 import type { Rules } from './rulesets/rules.js'
@@ -41,9 +40,7 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
 
   const plugins: Exclude<ConfigWithExtends['plugins'], undefined> = {}
   const baseConfig = {
-    extends: [tseslintPlugin.configs['recommended']] as NonNullable<
-      ConfigWithExtends['extends']
-    >,
+    extends: [] as NonNullable<ConfigWithExtends['extends']>,
     files: getFilePatterns(FilePatterns.source),
     name: namer('source/base'),
     plugins,
@@ -131,7 +128,7 @@ export function configureSource({ nx, source }: ConfigOptions): ConfigWithExtend
 function createCJSConfig(source: ConfigOptions['source']): ConfigWithExtends {
   const rules: Rules = {}
 
-  if (Object.values(source.ts).includes(true)) {
+  if (source.ts.typescript) {
     rules['@typescript-eslint/no-require-imports'] = 'off'
   }
 

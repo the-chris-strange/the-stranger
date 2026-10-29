@@ -1,4 +1,3 @@
-/* eslint-disable perfectionist/sort-objects -- Fixtures intentionally contain unsorted package keys. */
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'

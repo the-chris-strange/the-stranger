@@ -12,12 +12,14 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json",
     "./package-json": {
       "types": "./dist/lib/package-json.d.ts",
-      "import": "./dist/lib/package-json.js"
+      "import": "./dist/lib/package-json.js",
+      "default": "./dist/lib/package-json.js"
     }
   },
   "main": "./dist/index.js",

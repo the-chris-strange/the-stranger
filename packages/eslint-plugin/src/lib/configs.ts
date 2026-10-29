@@ -1,3 +1,5 @@
+import { createRequire } from 'node:module'
+
 import {
   type ConfigOptions,
   type Options,
@@ -6,6 +8,22 @@ import {
 
 import { disableTypeCheckedConfig } from './disable-type-checked.js'
 import { disableExcept } from './utils/options.js'
+
+function hasNxPlugin(): boolean {
+  try {
+    createRequire(import.meta.url).resolve('@nx/eslint-plugin')
+    return true
+  } catch (error) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 'MODULE_NOT_FOUND'
+    )
+      return false
+    throw error
+  }
+}
 
 const recommendedSourceOptions = {
   agentSkills: true,
@@ -42,7 +60,7 @@ const recommendedReactOptions = {
 
 const recommendedOptions = {
   json: { sort: true },
-  nx: true,
+  nx: hasNxPlugin(),
   source: recommendedSourceOptions,
   tests: { unitTestRunner: 'vitest' },
   yaml: { sort: true },

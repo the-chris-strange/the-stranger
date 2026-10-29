@@ -9,7 +9,9 @@
       "inputs": [
         "{workspaceRoot}/package.json",
         "{workspaceRoot}/packages/*/package.json",
-        { "dependentTasksOutputFiles": "**/*.{js,cjs}" }
+        {
+          "dependentTasksOutputFiles": "**/*.{js,cjs}"
+        }
       ],
       "outputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
       "options": {
@@ -22,6 +24,34 @@
         }
       }
     },
+    "consumer-smoke": {
+      "cache": true,
+      "dependsOn": [
+        "ordered:build",
+        "nx-plugin:build",
+        "nx-plugin-internal:build",
+        "eslint-config:build",
+        "eslint-plugin:build"
+      ],
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        {
+          "dependentTasksOutputFiles": "**/*",
+          "transitive": true
+        },
+        {
+          "runtime": "node --version"
+        },
+        {
+          "externalDependencies": ["vitest"]
+        }
+      ],
+      "options": {
+        "command": "vitest run --config tools/consumer-smoke/smoke.config.mts",
+        "cwd": "."
+      }
+    },
     "cruise-deps": {
       "cache": true,
       "executor": "nx:run-commands",
@@ -30,9 +60,13 @@
         "{workspaceRoot}/package.json",
         "{workspaceRoot}/yarn.lock",
         "{workspaceRoot}/packages/*/package.json",
-        { "externalDependencies": ["dependency-cruiser"] }
+        {
+          "externalDependencies": ["dependency-cruiser"]
+        }
       ],
-      "options": { "command": "dependency-cruiser ." }
+      "options": {
+        "command": "dependency-cruiser ."
+      }
     },
     "lint": {
       "executor": "nx:run-commands",
@@ -51,7 +85,9 @@
         "!{workspaceRoot}/packages/**/*",
         "!{workspaceRoot}/**/LICENSE",
         "!{workspaceRoot}/yarn.lock",
-        { "externalDependencies": ["eslint"] }
+        {
+          "externalDependencies": ["eslint"]
+        }
       ],
       "options": {
         "command": "eslint .",

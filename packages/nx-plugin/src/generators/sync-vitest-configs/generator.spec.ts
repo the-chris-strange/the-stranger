@@ -63,32 +63,49 @@ export default defineWorkspace(projects)
     expect(contents).toContain('projects: projects')
   })
 
-  it('removes a workspace config when a defineProject config already exists', async () => {
-    const config = `import { defineProject } from 'vitest/config'
+  it.each(['mts', 'ts', 'js', 'mjs', 'cjs', 'cts'])(
+    'preserves a conflicting defineProject root .%s config and workspace',
+    async extension => {
+      const config =
+        "import { defineProject } from 'vitest/config'\nexport default defineProject({ test: { include: ['root.spec.ts'] } })"
+      const workspace = "export default ['packages/*/vitest.config.ts']"
+      const configPath = `vitest.config.${extension}`
+      tree.write(configPath, config)
+      tree.write('vitest.workspace.ts', workspace)
 
-export default defineProject({ test: { projects: ['packages/*'] } })
-`
-    tree.write('vitest.config.mts', config)
+      await expect(syncVitestConfigsGenerator(tree)).rejects.toThrow(/already exists/)
+      expect(tree.read(configPath, 'utf8')).toBe(config)
+      expect(tree.read('vitest.workspace.ts', 'utf8')).toBe(workspace)
+    },
+  )
+
+  it('preserves both legacy files when their selections conflict', async () => {
+    tree.write('vitest.workspace.ts', "export default ['packages/a']")
+    tree.write('vitest.workspace.mts', "export default ['packages/b']")
+    await expect(syncVitestConfigsGenerator(tree)).rejects.toThrow()
+    expect(tree.read('vitest.workspace.ts', 'utf8')).toBe(
+      "export default ['packages/a']",
+    )
+    expect(tree.read('vitest.workspace.mts', 'utf8')).toBe(
+      "export default ['packages/b']",
+    )
+    expect(tree.exists('vitest.config.mts')).toBe(false)
+    expect(tree.exists('vitest.config.ts')).toBe(false)
+  })
+
+  it('leaves the migrated configuration unchanged on a second run', async () => {
     tree.write('vitest.workspace.ts', "export default ['packages/*']")
-
-    const result = await syncVitestConfigsGenerator(tree)
-
-    expect(tree.exists('vitest.workspace.ts')).toBe(false)
-    expect(tree.read('vitest.config.mts', 'utf8')).toBe(config)
-    expect(result).toMatchObject({
-      outOfSyncDetails: [
-        'Removed deprecated vitest.workspace.ts in favor of vitest.config.mts.',
-      ],
-    })
+    await syncVitestConfigsGenerator(tree)
+    const config = tree.read('vitest.config.ts', 'utf8')
+    await expect(syncVitestConfigsGenerator(tree)).resolves.toBeUndefined()
+    expect(tree.read('vitest.config.ts', 'utf8')).toBe(config)
   })
 
   it('rejects a conflicting root config', async () => {
     tree.write('vitest.config.ts', 'export default {}')
     tree.write('vitest.workspace.ts', "export default ['packages/*']")
 
-    await expect(syncVitestConfigsGenerator(tree)).rejects.toThrow(
-      'vitest.config.ts already exists and does not export defineProject(...)',
-    )
+    await expect(syncVitestConfigsGenerator(tree)).rejects.toThrow(/already exists/)
     expect(tree.read('vitest.config.ts', 'utf8')).toBe('export default {}')
     expect(tree.exists('vitest.workspace.ts')).toBe(true)
   })

@@ -1,13 +1,38 @@
-/* eslint-disable perfectionist/sort-objects -- Fixtures intentionally contain unsorted document keys. */
 import { describe, expect, it } from 'vitest'
 
-import {
-  buildNamedOrderRanks,
-  resolveObjectKeyOptions,
-  sortValue,
-} from './core.js'
+import { buildNamedOrderRanks, resolveObjectKeyOptions, sortValue } from './core.js'
 
 describe('document sorting', () => {
+  it('lets later path overrides replace the selected comparison mode', () => {
+    const output = sortValue(
+      { lexical: ['a', 'Z'], locale: ['Z', 'a'], natural: ['item10', 'item2'] },
+      {
+        arrayValues: {
+          sortType: 'lexical',
+          overrides: [
+            { pathPattern: 'locale', sortType: 'locale' },
+            { pathPattern: 'natural', sortType: 'locale' },
+            { pathPattern: 'natural', sortType: 'natural' },
+          ],
+        },
+      },
+    )
+    expect(output.lexical).toStrictEqual(['Z', 'a'])
+    expect(output.locale).toStrictEqual(['a', 'Z'])
+    expect(output.natural).toStrictEqual(['item2', 'item10'])
+  })
+
+  it('supports lexical comparison and pinned array values', () => {
+    expect(
+      sortValue(['a', 'Z', '_', 'A'], { arrayValues: { sortType: 'lexical' } }),
+    ).toStrictEqual(['A', 'Z', '_', 'a'])
+    expect(
+      sortValue(['.aaa', 'z', '.env?', 'a'], {
+        arrayValues: { sortType: 'lexical', priority: ['.env?'] },
+      }),
+    ).toStrictEqual(['.env?', '.aaa', 'a', 'z'])
+  })
+
   it('sorts nested keys and arrays without mutating the input', () => {
     const nested = Object.freeze({ z: 1, a: 2 })
     const values = Object.freeze(['b', 'a'])
@@ -41,7 +66,7 @@ describe('document sorting', () => {
         sortValue(
           { a1: 1, a2: 3, a10: 2 },
           {
-            objectKeys: { natural: true, order: 'desc' },
+            objectKeys: { sortType: 'natural', order: 'desc' },
           },
         ),
       ),
@@ -72,7 +97,10 @@ describe('document sorting', () => {
       {
         objectKeys: {
           overrides: [
-            { order: ['name', { key: 'version', natural: true }], pathPattern: '' },
+            {
+              order: ['name', { key: 'version', sortType: 'natural' }],
+              pathPattern: '',
+            },
           ],
         },
       },
@@ -109,7 +137,7 @@ describe('document sorting', () => {
   it('sorts scalar values by value and preserves ties', () => {
     expect(sortValue([10, 2, 1])).toStrictEqual([1, 2, 10])
     expect(
-      sortValue(['item10', 'item2'], { arrayValues: { natural: true } }),
+      sortValue(['item10', 'item2'], { arrayValues: { sortType: 'natural' } }),
     ).toStrictEqual(['item2', 'item10'])
     expect(sortValue([true, null, 'a', 2, false])).toStrictEqual([
       null,

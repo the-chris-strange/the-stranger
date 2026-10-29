@@ -16,6 +16,8 @@ If you enable Nx rules, also install `@nx/eslint-plugin`:
 npm install --save-dev @nx/eslint-plugin
 ```
 
+Nx is optional for importing this package and using ordinary configurations. Explicit Nx options and helpers report an installation error when the peer is missing. Errors from an installed Nx plugin are not suppressed.
+
 ## Usage
 
 Create an `eslint.config.mjs` file and export the result of `configure()`.
@@ -70,6 +72,8 @@ Enabled by default. Applies JavaScript and TypeScript recommendations, CommonJS 
 
 TypeScript type-aware linting is enabled by default. Strict type-checked TypeScript rules can be enabled with `source.ts.strict`.
 
+Set `source.ts.typeChecked: false` to lint TypeScript without a TypeScript project. React TypeScript configurations also require `source.react.typeChecked: false` to avoid project-based parsing. Setting `source.ts.typescript: false` disables the ordinary TypeScript configuration, regardless of its other switches. Each `configure()` call has independent rules.
+
 ### React
 
 Included with the source configuration for React and JSX files. Adds `@eslint-react`, React Hooks, JSX accessibility, React file-casing rules, and project React rules. Additional TypeScript and Astro handling can be enabled with `source.react.typescript`, `source.react.typeChecked`, and `source.react.astro`.
@@ -80,11 +84,13 @@ Disabled unless `tests` options are provided. Supports Vitest or Jest for unit t
 
 ### JSON
 
-Enabled by default. Adds JSONC parsing and sorting rules for Nx, TypeScript, and VS Code configuration files. Individual sort presets can be disabled under `json.sort`.
+JSONC parsing is enabled by default. Sorting is opt-in for Nx, TypeScript, and VS Code configuration files. Enable all presets with `json: { sort: true }` (or `json: true`), or select individual presets under `json.sort`, such as `{ nx: true }`. Unspecified sort presets remain disabled. Set `json: false` to disable JSON configuration entirely.
 
 ### YAML
 
-Enabled by default. Adds standard YAML linting and sorting rules for GitHub Actions, as well as for CSpell, Dependabot, markdownlint, and Yarn configuration files. Individual sort presets can be disabled under `yaml.sort`.
+Standard YAML linting is enabled by default. Sorting is opt-in for GitHub Actions, CSpell, Dependabot, markdownlint, and Yarn configuration files. Enable all presets with `yaml: { sort: true }` (or `yaml: true`), or select individual presets under `yaml.sort`, such as `{ githubActions: true }`. Unspecified sort presets remain disabled. Set `yaml: false` to disable YAML configuration entirely.
+
+When using `@the-stranger/prettier-plugin/sorting-config`, leave both `json.sort` and `yaml.sort` disabled so Prettier owns data sorting. ESLint source sorting is independent. TOML has no data-sorting preset.
 
 ### TOML
 

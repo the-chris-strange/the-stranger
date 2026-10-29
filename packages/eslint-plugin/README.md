@@ -45,6 +45,8 @@ export default defineConfig({
 
 ## Optional peer dependencies
 
+The recommended presets automatically include Nx rules when `@nx/eslint-plugin` is installed and omit them when it is absent. Ordinary presets can be imported without this optional peer. Explicit Nx requests report a missing-peer error, and failures inside an installed plugin remain visible.
+
 Install [@nx/eslint-plugin] to enable the Nx preset:
 
 ```bash

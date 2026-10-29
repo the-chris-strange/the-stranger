@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { type Tree, logger, OverwriteStrategy } from '@nx/devkit'
+import ts from 'typescript'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { TsConfigJson } from 'get-tsconfig'
@@ -199,7 +200,7 @@ describe('TSConfig', () => {
       expect(tsconfig.config.compilerOptions.types).toStrictEqual(['type2'])
 
       tsconfig.removeTypes('type2')
-      expect(tsconfig.config.compilerOptions.types).toBeUndefined()
+      expect(tsconfig.config.compilerOptions.types).toStrictEqual([])
     })
 
     it('supports empty additive, replacement, and removal inputs', () => {
@@ -210,7 +211,7 @@ describe('TSConfig', () => {
       expect(tsconfig.config.compilerOptions.types).toStrictEqual(before)
 
       tsconfig.setTypes()
-      expect(tsconfig.config.compilerOptions.types).toBeUndefined()
+      expect(tsconfig.config.compilerOptions.types).toStrictEqual([])
     })
   })
 
@@ -266,6 +267,50 @@ describe('TSConfig', () => {
   })
 
   describe('serialization', () => {
+    it('preserves explicit empty lists and their TypeScript compilation behavior', () => {
+      const original: TsConfigJson = {
+        compilerOptions: { types: [] },
+        exclude: [],
+        files: [],
+        include: [],
+      }
+      tree.write(path, JSON.stringify(original))
+      const serialized = new TSConfig(path, tree).toJSON()
+      expect(serialized).toStrictEqual(original)
+      const host: ts.ParseConfigHost = {
+        fileExists: () => true,
+        readDirectory: () => ['/project/unintended.ts'],
+        readFile: () => '',
+        useCaseSensitiveFileNames: true,
+      }
+      const parsed = ts.parseJsonConfigFileContent(serialized, host, '/project')
+      expect(parsed.fileNames).toStrictEqual([])
+      expect(parsed.options.types).toStrictEqual([])
+    })
+
+    it('omits synthesized lists even after an unrelated patch', () => {
+      const fresh = new TSConfig('missing.json', tree)
+      expect(fresh.toJSON()).toStrictEqual({})
+      fresh.apply({ compilerOptions: { strict: true } })
+      expect(fresh.toJSON()).toStrictEqual({ compilerOptions: { strict: true } })
+    })
+
+    it('preserves explicitly empty lists supplied by a patch', () => {
+      const fresh = new TSConfig('missing.json', tree)
+      fresh.apply({
+        compilerOptions: { types: [] },
+        exclude: [],
+        files: [],
+        include: [],
+      })
+      expect(fresh.toJSON()).toStrictEqual({
+        compilerOptions: { types: [] },
+        exclude: [],
+        files: [],
+        include: [],
+      })
+    })
+
     it('returns a detached result without mutating the working document', () => {
       const before = structuredClone(tsconfig.config)
       const json = tsconfig.toJSON()
@@ -294,7 +339,7 @@ describe('TSConfig', () => {
         },
         customField: { enabled: false },
       })
-      expect(tsconfig.toJSON()).not.toHaveProperty('include')
+      expect(tsconfig.toJSON().include).toStrictEqual([])
       expect(tsconfig.toJSON()).not.toHaveProperty('compilerOptions.paths.@empty/*')
     })
 

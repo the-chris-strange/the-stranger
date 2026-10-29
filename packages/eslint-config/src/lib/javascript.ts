@@ -23,6 +23,11 @@ export function configureJs({ js }: ConfigOptions['source']): ConfigWithExtends[
         },
       },
       name: namer('javascript/base'),
+      rules: {
+        'no-array-constructor': 'error',
+        'no-unused-expressions': 'error',
+        'no-unused-vars': 'error',
+      },
     },
   ]
 }

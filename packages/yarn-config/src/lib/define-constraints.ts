@@ -1,11 +1,10 @@
 import type { RepositoryObject } from './manifest'
-import type { ProjectVersion } from './project-version'
 import type { ConstraintOptions, Workspace, Yarn } from './types'
 
 import { setLicense } from './license'
 import { setNodeEngine } from './node-engine'
 import { enforceConsistentProjectDependencies } from './project-dependencies'
-import { setProjectVersion } from './project-version'
+import { type ProjectVersion, setProjectVersion } from './project-version'
 import { setRepo } from './repository'
 
 export function defineConstraints(config?: ConstraintsOptions) {
@@ -18,16 +17,20 @@ export function defineConstraints(config?: ConstraintsOptions) {
   }
 
   if (nodeEngines) {
-    constraints.push(setNodeEngine)
+    constraints.push((ws, yarn, options) =>
+      setNodeEngine(ws, typeof nodeEngines === 'string' ? nodeEngines : yarn, options),
+    )
   }
 
   if (license) {
-    constraints.push(setLicense)
+    constraints.push((ws, yarn, options) =>
+      setLicense(ws, typeof license === 'string' ? license : yarn, options),
+    )
   }
 
   if (repository) {
     constraints.push((ws, yarn, options) =>
-      setRepo(ws, yarn, { ...options, fromRoot: true }),
+      setRepo(ws, typeof repository === 'object' ? repository : yarn, options),
     )
   }
 

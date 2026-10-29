@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "build": "nx run-many -t build",
-    "ci": "nx run-many -t lint test build typecheck",
+    "ci": "nx run-many -t lint test build typecheck consumer-smoke",
     "commit": "commit",
     "commit:lint": "commitlint",
     "format": "nx format",

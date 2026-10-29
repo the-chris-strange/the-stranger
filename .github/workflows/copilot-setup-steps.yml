@@ -7,7 +7,7 @@ on:
   push:
     paths:
       - .github/workflows/copilot-setup-steps.yml
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 jobs:
   # required name

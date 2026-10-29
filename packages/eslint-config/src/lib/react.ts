@@ -41,7 +41,9 @@ export function configureReact({ react }: ConfigOptions['source']) {
         ],
       ],
       files: getFilePatterns(FilePatterns.reactTs),
-      languageOptions,
+      languageOptions: react.typeChecked
+        ? languageOptions
+        : { parser: languageOptions.parser },
       name: namer('react/typescript'),
     })
   }

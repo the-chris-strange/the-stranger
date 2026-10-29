@@ -2,7 +2,9 @@ import { type Tree, formatFiles } from '@nx/devkit'
 
 import type { SyncGeneratorResult } from 'nx/src/utils/sync-generators'
 
-const rootConfigPaths = ['vitest.config.mts', 'vitest.config.ts'] as const
+const rootConfigPaths = ['mts', 'ts', 'js', 'mjs', 'cjs', 'cts'].map(
+  extension => `vitest.config.${extension}`,
+)
 const workspaceConfigPaths = ['vitest.workspace.mts', 'vitest.workspace.ts'] as const
 
 /**
@@ -19,29 +21,20 @@ export async function syncVitestConfigsGenerator(
     return
   }
 
-  const projectConfigPath = rootConfigPaths.find(path => {
-    const contents = tree.read(path, 'utf8')
-    return contents !== null && hasDefineProjectExport(contents)
-  })
-
+  const projectConfigPath = rootConfigPaths.find(path => tree.exists(path))
   if (projectConfigPath) {
-    for (const workspacePath of workspacePaths) {
-      tree.delete(workspacePath)
-    }
-
-    return syncResult([
-      `Removed deprecated ${workspacePaths.join(', ')} in favor of ${projectConfigPath}.`,
-    ])
+    throw new Error(
+      `Cannot migrate ${workspacePaths.join(', ')} because ${projectConfigPath} already exists. Merge the project selections manually; both files were preserved.`,
+    )
+  }
+  if (workspacePaths.length > 1) {
+    throw new Error(
+      `Cannot migrate multiple workspace configs: ${workspacePaths.join(', ')}. Merge them manually; both files were preserved.`,
+    )
   }
 
   const workspacePath = workspacePaths[0]
   const configPath = workspacePath.replace('.workspace.', '.config.')
-
-  if (tree.exists(configPath)) {
-    throw new Error(
-      `Cannot migrate ${workspacePath} because ${configPath} already exists and does not export defineProject(...).`,
-    )
-  }
 
   const workspaceContents = tree.read(workspacePath, 'utf8')
   if (workspaceContents === null) {
@@ -107,10 +100,6 @@ export default defineProject({
   },
 })
 `
-}
-
-function hasDefineProjectExport(contents: string) {
-  return /export\s+default\s+defineProject\s*\(/.test(contents)
 }
 
 function syncResult(outOfSyncDetails: string[]): Exclude<SyncGeneratorResult, void> {

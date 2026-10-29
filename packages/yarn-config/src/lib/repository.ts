@@ -32,7 +32,7 @@ export function setRepo(
     ws.set('repository.url', repo.url)
     ws.set('repository.directory', directory)
   } else if (fromRoot) {
-    setRepo(ws, getRootRepository(repo), options)
+    setRepo(ws, getRootRepository(repo), { ...options, fromRoot: false })
   }
 }
 

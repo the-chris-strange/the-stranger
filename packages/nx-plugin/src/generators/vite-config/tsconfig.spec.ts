@@ -34,11 +34,13 @@ describe('tsconfig generators', () => {
         compilerOptions: {
           forceConsistentCasingInFileNames: true,
           importHelpers: true,
+          jsx: 'react-jsx',
           module: 'commonjs',
           noFallthroughCasesInSwitch: true,
           noImplicitOverride: true,
           noImplicitReturns: true,
           noPropertyAccessFromIndexSignature: true,
+          paths: { '@app/*': ['src/*'] },
           strict: true,
         },
         extends: '../../tsconfig.base.json',
@@ -121,6 +123,21 @@ describe('tsconfig generators', () => {
       path.startsWith('packages/test') ? path : `packages/test/${path}`,
       tree,
     )
+
+  it('preserves consumer compiler options and repeated output', async () => {
+    const original = readConfig('tsconfig.json')
+    await viteConfigGenerator(tree, options)
+    expect(readConfig('tsconfig.json').compilerOptions).toStrictEqual(
+      original.compilerOptions,
+    )
+    expect(readConfig('tsconfig.json').extends).toBe('../../tsconfig.base.json')
+    expect(readConfig('tsconfig.lib.json').extends).toBe('./tsconfig.json')
+    const base = readConfig('tsconfig.json')
+    const build = readConfig('tsconfig.lib.json')
+    await viteConfigGenerator(tree, options)
+    expect(readConfig('tsconfig.json')).toStrictEqual(base)
+    expect(readConfig('tsconfig.lib.json')).toStrictEqual(build)
+  })
 
   it('includes .tsx files in compilation if using react', async () => {
     options.react = true

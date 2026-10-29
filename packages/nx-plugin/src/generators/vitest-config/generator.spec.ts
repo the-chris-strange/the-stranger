@@ -1,4 +1,5 @@
 import { type Tree, readJson, readNxJson, writeJson } from '@nx/devkit'
+import ts from 'typescript'
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { VitestConfigSchema } from './schema'
@@ -31,6 +32,24 @@ describe('vitest config generator', () => {
     await vitestConfigGenerator(tree, options)
     expect(tree.exists('packages/test/vitest.config.mts')).toBe(true)
   })
+
+  it.each(['v8', 'istanbul'] as const)(
+    'generates valid TypeScript with %s coverage',
+    async coverageProvider => {
+      await vitestConfigGenerator(tree, { ...options, coverageProvider })
+      const text = tree.read('packages/test/vitest.config.mts', 'utf8')!
+      const result = ts.transpileModule(text, {
+        compilerOptions: { module: ts.ModuleKind.ESNext },
+        fileName: 'vitest.config.mts',
+        reportDiagnostics: true,
+      })
+      expect(
+        result.diagnostics?.map(diagnostic =>
+          ts.flattenDiagnosticMessageText(diagnostic.messageText, ' '),
+        ),
+      ).toStrictEqual([])
+    },
+  )
 
   it('registers the Vitest sync generator on the inferred test target', async () => {
     await vitestConfigGenerator(tree, options)

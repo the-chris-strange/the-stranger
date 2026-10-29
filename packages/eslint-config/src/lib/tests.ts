@@ -62,7 +62,7 @@ export function configureTests({ source, tests }: ConfigOptions) {
       Object.assign(baseConfig.rules, typescriptTestFileRules)
     }
 
-    if (source.ts.typeChecked) {
+    if (source.ts.typescript && source.ts.typeChecked) {
       Object.assign(baseConfig.rules, typeCheckedTestFileRules)
     }
   }

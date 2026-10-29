@@ -12,7 +12,7 @@ export default defineConfig(() => ({
   test: {
     coverage: {
       exclude: ['src/test/**', 'src/**/*.d.ts'],
-      include: ['src/**/*.ts']
+      include: ['src/**/*.ts'],
       <% if (coverageProvider !== 'v8') { %> provider: '<%= coverageProvider %>' as const, <% } %>
       reportsDirectory: `<%= coveragePath %>/${projectPath}`,
     },

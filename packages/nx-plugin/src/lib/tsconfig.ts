@@ -17,6 +17,7 @@ import { toArray } from './to-array'
 export class TSConfig {
   readonly config: TSConfigType
 
+  #implicitLists = new WeakSet<string[]>()
   #options: TSConfigOptions
   #path: string
   #tree?: Tree
@@ -31,7 +32,7 @@ export class TSConfig {
     this.#path = path
     this.#tree = tree
     this.#options = options ?? {}
-    this.config = TSConfig.normalize(maybeReadJson(path, tree) ?? {})
+    this.config = this.#normalize(maybeReadJson(path, tree) ?? {})
   }
 
   /**
@@ -73,7 +74,7 @@ export class TSConfig {
         }
       } else if (key === 'types') {
         const types = TSConfig.normalizeTypes(value as CompilerOptions['types'])
-        if (types.length > 0) {
+        if (Array.isArray(value) || types.length > 0) {
           normalized.types = types
         }
       } else if (!isEmpty(value)) {
@@ -200,7 +201,13 @@ export class TSConfig {
    * @param config patch to apply
    */
   apply(config: TsConfigJson) {
-    const normalized = TSConfig.normalize(mergeDeep(this.config, config))
+    const source: TsConfigJson = structuredClone(this.config)
+    for (const key of ['files', 'include', 'exclude'] as const) {
+      if (this.#implicitLists.has(this.config[key]) && this.config[key].length === 0) {
+        Reflect.deleteProperty(source, key)
+      }
+    }
+    const normalized = this.#normalize(mergeDeep(source, config))
 
     for (const key of Object.keys(this.config)) {
       Reflect.deleteProperty(this.config, key)
@@ -243,10 +250,8 @@ export class TSConfig {
       type => !removed.has(type),
     )
 
-    if (remaining.length > 0) {
+    if (this.config.compilerOptions.types !== undefined) {
       this.config.compilerOptions.types = remaining
-    } else {
-      delete this.config.compilerOptions.types
     }
   }
 
@@ -281,12 +286,7 @@ export class TSConfig {
    * @param types replacement types
    */
   setTypes(...types: string[]) {
-    const normalized = TSConfig.normalizeTypes(types)
-    if (normalized.length > 0) {
-      this.config.compilerOptions.types = normalized
-    } else {
-      delete this.config.compilerOptions.types
-    }
+    this.config.compilerOptions.types = TSConfig.normalizeTypes(types)
   }
 
   [Symbol.dispose]() {
@@ -304,6 +304,12 @@ export class TSConfig {
     const includedProperties = (this.#options.includeProperties ?? []).map(property =>
       parsePropertyPath(property),
     )
+    for (const key of ['files', 'include', 'exclude'] as const) {
+      if (!this.#implicitLists.has(this.config[key])) includedProperties.push([key])
+    }
+    if (Array.isArray(source.compilerOptions.types)) {
+      includedProperties.push(['compilerOptions', 'types'])
+    }
     const normalized = TSConfig.normalize(source)
 
     for (const path of includedProperties) {
@@ -347,6 +353,14 @@ export class TSConfig {
     if (!fileExists || this.overwriteStrategy === OverwriteStrategy.Overwrite) {
       writeJson(this.#path, this.toJSON(), this.#tree)
     }
+  }
+
+  #normalize(source: TsConfigJson): TSConfigType {
+    const normalized = TSConfig.normalize(source)
+    for (const key of ['files', 'include', 'exclude'] as const) {
+      if (!Array.isArray(source[key])) this.#implicitLists.add(normalized[key])
+    }
+    return normalized
   }
 
   private get overwriteStrategy(): OverwriteStrategy {

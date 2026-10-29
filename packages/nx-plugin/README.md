@@ -34,3 +34,9 @@ Generate a [Vite](https://vitejs.dev) (or [Vitest](https://vitest.dev)) configur
 
 Replace the [deprecated](https://vitest.dev/guide/migration.html#workspace-is-replaced-with-projects) `vitest.workspace` file with a
 `vitest.config` project definition.
+
+Migration stops without changing files when a root Vitest configuration already exists or both legacy workspace extensions are present. Merge the project selections manually before removing the legacy file.
+
+## TypeScript configuration updates
+
+The Vite generator preserves existing compiler options, including module settings, strictness, JSX settings, and path aliases. `TSConfig` preserves explicitly supplied empty `files`, `include`, `exclude`, and `compilerOptions.types` arrays because removing them changes TypeScript behavior. Synthesized empty defaults remain omitted. Clearing types with `setTypes()` or removing the final explicit type retains `types: []`.

@@ -19,16 +19,20 @@ export function configureTs({
   jsdoc,
   ts,
 }: ConfigOptions['source']): ConfigWithExtends[] {
-  if (!Object.values(ts).includes(true)) {
+  if (!ts.typescript) {
     return []
   }
 
   const config = {
-    extends: [] as NonNullable<ConfigWithExtends['extends']>,
+    extends: [tseslintPlugin.configs['recommended']] as NonNullable<
+      ConfigWithExtends['extends']
+    >,
     files: getFilePatterns(FilePatterns.ts),
-    languageOptions,
+    languageOptions: ts.typeChecked
+      ? languageOptions
+      : { parser: languageOptions.parser },
     name: namer('typescript/base'),
-    rules: typescriptRules,
+    rules: { ...typescriptRules },
   } satisfies ConfigWithExtends
 
   if (ts.typeChecked) {

@@ -16,8 +16,8 @@ export function configure(
   const configArray: ConfigWithExtends[] = [
     ...configureSource(config),
     ...configureTests(config),
-    ...configureJson(config),
-    ...configureYaml(config),
+    ...(options?.json === false ? [] : configureJson(config)),
+    ...(options?.yaml === false ? [] : configureYaml(config)),
   ]
 
   if (config.toml) {
@@ -28,7 +28,6 @@ export function configure(
     globalIgnores(
       [
         '.cache',
-        '.github',
         '.nx',
         '.pnp.*',
         '.yarn',
