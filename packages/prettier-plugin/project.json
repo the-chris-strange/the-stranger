@@ -9,6 +9,21 @@
       "executor": "@the-stranger/nx-plugin-internal:build-package"
     },
     "prepare-publish": {},
+    "test": {
+      "inputs": [
+        "default",
+        "^productionCode",
+        "{workspaceRoot}/packages/eslint-config/src/**/*.ts",
+        "{workspaceRoot}/packages/eslint-utils/src/**/*.ts",
+        "{workspaceRoot}/prettier.config.mjs",
+        "{workspaceRoot}/nx.json",
+        {
+          "externalDependencies": ["eslint", "eslint-plugin-jsonc", "eslint-plugin-yml", "jiti", "prettier", "vitest"]
+        },
+        { "env": "CI" },
+        { "env": "GITHUB_ACTIONS" }
+      ]
+    },
     "watch-tests": {}
   }
 }

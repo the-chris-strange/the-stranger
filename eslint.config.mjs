@@ -40,13 +40,6 @@ const { getFilePatterns, FilePatterns } = await jiti.import(
 const wsPlugin = await jiti.import('@the-stranger/eslint-plugin')
 
 const configureOptions = {
-  json: {
-    sort: {
-      nx: true,
-      tsconfig: true,
-      vscode: true,
-    },
-  },
   nx: true,
   source: {
     agentSkills: true,
@@ -74,15 +67,6 @@ const configureOptions = {
   tests: {
     disallowedWords: ['should'],
     unitTestRunner: 'vitest',
-  },
-  yaml: {
-    sort: {
-      cspellConfig: true,
-      dependabotConfig: true,
-      githubActions: true,
-      markdownlintConfig: true,
-      yarnrc: true,
-    },
   },
 }
 

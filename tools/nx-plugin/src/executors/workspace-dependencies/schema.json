@@ -1,29 +1,29 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "version": 2,
-  "title": "Resolve Workspace Dependencies",
   "description": "Resolves workspace dependencies and updates the package.json file with the resolved versions.",
-  "type": "object",
   "properties": {
-    "source": {
-      "type": "string",
-      "description": "The source manifest file where the workspace dependencies are declared. If not specified, the executor will use the manifest in the project root."
-    },
     "destination": {
-      "type": "string",
-      "description": "The manifest file to write resolved dependency versions to. If not specified, the executor will attempt to find a manifest in the project's build output."
+      "description": "The manifest file to write resolved dependency versions to. If not specified, the executor will attempt to find a manifest in the project's build output.",
+      "type": "string"
     },
     "resolvedVersionPrefix": {
-      "type": "string",
-      "enum": ["", "^", "~"],
       "default": "^",
-      "description": "The prefix to use when writing resolved versions to the destination manifest."
+      "description": "The prefix to use when writing resolved versions to the destination manifest.",
+      "enum": ["", "^", "~"],
+      "type": "string"
+    },
+    "source": {
+      "description": "The source manifest file where the workspace dependencies are declared. If not specified, the executor will use the manifest in the project root.",
+      "type": "string"
     },
     "stage": {
-      "type": "boolean",
       "default": false,
-      "description": "Copy the publish manifest, README, Markdown docs, workspace license, and runtime dist files to the destination before resolving dependencies."
+      "description": "Copy the publish manifest, README, Markdown docs, workspace license, and runtime dist files to the destination before resolving dependencies.",
+      "type": "boolean"
     }
   },
-  "required": []
+  "required": [],
+  "title": "Resolve Workspace Dependencies",
+  "type": "object",
+  "version": 2
 }

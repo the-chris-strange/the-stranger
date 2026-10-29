@@ -24,9 +24,5 @@
     "src/**/*.spec.jsx",
     "src/test/**/*.ts"
   ],
-  "references": [
-    {
-      "path": "../ordered/tsconfig.lib.json"
-    }
-  ]
+  "references": [{ "path": "../ordered/tsconfig.lib.json" }]
 }

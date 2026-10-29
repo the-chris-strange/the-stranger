@@ -13,6 +13,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./sorting-config": {
+      "types": "./dist/sorting-config.d.ts",
+      "import": "./dist/sorting-config.js"
+    },
     "./package.json": "./package.json",
     "./config": {
       "types": "./dist/config.d.ts",

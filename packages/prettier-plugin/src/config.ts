@@ -1,7 +1,5 @@
 import type { Config } from 'prettier'
 
-import sortingPlugin from './sorting.js'
-
 export default {
   arrowParens: 'avoid',
   bracketSameLine: true,
@@ -39,7 +37,6 @@ export default {
       },
     },
   ],
-  plugins: [sortingPlugin],
   printWidth: 88,
   proseWrap: 'preserve',
   quoteProps: 'consistent',

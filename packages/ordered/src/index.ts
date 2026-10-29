@@ -5,6 +5,7 @@ export {
   resolveArrayValueOptions,
   resolveObjectKeyOptions,
   sortArrayValues,
+  sortObjectItems,
   sortValue,
   toComparatorOpts,
 } from './lib/core.js'
@@ -26,5 +27,6 @@ export type {
   SortJsonStringOptions,
   SortOptions,
   SortOrder,
+  SortType,
 } from './lib/types.js'
 export { sortYamlString, sortYamlValue } from './lib/yaml.js'

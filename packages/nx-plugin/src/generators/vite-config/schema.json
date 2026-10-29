@@ -1,69 +1,69 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "ViteConfig",
-  "title": "Vite configuration file generator",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "description": "Generate a vite.config.ts file for a project.",
-  "type": "object",
   "properties": {
+    "force": {
+      "description": "Overwrite existing files.",
+      "type": "boolean"
+    },
+    "formats": {
+      "default": ["es"],
+      "description": "Module formats produced by the build process. This option is ignored if 'includeBuild' is false.",
+      "enum": ["es", "cjs", "umd", "iife", "system"],
+      "type": "array"
+    },
+    "includeBuild": {
+      "description": "Include build configuration in the generated file.",
+      "type": "boolean"
+    },
     "project": {
-      "type": "string",
-      "description": "The name of the project in which to generate a vite config.",
       "$default": {
         "$source": "projectName",
         "index": 0
       },
+      "description": "The name of the project in which to generate a vite config.",
+      "type": "string",
       "x-prompt": "To which project would you like to add a Vite configuration file?"
     },
-    "formats": {
-      "type": "array",
-      "enum": ["es", "cjs", "umd", "iife", "system"],
-      "description": "Module formats produced by the build process. This option is ignored if 'includeBuild' is false.",
-      "default": ["es"]
-    },
-    "includeBuild": {
-      "type": "boolean",
-      "description": "Include build configuration in the generated file."
-    },
     "react": {
-      "type": "boolean",
+      "default": false,
       "description": "Indicate that the project uses React.js.",
-      "default": false
+      "type": "boolean"
     },
     "rollupExternals": {
-      "type": "array",
       "description": "An array of values to add to the `rollupOptions.external` configuration field.",
       "items": {
         "type": "string"
-      }
+      },
+      "type": "array"
     },
     "skipTsconfigs": {
-      "type": "boolean",
-      "description": "Skip updating the project's tsconfig.json files."
+      "description": "Skip updating the project's tsconfig.json files.",
+      "type": "boolean"
     },
     "swc": {
-      "type": "boolean",
-      "description": "Use the SWC compiler instead of babel."
+      "description": "Use the SWC compiler instead of babel.",
+      "type": "boolean"
     },
     "target": {
-      "type": "array",
+      "description": "Build targets. This option is ignored if 'includeBuild' is false.",
       "items": {
         "type": "string"
       },
-      "description": "Build targets. This option is ignored if 'includeBuild' is false."
+      "type": "array"
     },
     "tsconfigName": {
-      "type": "string",
-      "description": "Set the filename to use in the configuration for `vite-plugin-dts`. If unspecified, the generator will use the project's 'projectType' configuration value to create a file name."
+      "description": "Set the filename to use in the configuration for `vite-plugin-dts`. If unspecified, the generator will use the project's 'projectType' configuration value to create a file name.",
+      "type": "string"
     },
     "worker": {
-      "type": "boolean",
+      "default": false,
       "description": "Indicates whether the project uses workers.",
-      "default": false
-    },
-    "force": {
-      "type": "boolean",
-      "description": "Overwrite existing files."
+      "type": "boolean"
     }
   },
-  "required": ["project"]
+  "required": ["project"],
+  "title": "Vite configuration file generator",
+  "type": "object"
 }

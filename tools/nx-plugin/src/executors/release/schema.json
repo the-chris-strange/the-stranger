@@ -1,39 +1,39 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "version": 2,
-  "title": "Release",
   "description": "Version and publish workspace packages with Nx Release.",
-  "type": "object",
   "properties": {
     "dryRun": {
-      "type": "boolean",
-      "description": "Preview the resolved versions without changing files, requesting an npm OTP, or publishing."
+      "description": "Preview the resolved versions without changing files, requesting an npm OTP, or publishing.",
+      "type": "boolean"
     },
     "firstRelease": {
-      "type": "boolean",
-      "description": "Treat the release as the first release for the selected projects."
+      "description": "Treat the release as the first release for the selected projects.",
+      "type": "boolean"
     },
     "groups": {
-      "type": "array",
+      "description": "Release only these release groups.",
       "items": { "type": "string" },
-      "description": "Release only these release groups."
+      "type": "array"
     },
     "preid": {
-      "type": "string",
-      "description": "Prerelease identifier, such as next or beta."
+      "description": "Prerelease identifier, such as next or beta.",
+      "type": "string"
     },
     "projects": {
-      "type": "array",
+      "description": "Release only these projects.",
       "items": { "type": "string" },
-      "description": "Release only these projects."
+      "type": "array"
     },
     "specifier": {
-      "type": "string",
-      "description": "Explicit semver version or relative bump, such as patch."
+      "description": "Explicit semver version or relative bump, such as patch.",
+      "type": "string"
     },
     "verbose": {
-      "type": "boolean",
-      "description": "Print additional Nx Release output."
+      "description": "Print additional Nx Release output.",
+      "type": "boolean"
     }
-  }
+  },
+  "title": "Release",
+  "type": "object",
+  "version": 2
 }

@@ -27,4 +27,12 @@ export default defineConfig(
     },
     languageOptions: { parser: jsoncParser },
   },
+
+  {
+    files: ['**/*.spec.ts'],
+    name: 'Disable object sort for test files',
+    rules: {
+      'perfectionist/sort-objects': 'off',
+    },
+  },
 )

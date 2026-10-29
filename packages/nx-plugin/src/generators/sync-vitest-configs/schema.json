@@ -1,8 +1,8 @@
 {
-  "$schema": "https://json-schema.org/schema",
   "$id": "SyncVitestConfigs",
-  "title": "Synchronize workspace Vitest configurations",
-  "type": "object",
+  "$schema": "https://json-schema.org/schema",
   "properties": {},
-  "required": []
+  "required": [],
+  "title": "Synchronize workspace Vitest configurations",
+  "type": "object"
 }

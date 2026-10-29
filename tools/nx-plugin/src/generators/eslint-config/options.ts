@@ -1,16 +1,9 @@
-import type { ConfigOptions } from '@the-stranger/eslint-config'
+import type { Options } from '@the-stranger/eslint-config'
 
 import type { EslintConfigSchema } from './schema'
 
 export function normalizeOptions(options: EslintConfigSchema): NormalizedOptions {
   const defaultOptions = {
-    json: {
-      sort: {
-        nx: true,
-        tsconfig: true,
-        vscode: true,
-      },
-    },
     nx: true,
     source: {
       agentSkills: true,
@@ -39,16 +32,7 @@ export function normalizeOptions(options: EslintConfigSchema): NormalizedOptions
       disallowedWords: ['should'],
       unitTestRunner: 'vitest',
     },
-    yaml: {
-      sort: {
-        cspellConfig: true,
-        dependabotConfig: true,
-        githubActions: true,
-        markdownlintConfig: true,
-        yarnrc: true,
-      },
-    },
-  } satisfies ConfigOptions
+  } satisfies Options
 
   const configureOptions = Object.assign({}, defaultOptions, options.configureOptions)
 

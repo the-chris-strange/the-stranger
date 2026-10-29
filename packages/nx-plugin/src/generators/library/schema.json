@@ -1,67 +1,67 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "Library",
-  "title": "TypeScript library generator",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "description": "Generate a TypeScript library for that works with my projects.",
-  "type": "object",
   "properties": {
+    "bundler": {
+      "default": "tsc",
+      "description": "The bundler to use. Choosing 'none' means this library is not buildable.",
+      "enum": ["swc", "tsc", "rollup", "vite", "esbuild", "none"],
+      "type": "string"
+    },
+    "force": {
+      "description": "Overwrite existing files.",
+      "type": "boolean"
+    },
+    "globals": {
+      "default": false,
+      "description": "Allow vitest to inject jest-like API's into the testing environment.",
+      "type": "boolean"
+    },
     "name": {
-      "type": "string",
-      "description": "The name of the new library.",
       "$default": {
         "$source": "argv",
         "index": 0
       },
+      "description": "The name of the new library.",
+      "type": "string",
       "x-prompt": "What name would you like to use for the new library?"
     },
-    "bundler": {
-      "description": "The bundler to use. Choosing 'none' means this library is not buildable.",
-      "type": "string",
-      "enum": ["swc", "tsc", "rollup", "vite", "esbuild", "none"],
-      "default": "tsc"
-    },
-    "unitTestRunner": {
-      "description": "Test runner to use for unit tests.",
-      "type": "string",
-      "enum": ["none", "jest", "vitest"],
-      "default": "none"
-    },
-    "testEnvironment": {
-      "type": "string",
-      "enum": ["jsdom", "node"],
-      "description": "The test environment to use if unitTestRunner is set.",
-      "default": "node"
-    },
-    "skipEslint": {
-      "type": "boolean",
-      "description": "Skip creating an ESLint configuration file for the project."
-    },
-    "skipCspell": {
-      "type": "boolean",
-      "description": "Skip creating a CSpell configuration file for the project."
-    },
-    "globals": {
-      "type": "boolean",
-      "description": "Allow vitest to inject jest-like API's into the testing environment.",
-      "default": false
-    },
     "react": {
-      "type": "boolean",
-      "description": "Indicate that the project uses React.js."
+      "description": "Indicate that the project uses React.js.",
+      "type": "boolean"
     },
     "rollupExternals": {
-      "type": "array",
       "description": "An array of values to add to the `rollupOptions.external` configuration field. Ignored if the `bundler` option isn't 'vite'.",
-      "items": { "type": "string" }
+      "items": { "type": "string" },
+      "type": "array"
+    },
+    "skipCspell": {
+      "description": "Skip creating a CSpell configuration file for the project.",
+      "type": "boolean"
+    },
+    "skipEslint": {
+      "description": "Skip creating an ESLint configuration file for the project.",
+      "type": "boolean"
     },
     "swc": {
-      "type": "boolean",
-      "description": "Use the SWC compiler instead of babel. Only relevant for projects using React.js."
+      "description": "Use the SWC compiler instead of babel. Only relevant for projects using React.js.",
+      "type": "boolean"
     },
-    "force": {
-      "type": "boolean",
-      "description": "Overwrite existing files."
+    "testEnvironment": {
+      "default": "node",
+      "description": "The test environment to use if unitTestRunner is set.",
+      "enum": ["jsdom", "node"],
+      "type": "string"
+    },
+    "unitTestRunner": {
+      "default": "none",
+      "description": "Test runner to use for unit tests.",
+      "enum": ["none", "jest", "vitest"],
+      "type": "string"
     }
   },
-  "required": ["name"]
+  "required": ["name"],
+  "title": "TypeScript library generator",
+  "type": "object"
 }

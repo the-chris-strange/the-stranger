@@ -19,7 +19,7 @@ const json = sortJsonString('{"b":1,"a":2}')
 const yaml = sortYamlString('b: 1\na: 2\n')
 const markdown = sortMarkdownFrontmatter('---\nz: 1\na: 2\n---\n# Notes\n')
 const values = sortValue(['item10', 'item2'], {
-  arrayValues: { natural: true },
+  arrayValues: { sortType: 'natural' },
 })
 ```
 
@@ -31,7 +31,17 @@ const values = sortValue(['item10', 'item2'], {
 
 ## Configuration
 
-Object keys and array values default to ascending, case-sensitive, non-natural string comparison. Collections with fewer than two entries retain their order, while nested values are still visited. Set `order: 'desc'`, `caseSensitive: false`, `natural: true`, `minKeys`, or `minValues` in the relevant section to change these defaults.
+Object keys and array values default to ascending, case-sensitive locale comparison (`sortType: 'locale'`). Collections with fewer than two entries retain their order, while nested values are still visited. Set `order: 'desc'`, `caseSensitive: false`, `sortType`, `minKeys`, or `minValues` in the relevant section to change these defaults.
+
+| `sortType`           | String comparison                                                          |
+| -------------------- | -------------------------------------------------------------------------- |
+| `'locale'` (default) | `Intl.Collator` using the runtime's default locale.                        |
+| `'natural'`          | Locale comparison with numeric segments, so `item2` comes before `item10`. |
+| `'lexical'`          | UTF-16 code-unit order, independent of locale.                             |
+
+The same `sortType` option applies to object keys, array values, path overrides, named-key entries, and comparator factories. Sorting direction and case sensitivity apply to every mode. Unsupported sort types throw. The `SortType` TypeScript type is exported.
+
+**Migration:** replace `natural: true` with `sortType: 'natural'`, `lexical: true` with `sortType: 'lexical'`, and `natural: false` with `sortType: 'locale'` (or omit it). The boolean `natural` and `lexical` options have been removed. This also applies to Chaotic configuration files and Prettier's `createSortingPlugin` rules.
 
 ```typescript
 import { sortJsonString, type SortOptions } from '@the-stranger/ordered'
@@ -40,7 +50,7 @@ const options: SortOptions = {
   objectKeys: {
     overrides: [
       { pathPattern: '', order: ['name', 'version', 'description'] },
-      { pathPattern: 'dependencies', natural: true },
+      { pathPattern: 'dependencies', sortType: 'natural' },
     ],
   },
   arrayValues: {
@@ -61,9 +71,9 @@ Overrides apply in declaration order; later matching settings take precedence. P
 | `users[0].name`  | A specific element's property     |
 | `**`             | Every path                        |
 
-Named key lists are available in object-key overrides. Listed names come first; remaining keys use the comparator settings. Entries may also be objects such as `{ key: 'name', natural: true }`: these pin the key and update the comparator for unlisted keys. Later entries override comparator settings they explicitly supply.
+Named key lists are available in object-key overrides. Listed names come first; remaining keys use the comparator settings. Entries may also be objects such as `{ key: 'name', sortType: 'natural' }`: these pin the key and update the comparator for unlisted keys. Later entries override comparator settings they explicitly supply.
 
-Arrays of objects use `key` or `keys` to compare property values. `keys` selects the first present property on each object, rather than comparing multiple fields in sequence. Without either option, objects are compared using serialized values; `sortObjectKeysBeforeSerialize` defaults to `true`. With `serialize: false` and no comparison key, objects keep their relative order. Mixed arrays group scalars before objects in ascending order and after objects in descending order. Comparison ties preserve input order. String comparisons use `Intl.Collator` with the runtime's default locale.
+Arrays of objects use `key` or `keys` to compare property values. `keys` selects the first present property on each object, rather than comparing multiple fields in sequence. Without either option, objects are compared using serialized values; `sortObjectKeysBeforeSerialize` defaults to `true`. With `serialize: false` and no comparison key, objects keep their relative order. Mixed arrays group scalars before objects in ascending order and after objects in descending order. Comparison ties preserve input order. The locale and natural modes use `Intl.Collator` with the runtime's default locale. JSON values and YAML nodes share array comparison logic; YAML anchor dependencies are enforced after ordering.
 
 The package also exports comparator factories (`makeStringComparator`, `makeValueComparator`), path helpers (`matchesPattern`, `pathToString`), option-resolution helpers, and their TypeScript types.
 
@@ -99,3 +109,11 @@ yarn nx test ordered
 yarn nx lint ordered
 yarn nx typecheck ordered
 ```
+
+### Matching ESLint data policies
+
+Set `sortType: 'lexical'` in `objectKeys`, `arrayValues`, or an override to compare strings by UTF-16 code units instead of locale collation. `caseSensitive` and `order` still apply. Array options accept `priority: ['.env?']` to pin specific string values before the sorted remainder without deduplicating them.
+
+Override `pathPattern` values can also be `RegExp` objects. Expressions match ESLint-style paths: identifier properties use dots, other names use JSON-quoted brackets, and array indices use numeric brackets (for example, `jobs["build-test"].steps[0]`); use anchors when a complete match is needed. Global and sticky expression state is ignored. String patterns retain their existing wildcard behavior. Regular expressions require a JavaScript or TypeScript configuration rather than JSON.
+
+Set `objectKeys.preserveUnknownKeys: true` (or use it in an override) to sort only keys listed in a named `order` by moving inverted entries after their successors, retaining the relative order of unlisted keys. `sortObjectItems` applies the same resolved object-key policy to entries or syntax nodes without mutating the input.

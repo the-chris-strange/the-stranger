@@ -1,74 +1,23 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "version": 2,
-  "title": "Build Package",
-  "description": "Builds a TypeScript package and makes its project-local dist metadata resolve files relative to dist.",
-  "type": "object",
-  "properties": {
-    "assets": {
-      "type": "array",
-      "description": "Static assets copied into the build output.",
-      "default": [],
-      "items": {
-        "$ref": "#/definitions/assetPattern"
-      }
-    },
-    "clean": {
-      "type": "boolean",
-      "description": "Remove previous output before build.",
-      "default": true
-    },
-    "generatePackageJson": {
-      "type": "boolean",
-      "description": "Generate and finalize package.json in the build output.",
-      "default": true
-    },
-    "main": {
-      "type": "string",
-      "description": "The main TypeScript entry point."
-    },
-    "outputPath": {
-      "type": "string",
-      "description": "The project-local distribution directory."
-    },
-    "rootDir": {
-      "type": "string",
-      "description": "The TypeScript source root."
-    },
-    "tsConfig": {
-      "type": "string",
-      "description": "The TypeScript configuration file."
-    },
-    "transformers": {
-      "type": "array",
-      "description": "TypeScript transformer plugins.",
-      "default": [],
-      "items": {
-        "$ref": "#/definitions/transformerPattern"
-      }
-    },
-    "watch": {
-      "type": "boolean",
-      "default": false
-    }
-  },
+  "additionalProperties": true,
   "definitions": {
     "assetPattern": {
       "oneOf": [
         {
-          "type": "object",
+          "additionalProperties": false,
           "properties": {
             "glob": { "type": "string" },
-            "input": { "type": "string" },
             "ignore": {
-              "type": "array",
-              "items": { "type": "string" }
+              "items": { "type": "string" },
+              "type": "array"
             },
-            "output": { "type": "string" },
-            "includeIgnoredFiles": { "type": "boolean", "default": false }
+            "includeIgnoredFiles": { "default": false, "type": "boolean" },
+            "input": { "type": "string" },
+            "output": { "type": "string" }
           },
-          "additionalProperties": false,
-          "required": ["glob", "input", "output"]
+          "required": ["glob", "input", "output"],
+          "type": "object"
         },
         { "type": "string" }
       ]
@@ -77,17 +26,68 @@
       "oneOf": [
         { "type": "string" },
         {
-          "type": "object",
+          "additionalProperties": false,
           "properties": {
             "name": { "type": "string" },
-            "options": { "type": "object", "additionalProperties": true }
+            "options": { "additionalProperties": true, "type": "object" }
           },
-          "additionalProperties": false,
-          "required": ["name"]
+          "required": ["name"],
+          "type": "object"
         }
       ]
     }
   },
-  "additionalProperties": true,
-  "required": ["main", "outputPath", "tsConfig"]
+  "description": "Builds a TypeScript package and makes its project-local dist metadata resolve files relative to dist.",
+  "properties": {
+    "assets": {
+      "default": [],
+      "description": "Static assets copied into the build output.",
+      "items": {
+        "$ref": "#/definitions/assetPattern"
+      },
+      "type": "array"
+    },
+    "clean": {
+      "default": true,
+      "description": "Remove previous output before build.",
+      "type": "boolean"
+    },
+    "generatePackageJson": {
+      "default": true,
+      "description": "Generate and finalize package.json in the build output.",
+      "type": "boolean"
+    },
+    "main": {
+      "description": "The main TypeScript entry point.",
+      "type": "string"
+    },
+    "outputPath": {
+      "description": "The project-local distribution directory.",
+      "type": "string"
+    },
+    "rootDir": {
+      "description": "The TypeScript source root.",
+      "type": "string"
+    },
+    "transformers": {
+      "default": [],
+      "description": "TypeScript transformer plugins.",
+      "items": {
+        "$ref": "#/definitions/transformerPattern"
+      },
+      "type": "array"
+    },
+    "tsConfig": {
+      "description": "The TypeScript configuration file.",
+      "type": "string"
+    },
+    "watch": {
+      "default": false,
+      "type": "boolean"
+    }
+  },
+  "required": ["main", "outputPath", "tsConfig"],
+  "title": "Build Package",
+  "type": "object",
+  "version": 2
 }

@@ -2,9 +2,14 @@
  * Match a path; ** spans zero or more segments, and [*] matches an array index.
  * @param pattern dotted properties, bracketed indices, and wildcards
  * @param path property names and original array indices
- * @returns true if the pattern matches the complete path; false otherwise
+ * @returns true if the pattern matches (string patterns match the complete path)
  */
-export function matchesPattern(pattern: string, path: PathSegment[]): boolean {
+export function matchesPattern(pattern: string | RegExp, path: PathSegment[]): boolean {
+  if (pattern instanceof RegExp) {
+    return new RegExp(pattern.source, pattern.flags.replaceAll(/[gy]/g, '')).test(
+      regexPathToString(path),
+    )
+  }
   const tokens = tokenize(pattern)
   const memo = new Map<string, boolean>()
 
@@ -62,6 +67,15 @@ export function pathToString(path: PathSegment[]): string {
 }
 
 export type PathSegment = number | string
+
+// Match ESLint's JSON/YAML paths while leaving existing wildcard paths unchanged.
+function regexPathToString(path: PathSegment[]): string {
+  return path.reduce<string>((text, segment) => {
+    if (typeof segment === 'number') return `${text}[${segment}]`
+    if (/^[$a-z_][\w$]*$/iu.test(segment)) return `${text}${text ? '.' : ''}${segment}`
+    return `${text}[${JSON.stringify(segment)}]`
+  }, '')
+}
 
 function tokenize(pattern: string): Token[] {
   const tokens: Token[] = []

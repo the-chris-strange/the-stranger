@@ -12,10 +12,6 @@ import {
 } from './configs/yaml/index.js'
 
 export function configureYaml({ yaml }: ConfigOptions) {
-  if (!Object.values(yaml.sort).includes(true)) {
-    return []
-  }
-
   const configs = [
     ['cspellConfig', cspellYamlSortConfig],
     ['dependabotConfig', dependabotYamlSortConfig],

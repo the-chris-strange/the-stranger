@@ -1,8 +1,7 @@
-/* eslint-disable perfectionist/sort-objects -- Fixtures deliberately contain unsorted keys. */
 import { format } from 'prettier'
 import { describe, expect, it } from 'vitest'
 
-import { config, createSortingPlugin } from './index.js'
+import { config, createSortingPlugin, sortingConfig } from './index.js'
 
 async function sorted(text: string, filepath: string, options = {}, rules = {}) {
   return format(text, { filepath, plugins: [createSortingPlugin(rules)], ...options })
@@ -25,7 +24,9 @@ describe('sorting plugin', () => {
       {
         objectKeys: { overrides: [{ pathPattern: '', order: ['name'] }] },
         arrayValues: {
-          overrides: [{ pathPattern: 'users', key: 'id', natural: true, minValues: 2 }],
+          overrides: [
+            { pathPattern: 'users', key: 'id', sortType: 'natural', minValues: 2 },
+          ],
         },
       },
     )
@@ -117,9 +118,21 @@ describe('sorting plugin', () => {
     expect(output).toBe('const x = { z: 1, a: 2 };\n')
   })
 
-  it('applies sorting through the shared default configuration', async () => {
+  it('keeps shared styling configuration free of sorting', async () => {
     const output = await format('{"z":1,"a":2}', { ...config, filepath: 'data.json' })
-    expect(Object.keys(JSON.parse(output))).toStrictEqual(['a', 'z'])
+    expect(Object.keys(JSON.parse(output))).toStrictEqual(['z', 'a'])
+  })
+
+  it('opts into configuration sorting with the shared sorting preset', async () => {
+    const output = await format(
+      '{"include":["z","a"],"extends":"base","compilerOptions":{"target":"esnext","paths":{"z":["z","a"],"a":["a"]}}}',
+      { ...sortingConfig, filepath: '/repo/pkg/tsconfig.lib.json' },
+    )
+    const value = JSON.parse(output)
+    expect(Object.keys(value)).toStrictEqual(['extends', 'compilerOptions', 'include'])
+    expect(Object.keys(value.compilerOptions)).toStrictEqual(['paths', 'target'])
+    expect(value.include).toStrictEqual(['z', 'a'])
+    expect(value.compilerOptions.paths.z).toStrictEqual(['z', 'a'])
   })
 
   it('is idempotent across JSON, YAML, and Markdown', async () => {

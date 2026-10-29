@@ -1,60 +1,60 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "VitestConfig",
-  "title": "Vitest configuration file generator",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "description": "Generate a vitest.config.ts file for a project.",
-  "type": "object",
   "properties": {
+    "coveragePath": {
+      "default": ".reports/coverage",
+      "description": "Specify a path to write coverage reports, relative to the workspace root.",
+      "type": "string"
+    },
+    "force": {
+      "description": "Overwrite existing files.",
+      "type": "boolean"
+    },
+    "globals": {
+      "default": false,
+      "description": "Allow vitest to inject jest-like API's into the testing environment.",
+      "type": "boolean"
+    },
+    "includeTest": {
+      "default": true,
+      "description": "Include configuration for Vitest in the generated file.",
+      "type": "boolean"
+    },
+    "inSourceTests": {
+      "description": "Include setup for writing tests directly in source code files, rather than creating separate *.spec files.",
+      "type": "boolean"
+    },
     "project": {
-      "type": "string",
-      "description": "The name of the project in which to generate a vitest config.",
       "$default": {
         "$source": "projectName",
         "index": 0
       },
+      "description": "The name of the project in which to generate a vitest config.",
+      "type": "string",
       "x-prompt": "To which project would you like to add a Vitest configuration file?"
     },
-    "coveragePath": {
-      "type": "string",
-      "description": "Specify a path to write coverage reports, relative to the workspace root.",
-      "default": ".reports/coverage"
-    },
-    "globals": {
-      "type": "boolean",
-      "description": "Allow vitest to inject jest-like API's into the testing environment.",
-      "default": false
-    },
-    "includeTest": {
-      "type": "boolean",
-      "description": "Include configuration for Vitest in the generated file.",
-      "default": true
-    },
-    "inSourceTests": {
-      "type": "boolean",
-      "description": "Include setup for writing tests directly in source code files, rather than creating separate *.spec files."
-    },
     "skipTsconfigs": {
-      "type": "boolean",
-      "description": "Skip updating the project's tsconfig.json files."
+      "description": "Skip updating the project's tsconfig.json files.",
+      "type": "boolean"
     },
     "testEnvironment": {
-      "type": "string",
-      "description": "The testing environment for the project.",
       "default": "node",
-      "enum": ["node", "jsdom"]
+      "description": "The testing environment for the project.",
+      "enum": ["node", "jsdom"],
+      "type": "string"
     },
     "testReportPath": {
-      "type": "string",
-      "description": "Specify a path to write unit test reports, relative to the workspace root."
+      "description": "Specify a path to write unit test reports, relative to the workspace root.",
+      "type": "string"
     },
     "tsconfigName": {
-      "type": "string",
-      "description": "Set the filename to use for the build tsconfig referenced by the test tsconfig."
-    },
-    "force": {
-      "type": "boolean",
-      "description": "Overwrite existing files."
+      "description": "Set the filename to use for the build tsconfig referenced by the test tsconfig.",
+      "type": "string"
     }
   },
-  "required": ["project"]
+  "required": ["project"],
+  "title": "Vitest configuration file generator",
+  "type": "object"
 }

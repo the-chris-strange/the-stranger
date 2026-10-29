@@ -7,9 +7,9 @@ describe('resolveOptions', () => {
     expect(resolveOptions()).toStrictEqual({
       json: {
         sort: {
-          nx: true,
-          tsconfig: true,
-          vscode: true,
+          nx: false,
+          tsconfig: false,
+          vscode: false,
         },
       },
       nx: undefined,
@@ -40,11 +40,11 @@ describe('resolveOptions', () => {
       toml: undefined,
       yaml: {
         sort: {
-          cspellConfig: true,
-          dependabotConfig: true,
-          githubActions: true,
-          markdownlintConfig: true,
-          yarnrc: true,
+          cspellConfig: false,
+          dependabotConfig: false,
+          githubActions: false,
+          markdownlintConfig: false,
+          yarnrc: false,
         },
       },
     })
@@ -101,11 +101,11 @@ describe('resolveOptions', () => {
       toml: undefined,
       yaml: {
         sort: {
-          cspellConfig: true,
-          dependabotConfig: true,
+          cspellConfig: false,
+          dependabotConfig: false,
           githubActions: false,
-          markdownlintConfig: true,
-          yarnrc: true,
+          markdownlintConfig: false,
+          yarnrc: false,
         },
       },
     })

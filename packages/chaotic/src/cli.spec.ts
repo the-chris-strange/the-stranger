@@ -191,6 +191,62 @@ it('Checks sorted stdin and reports unsorted stdin without output', async () => 
   expect(changed.stderr).toContain('<stdin>')
 })
 
+it.each([
+  ['lexical', '["a","Z"]', ['Z', 'a']],
+  ['locale', '["Z","a"]', ['a', 'Z']],
+  ['natural', '["item10","item2"]', ['item2', 'item10']],
+])('Applies %s sortType from configuration', async (sortType, stdin, expected) => {
+  const cwd = await directory()
+  await writeFile(
+    join(cwd, 'chaotic.config.json'),
+    JSON.stringify({ arrayValues: { sortType } }),
+  )
+  const result = await run([], { cwd, stdin })
+  expect(result.code).toBe(0)
+  expect(JSON.parse(result.stdout)).toStrictEqual(expected)
+})
+
+it.each([
+  [
+    'priorities',
+    'export default { arrayValues: { priority: [".env?"], sortType: "lexical" } }',
+    '[".aaa","z",".env?"]',
+    ['.env?', '.aaa', 'z'],
+  ],
+  [
+    'regular-expression paths',
+    'export default { arrayValues: { sortType: "lexical", overrides: [{ pathPattern: /^users$/, key: "id", sortType: "natural" }] } }',
+    '{"users":[{"id":"item10"},{"id":"item2"}]}',
+    { users: [{ id: 'item2' }, { id: 'item10' }] },
+  ],
+])('Supports Ordered %s configuration', async (_name, config, stdin, expected) => {
+  const cwd = await directory()
+  await writeFile(join(cwd, 'chaotic.config.mjs'), config)
+  const result = await run([], { cwd, stdin })
+  expect(result.code).toBe(0)
+  expect(JSON.parse(result.stdout)).toStrictEqual(expected)
+})
+
+it('Preserves unlisted key positions from configuration', async () => {
+  const cwd = await directory()
+  await writeFile(
+    join(cwd, 'chaotic.config.json'),
+    JSON.stringify({
+      objectKeys: {
+        overrides: [{ order: ['name'], pathPattern: '' }],
+        preserveUnknownKeys: true,
+      },
+    }),
+  )
+  const result = await run([], { cwd, stdin: '{"z":1,"name":"x","a":2}' })
+  expect(result.code).toBe(0)
+  expect(Object.keys(JSON.parse(result.stdout) as object)).toStrictEqual([
+    'z',
+    'name',
+    'a',
+  ])
+})
+
 it('Resolves relative input and explicit config paths against cwd', async () => {
   const root = await directory()
   const cwd = join(root, 'project')
@@ -364,6 +420,42 @@ it('Fails when an explicitly requested configuration file is missing', async () 
 
 it.each([
   ['malformed JSON', 'options.json', '{invalid}', /configuration/i],
+  [
+    'invalid sort type',
+    'options.json',
+    '{"arrayValues":{"sortType":"random"}}',
+    /sortType/i,
+  ],
+  [
+    'removed natural flag',
+    'options.json',
+    '{"arrayValues":{"natural":true}}',
+    /natural/i,
+  ],
+  [
+    'removed lexical flag',
+    'options.json',
+    '{"objectKeys":{"lexical":true}}',
+    /lexical/i,
+  ],
+  [
+    'invalid priority values',
+    'options.json',
+    '{"arrayValues":{"priority":[1]}}',
+    /priority/i,
+  ],
+  [
+    'invalid key preservation',
+    'options.json',
+    '{"objectKeys":{"preserveUnknownKeys":"yes"}}',
+    /preserveUnknownKeys/i,
+  ],
+  [
+    'invalid path pattern',
+    'options.json',
+    '{"arrayValues":{"overrides":[{"pathPattern":1}]}}',
+    /pathPattern/i,
+  ],
   ['invalid root shape', 'options.json', '[]', /options object/i],
   [
     'invalid nested shape',

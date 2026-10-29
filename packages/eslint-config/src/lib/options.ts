@@ -25,7 +25,7 @@ function resolveJsonOptions({ json }: Options): ConfigOptions['json'] {
   const getValue = (key: keyof ConfigOptions['json']['sort']): boolean => {
     if (typeof json === 'boolean') return json
     if (typeof json?.sort === 'boolean') return json.sort
-    return json?.sort?.[key] ?? true
+    return json?.sort?.[key] ?? false
   }
 
   return {
@@ -103,7 +103,7 @@ function resolveYamlOptions({ yaml }: Options): ConfigOptions['yaml'] {
   const getValue = (key: keyof ConfigOptions['yaml']['sort']): boolean => {
     if (typeof yaml === 'boolean') return yaml
     if (typeof yaml?.sort === 'boolean') return yaml.sort
-    return yaml?.sort?.[key] ?? true
+    return yaml?.sort?.[key] ?? false
   }
 
   return {

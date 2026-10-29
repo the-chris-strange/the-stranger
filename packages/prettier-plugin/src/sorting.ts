@@ -10,6 +10,7 @@ import { parsers as yamlParsers } from 'prettier/plugins/yaml'
 import type { SortOptions } from '@the-stranger/ordered'
 import type { Options, Parser, Plugin } from 'prettier'
 
+import { configurationSortOptions } from './configuration-sorting.js'
 import { type JsonNode, applyPackageOrder, jsonValue, sortJsonNode } from './json.js'
 
 // Native Prettier options remain validated by Prettier; structured rules use the typed factory.
@@ -17,6 +18,7 @@ declare module 'prettier' {
   interface RequiredOptions {
     orderedSort: boolean
     orderedSortArrays: boolean
+    orderedSortConfigFiles: boolean
     orderedSortPackageJson: boolean
     packageSortOrder: string[]
   }
@@ -33,6 +35,12 @@ export const options: NonNullable<Plugin['options']> = {
     category: 'Global',
     default: false,
     description: 'Sort data arrays as well as object keys.',
+    type: 'boolean',
+  },
+  orderedSortConfigFiles: {
+    category: 'Global',
+    default: false,
+    description: 'Special sorting rules for some common configuration files.',
     type: 'boolean',
   },
   orderedSortPackageJson: {
@@ -56,14 +64,24 @@ export const options: NonNullable<Plugin['options']> = {
  * @returns a Prettier plugin with sorting parsers and validated options
  */
 export function createSortingPlugin(rules: SortOptions = {}): Plugin {
-  const sortingOptions = (format: Options): SortOptions => ({
-    ...rules,
-    arrayValues: {
-      minValues: format.orderedSortArrays ? 2 : Number.MAX_SAFE_INTEGER,
-      ...rules.arrayValues,
-    },
-  })
+  const sortingOptions = (format: Options): SortOptions => {
+    const policy = format.orderedSortConfigFiles
+      ? configurationSortOptions(format.filepath ?? '')
+      : undefined
+
+    return {
+      ...rules,
+      ...policy,
+      arrayValues: {
+        minValues: format.orderedSortArrays ? 2 : Number.MAX_SAFE_INTEGER,
+        ...rules.arrayValues,
+        ...policy?.arrayValues,
+      },
+    }
+  }
+
   const parsers: NonNullable<Plugin['parsers']> = {}
+
   for (const name of ['json', 'jsonc', 'json5', 'json-stringify'] as const) {
     const original = jsonParsers[name] as Parser<JsonNode>
     parsers[name] = {
@@ -74,8 +92,10 @@ export function createSortingPlugin(rules: SortOptions = {}): Plugin {
           format.orderedSort === false ||
           !ast.node ||
           ast.comments?.some(comment => /\bprettier-ignore\b/.test(comment.value))
-        )
+        ) {
           return ast
+        }
+
         if (/(?:^|[/\\])package\.json$/.test(format.filepath ?? '')) {
           if (format.orderedSortPackageJson !== false) {
             const value = sortPackageJson(jsonValue(ast.node), {
@@ -90,6 +110,7 @@ export function createSortingPlugin(rules: SortOptions = {}): Plugin {
       },
     }
   }
+
   const preprocess = (
     parser: Parser,
     sort: (text: string, rules: SortOptions) => string,
@@ -101,17 +122,25 @@ export function createSortingPlugin(rules: SortOptions = {}): Plugin {
         format.orderedSort === false ||
         /^[ \t]*#\s*prettier-ignore\b/m.test(text) ||
         /<!--\s*prettier-ignore\b/.test(text)
-      )
+      ) {
         return text
+      }
+
       return sort(text, sortingOptions(format))
     },
   })
+
   parsers['yaml'] = preprocess(yamlParsers['yaml'], sortYamlString)
-  for (const name of ['markdown', 'mdx'] as const)
+
+  for (const name of ['markdown', 'mdx'] as const) {
     parsers[name] = preprocess(markdownParsers[name], sortMarkdownFrontmatter)
+  }
+
   return { options, parsers }
 }
 
 const plugin = createSortingPlugin()
+
 export const parsers = plugin.parsers
+
 export default plugin

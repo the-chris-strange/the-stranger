@@ -1,56 +1,56 @@
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
   "$id": "ESLintConfig",
-  "title": "ESLint configuration file generator",
+  "$schema": "https://json-schema.org/draft-07/schema#",
   "description": "Generate a standardized ESLint config file.",
-  "type": "object",
   "properties": {
-    "project": {
-      "type": "string",
-      "description": "The name of the project where the ESLint config should be generated. If omitted, a workspace config is generated.",
-      "$default": {
-        "$source": "projectName",
-        "index": 0
-      }
-    },
-    "configType": {
-      "type": "string",
-      "description": "Generate a workspace-level config or a project-level config. Defaults to project when project is provided, otherwise workspace.",
-      "enum": ["workspace", "project"]
-    },
-    "configureOptions": {
-      "type": "object",
-      "description": "Options to pass as the first argument to configure().",
-      "additionalProperties": true
-    },
     "additionalConfigs": {
-      "type": "array",
       "description": "JavaScript expressions or config objects to append as additional configure() arguments. Only supported for workspace configs.",
       "items": {
         "type": ["object", "string"]
-      }
+      },
+      "type": "array"
+    },
+    "configType": {
+      "description": "Generate a workspace-level config or a project-level config. Defaults to project when project is provided, otherwise workspace.",
+      "enum": ["workspace", "project"],
+      "type": "string"
+    },
+    "configureOptions": {
+      "additionalProperties": true,
+      "description": "Options to pass as the first argument to configure().",
+      "type": "object"
+    },
+    "dryRun": {
+      "description": "Don't actually write to the file system.",
+      "type": "boolean"
     },
     "extend": {
-      "type": "string",
-      "description": "The path to a base ESLint config to extend for project-level configs."
+      "description": "The path to a base ESLint config to extend for project-level configs.",
+      "type": "string"
     },
     "force": {
-      "type": "boolean",
-      "description": "Overwrite existing files."
+      "description": "Overwrite existing files.",
+      "type": "boolean"
+    },
+    "project": {
+      "$default": {
+        "$source": "projectName",
+        "index": 0
+      },
+      "description": "The name of the project where the ESLint config should be generated. If omitted, a workspace config is generated.",
+      "type": "string"
     },
     "skipDependencies": {
-      "type": "boolean",
       "description": "Skip installing dependencies to the project.",
+      "type": "boolean",
       "x-priority": "internal"
     },
     "skipFormat": {
-      "type": "boolean",
       "description": "Skip formatting files.",
-      "x-priority": "internal"
-    },
-    "dryRun": {
       "type": "boolean",
-      "description": "Don't actually write to the file system."
+      "x-priority": "internal"
     }
-  }
+  },
+  "title": "ESLint configuration file generator",
+  "type": "object"
 }

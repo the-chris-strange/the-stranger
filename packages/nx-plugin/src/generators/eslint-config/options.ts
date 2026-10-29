@@ -1,7 +1,6 @@
 import type { ConfigureOptions, ESLintConfigSchema } from './schema'
 
 const DEFAULT_CONFIGURE_OPTIONS: ConfigureOptions = {
-  json: true,
   nx: true,
   source: {
     agentSkills: true,
@@ -16,7 +15,6 @@ const DEFAULT_CONFIGURE_OPTIONS: ConfigureOptions = {
     unicorn: true,
   },
   toml: true,
-  yaml: true,
 } satisfies ConfigureOptions
 
 export function normalizeOptions(options: ESLintConfigSchema): NormalizedOptions {

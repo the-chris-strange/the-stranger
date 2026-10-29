@@ -55,11 +55,11 @@ export default defineConfig({
   objectKeys: {
     overrides: [
       { pathPattern: '', order: ['name', 'version', 'description'] },
-      { pathPattern: 'dependencies', natural: true },
+      { pathPattern: 'dependencies', sortType: 'natural' },
     ],
   },
   arrayValues: {
-    overrides: [{ pathPattern: 'users', key: 'id', natural: true }],
+    overrides: [{ pathPattern: 'users', key: 'id', sortType: 'natural' }],
   },
 })
 ```
@@ -93,3 +93,5 @@ yarn nx test chaotic
 yarn nx lint chaotic
 yarn nx typecheck chaotic
 ```
+
+Configuration uses Ordered's `sortType: 'locale' | 'natural' | 'lexical'` option. The default is `'locale'`. Replace the former `natural` and `lexical` booleans with `sortType`; unsupported values and the removed flags are rejected before writing files.

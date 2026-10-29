@@ -11,10 +11,6 @@ import {
 } from './configs/json/index.js'
 
 export function configureJson({ json }: ConfigOptions) {
-  if (!Object.values(json.sort).includes(true)) {
-    return []
-  }
-
   const configs = [
     ['nx', nxJsonSortConfig],
     ['tsconfig', tsconfigJsonSortConfig],

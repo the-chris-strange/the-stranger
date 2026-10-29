@@ -15,16 +15,12 @@ import {
 import type { PathSegment } from './path.js'
 import type { SortOptions } from './types.js'
 
-import { makeStringComparator, makeValueComparator } from './compare.js'
 import {
-  type ResolvedObjectKeyOptions,
-  buildNamedOrderRanks,
   resolveArrayValueOptions,
-  resolveCandidateKeys,
   resolveObjectKeyOptions,
+  sortArrayItems,
+  sortObjectItems,
   sortValue,
-  stableStringify,
-  toComparatorOpts,
 } from './core.js'
 
 export function sortYamlString(input: string, options: SortOptions = {}): string {
@@ -147,23 +143,6 @@ function reorderForAnchors<T>(items: T[], edges: AnchorConstraint[] | undefined)
   }
   items.splice(0, items.length, ...result)
 }
-function sortPairsByNamedOrder(
-  items: Pair[],
-  resolved: ResolvedObjectKeyOptions,
-): void {
-  const { rankByKey, restCmpOpts } = buildNamedOrderRanks(resolved)
-  const fallbackCmp = makeStringComparator(restCmpOpts)
-  items.sort((a, b) => {
-    const ka = String(pairKey(a))
-    const kb = String(pairKey(b))
-    const ra = rankByKey.get(ka)
-    const rb = rankByKey.get(kb)
-    if (ra !== undefined && rb !== undefined) return ra - rb
-    if (ra !== undefined) return -1
-    if (rb !== undefined) return 1
-    return fallbackCmp(ka, kb)
-  })
-}
 function sortYamlMap(
   node: YAMLMap,
   path: PathSegment[],
@@ -183,13 +162,7 @@ function sortYamlMap(
   const resolved = resolveObjectKeyOptions(path, options)
   if (node.items.length < resolved.minKeys) return
 
-  const items = [...node.items]
-  if (resolved.namedOrder && resolved.namedOrder.length > 0) {
-    sortPairsByNamedOrder(items, resolved)
-  } else {
-    const cmp = makeStringComparator(toComparatorOpts(resolved))
-    items.sort((a, b) => cmp(String(pairKey(a)), String(pairKey(b))))
-  }
+  const items = sortObjectItems(node.items, resolved, pair => String(pairKey(pair)))
   reorderForAnchors(items, constraints.get(node))
   node.items = items
 }
@@ -225,49 +198,11 @@ function sortYamlSeq(
   const resolved = resolveArrayValueOptions(path, options)
   if (node.items.length < resolved.minValues) return
 
-  const cmpOpts = toComparatorOpts(resolved)
-  const valueCmp = makeValueComparator(cmpOpts)
-  const stringCmp = makeStringComparator(cmpOpts)
-  const dir = resolved.order === 'desc' ? -1 : 1
-  const candidateKeys = resolveCandidateKeys(resolved)
-  const useSerialize = resolved.serialize
-
-  const decorated = node.items.map((item, originalIndex) => {
-    const isObj = isMap(item)
-    let sortKey: unknown
-    let comparedAsString = false
-    if (isObj && candidateKeys.length > 0) {
-      sortKey = pickFirstPresentMapKey(item, candidateKeys, doc)
-    } else if (isObj && useSerialize) {
-      const plain = item.toJS(doc)
-      sortKey = stableStringify(plain, resolved.sortObjectKeysBeforeSerialize)
-      comparedAsString = true
-    } else if (isObj) {
-      sortKey = originalIndex
-    } else {
-      sortKey = toPlain(item, doc)
-    }
-    return { comparedAsString, isObj, item, originalIndex, sortKey }
+  const items = sortArrayItems(node.items, resolved, {
+    getKey: (item, keys) => pickFirstPresentMapKey(item as YAMLMap, keys, doc),
+    getValue: item => toPlain(item, doc),
+    isObject: isMap,
   })
-
-  decorated.sort((a, b) => {
-    if (a.isObj !== b.isObj) return dir * (a.isObj ? 1 : -1)
-    if (a.isObj) {
-      if (a.comparedAsString && b.comparedAsString) {
-        const c = stringCmp(a.sortKey as string, b.sortKey as string)
-        if (c !== 0) return c
-      } else if (candidateKeys.length > 0) {
-        const c = valueCmp(a.sortKey, b.sortKey)
-        if (c !== 0) return c
-      }
-    } else {
-      const c = valueCmp(a.sortKey, b.sortKey)
-      if (c !== 0) return c
-    }
-    return a.originalIndex - b.originalIndex
-  })
-
-  const items = decorated.map(d => d.item)
   reorderForAnchors(items, constraints.get(node))
   node.items = items
 }

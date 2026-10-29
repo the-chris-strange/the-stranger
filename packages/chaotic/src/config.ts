@@ -17,7 +17,10 @@ export const defineConfig = createDefineConfig<
 
 // Replacing arrays prevents inherited rules from taking precedence over local rules.
 const merge = createDefu((object, key, value) => {
-  if (!Array.isArray(value)) return false
+  if (!Array.isArray(value)) {
+    return false
+  }
+
   Object.assign(object, { [key]: [...value] })
   return true
 })
@@ -31,6 +34,7 @@ export async function resolveConfig(
   if (explicit && !(await stat(explicit)).isFile()) {
     throw new Error(`Configuration is not a file: ${explicit}`)
   }
+
   let sources = 0
   const options: LoadConfigOptions<ChaoticConfig> = {
     configFile: explicit ? basename(explicit) : 'chaotic.config',
@@ -51,9 +55,14 @@ export async function resolveConfig(
     rcFile: false,
     async resolve(source, context) {
       // c12 otherwise warns and ignores missing layers, and has no cycle bound.
-      if (++sources > 64)
+      if (++sources > 64) {
         throw new Error('Configuration exceeds 64 layers (possible extends cycle)')
-      if (source === '.') return
+      }
+
+      if (source === '.') {
+        return
+      }
+
       const path = resolve(context.cwd ?? cwd, source)
       let isDirectory = false
       try {
@@ -74,6 +83,7 @@ export async function resolveConfig(
       return layer
     },
   }
+
   const loaded = await loadConfig(options)
   validateConfig(loaded.config)
   return loaded.config
@@ -83,16 +93,25 @@ type Validator = (value: unknown) => boolean
 const boolean: Validator = value => typeof value === 'boolean'
 const string: Validator = value => typeof value === 'string'
 const strings: Validator = value => Array.isArray(value) && value.every(string)
+const pathPattern: Validator = value => string(value) || value instanceof RegExp
 const count: Validator = value =>
   typeof value === 'number' && Number.isInteger(value) && value >= 0
 const direction: Validator = value => value === 'asc' || value === 'desc'
-const comparator = { caseSensitive: boolean, natural: boolean, order: direction }
-const objectKeys = { ...comparator, allowLineSeparatedGroups: boolean, minKeys: count }
+const sortType: Validator = value =>
+  value === 'lexical' || value === 'locale' || value === 'natural'
+const comparator = { caseSensitive: boolean, order: direction, sortType }
+const objectKeys = {
+  ...comparator,
+  allowLineSeparatedGroups: boolean,
+  minKeys: count,
+  preserveUnknownKeys: boolean,
+}
 const arrayValues = {
   ...comparator,
   key: string,
   keys: strings,
   minValues: count,
+  priority: strings,
   serialize: boolean,
   sortObjectKeysBeforeSerialize: boolean,
 }
@@ -107,7 +126,7 @@ function entries(
     value.every(
       entry =>
         object(entry, fields) &&
-        typeof (entry as Record<string, unknown>)[required] === 'string',
+        fields[required]((entry as Record<string, unknown>)[required]),
     )
   )
 }
@@ -139,7 +158,7 @@ function validateConfig(value: unknown): asserts value is ChaoticConfig {
         object(section, {
           ...arrayValues,
           overrides: overrides =>
-            entries(overrides, { ...arrayValues, pathPattern: string }, 'pathPattern'),
+            entries(overrides, { ...arrayValues, pathPattern }, 'pathPattern'),
         }),
       extends: sources => string(sources) || strings(sources),
       indent: indent => string(indent) || (count(indent) && (indent as number) <= 10),
@@ -160,7 +179,7 @@ function validateConfig(value: unknown): asserts value is ChaoticConfig {
                         (object(entry, { ...comparator, key: string }) &&
                           string((entry as Record<string, unknown>)['key'])),
                     )),
-                pathPattern: string,
+                pathPattern,
               },
               'pathPattern',
             ),

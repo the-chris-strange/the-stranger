@@ -1,10 +1,26 @@
+import type { SortType } from './types.js'
+
 export function makeStringComparator(opts: ComparatorOptions): Comparator<string> {
-  const collator = new Intl.Collator(undefined, {
-    numeric: opts.natural,
-    sensitivity: opts.caseSensitive ? 'variant' : 'accent',
-  })
-  const dir = opts.direction === 'desc' ? -1 : 1
-  return (a, b) => dir * collator.compare(a, b) || 0
+  const direction = opts.direction === 'desc' ? -1 : 1
+  const sortType = opts.sortType ?? 'locale'
+  switch (sortType) {
+    case 'lexical':
+      return (a, b) => {
+        const left = opts.caseSensitive ? a : a.toLowerCase()
+        const right = opts.caseSensitive ? b : b.toLowerCase()
+        return direction * (left < right ? -1 : left > right ? 1 : 0) || 0
+      }
+    case 'locale':
+    case 'natural': {
+      const collator = new Intl.Collator(undefined, {
+        numeric: sortType === 'natural',
+        sensitivity: opts.caseSensitive ? 'variant' : 'accent',
+      })
+      return (a, b) => direction * collator.compare(a, b) || 0
+    }
+    default:
+      throw new TypeError('Unsupported sort type; expected lexical, locale, or natural')
+  }
 }
 
 export function makeValueComparator(opts: ComparatorOptions): Comparator<unknown> {
@@ -12,20 +28,33 @@ export function makeValueComparator(opts: ComparatorOptions): Comparator<unknown
   const direction = sortDirection(opts.direction)
 
   return (lhs, rhs) => {
-    const ra = rankOf(lhs)
-    const rb = rankOf(rhs)
-    if (ra !== rb) return direction * (ra - rb)
+    const rl = rankOf(lhs)
+    const rr = rankOf(rhs)
+
+    if (rl !== rr) {
+      return direction * (rl - rr)
+    }
+
     if (typeof lhs === 'number' && typeof rhs === 'number') {
-      if (lhs === rhs) return 0
+      if (lhs === rhs) {
+        return 0
+      }
+
       return direction * (lhs < rhs ? -1 : 1)
     }
+
     if (typeof lhs === 'boolean' && typeof rhs === 'boolean') {
-      if (lhs === rhs) return 0
+      if (lhs === rhs) {
+        return 0
+      }
+
       return direction * (lhs ? 1 : -1)
     }
+
     if (typeof lhs === 'string' && typeof rhs === 'string') {
       return compareStrings(lhs, rhs)
     }
+
     return 0
   }
 }
@@ -36,14 +65,15 @@ export interface ComparatorOptions {
    */
   caseSensitive: boolean
   /**
-   * Change the sort direction.
+   * Sort direction, either 'asc' or 'desc'.
    * @default 'asc'
    */
   direction: 'asc' | 'desc'
   /**
-   * Use natural sorting (e.g. 3 < 10).
+   * String comparison mode.
+   * @default 'locale'
    */
-  natural: boolean
+  sortType?: SortType
 }
 
 // Lower rank sorts first in ascending order.

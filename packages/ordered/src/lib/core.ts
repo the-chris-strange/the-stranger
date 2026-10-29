@@ -1,11 +1,10 @@
 import type {
   ArrayValueOptions,
-  ArrayValueOverride,
   ObjectKeyOptions,
   ObjectKeyOrderEntry,
-  ObjectKeyOverride,
   SortOptions,
   SortOrder,
+  SortType,
 } from './types.js'
 
 import {
@@ -14,40 +13,6 @@ import {
   makeValueComparator,
 } from './compare.js'
 import { type PathSegment, matchesPattern } from './path.js'
-
-interface ResolvedArrayValueOptions extends Required<
-  Omit<ArrayValueOptions, 'key' | 'keys'>
-> {
-  key: string | null
-  keys: string[]
-}
-
-interface ResolvedObjectKeyOptions extends Required<
-  Omit<ObjectKeyOptions, 'allowLineSeparatedGroups'>
-> {
-  allowLineSeparatedGroups: boolean
-  namedOrder: ObjectKeyOrderEntry[] | null
-}
-
-const DEFAULT_OBJECT_KEY: ResolvedObjectKeyOptions = {
-  allowLineSeparatedGroups: false,
-  caseSensitive: true,
-  minKeys: 2,
-  namedOrder: null,
-  natural: false,
-  order: 'asc',
-}
-
-const DEFAULT_ARRAY_VALUE: ResolvedArrayValueOptions = {
-  caseSensitive: true,
-  key: null,
-  keys: [],
-  minValues: 2,
-  natural: false,
-  order: 'asc',
-  serialize: true,
-  sortObjectKeysBeforeSerialize: true,
-}
 
 export function buildNamedOrderRanks(resolved: ResolvedObjectKeyOptions): {
   rankByKey: Map<string, number>
@@ -63,17 +28,72 @@ export function buildNamedOrderRanks(resolved: ResolvedObjectKeyOptions): {
       if (
         entry.order !== undefined ||
         entry.caseSensitive !== undefined ||
-        entry.natural !== undefined
+        entry.sortType !== undefined
       ) {
         restCmpOpts = {
+          ...restCmpOpts,
           caseSensitive: entry.caseSensitive ?? restCmpOpts.caseSensitive,
           direction: entry.order ?? restCmpOpts.direction,
-          natural: entry.natural ?? restCmpOpts.natural,
+          sortType: entry.sortType ?? restCmpOpts.sortType,
         }
       }
     }
   }
   return { rankByKey, restCmpOpts }
+}
+
+/**
+ * Share array ordering across plain values and format-specific syntax nodes.
+ * @param items recursively visited values or syntax nodes
+ * @param resolved resolved array sorting options
+ * @param adapter extract comparable values without changing item identity
+ * @returns ordered original items with stable ties
+ */
+export function sortArrayItems<T>(
+  items: T[],
+  resolved: ResolvedArrayValueOptions,
+  adapter: ArrayItemAdapter<T>,
+): T[] {
+  if (items.length < resolved.minValues) return items
+  const cmpOpts = toComparatorOpts(resolved)
+  const baseValueCmp = makeValueComparator(cmpOpts)
+  const valueCmp = (a: unknown, b: unknown) => {
+    const rankA = resolved.priority.indexOf(a as string)
+    const rankB = resolved.priority.indexOf(b as string)
+    if (rankA !== -1 || rankB !== -1)
+      return (rankA === -1 ? Infinity : rankA) - (rankB === -1 ? Infinity : rankB)
+    return baseValueCmp(a, b)
+  }
+  const stringCmp = makeStringComparator(cmpOpts)
+  const direction = resolved.order === 'desc' ? -1 : 1
+  const candidateKeys = resolveCandidateKeys(resolved)
+  const decorated = items.map((item, originalIndex) => {
+    const isObject = adapter.isObject(item)
+    const serialized = isObject && candidateKeys.length === 0 && resolved.serialize
+    let sortKey: unknown
+    if (isObject && candidateKeys.length > 0) {
+      sortKey = adapter.getKey(item, candidateKeys)
+    } else if (serialized) {
+      sortKey = stableStringify(
+        adapter.getValue(item),
+        resolved.sortObjectKeysBeforeSerialize,
+      )
+    } else {
+      sortKey = isObject ? originalIndex : adapter.getValue(item)
+    }
+    return { isObject, item, originalIndex, serialized, sortKey }
+  })
+  decorated.sort((a, b) => {
+    if (a.isObject !== b.isObject) return direction * (a.isObject ? 1 : -1)
+    let compared = 0
+    if (a.serialized && b.serialized) {
+      compared = stringCmp(a.sortKey as string, b.sortKey as string)
+    } else if (!a.isObject || candidateKeys.length > 0) {
+      compared = valueCmp(a.sortKey, b.sortKey)
+    }
+    return compared || a.originalIndex - b.originalIndex
+  })
+  return decorated.map(({ item }) => item)
 }
 
 /**
@@ -88,58 +108,60 @@ export function sortArrayValues<T>(
   path: PathSegment[],
   options: SortOptions,
 ): T[] {
-  const resolved = resolveArrayValueOptions(path, options)
-  if (recursed.length < resolved.minValues) return recursed
-
-  // Mixed scalar/object: scalars sort by value, objects via configured strategy. Tie-break: scalars come before objects in asc, after in desc.
-  const cmpOpts = toComparatorOpts(resolved)
-  const valueCmp = makeValueComparator(cmpOpts)
-  const stringCmp = makeStringComparator(cmpOpts)
-  const dir = resolved.order === 'desc' ? -1 : 1
-
-  const candidateKeys = resolveCandidateKeys(resolved)
-  const useSerialize = resolved.serialize
-
-  const decorated = recursed.map((v, originalIndex) => {
-    const isObj = v !== null && typeof v === 'object' && !Array.isArray(v)
-    let sortKey: unknown
-    let comparedAsString = false
-    if (isObj && candidateKeys.length > 0) {
-      sortKey = pickFirstPresentKey(v as Record<string, unknown>, candidateKeys)
-    } else if (isObj && useSerialize) {
-      sortKey = stableStringify(v, resolved.sortObjectKeysBeforeSerialize)
-      comparedAsString = true
-    } else if (isObj) {
-      // Without a comparison key, retain relative object order.
-      sortKey = originalIndex
-      comparedAsString = false
-    } else {
-      sortKey = v
-    }
-    return { comparedAsString, isObj, originalIndex, sortKey, v }
+  return sortArrayItems(recursed, resolveArrayValueOptions(path, options), {
+    getKey: (value, keys) =>
+      pickFirstPresentKey(value as Record<string, unknown>, keys),
+    getValue: value => value,
+    isObject: value =>
+      value !== null && typeof value === 'object' && !Array.isArray(value),
   })
+}
 
-  decorated.sort((a, b) => {
-    if (a.isObj !== b.isObj) {
-      return dir * (a.isObj ? 1 : -1)
-    }
-    if (a.isObj) {
-      if (a.comparedAsString && b.comparedAsString) {
-        const c = stringCmp(a.sortKey as string, b.sortKey as string)
-        if (c !== 0) return c
-      } else if (candidateKeys.length > 0) {
-        const c = valueCmp(a.sortKey, b.sortKey)
-        if (c !== 0) return c
+/**
+ * Sort original object items using a resolved named order and comparison policy.
+ * @param items entries, syntax nodes, or map pairs to sort without mutating input
+ * @param resolved resolved object-key options
+ * @param key extract the property name from each item
+ * @returns sorted items, leaving unspecified keys in relative order when requested
+ */
+export function sortObjectItems<T>(
+  items: T[],
+  resolved: ResolvedObjectKeyOptions,
+  key: (item: T) => string,
+): T[] {
+  const { rankByKey, restCmpOpts } = buildNamedOrderRanks(resolved)
+  const fallback = makeStringComparator(restCmpOpts)
+  const compare = (a: T, b: T) => {
+    const nameA = key(a)
+    const nameB = key(b)
+    const rankA = rankByKey.get(nameA)
+    const rankB = rankByKey.get(nameB)
+    if (rankA !== undefined || rankB !== undefined)
+      return (rankA ?? Infinity) - (rankB ?? Infinity)
+    return fallback(nameA, nameB)
+  }
+  if (resolved.preserveUnknownKeys && resolved.namedOrder) {
+    const result = [...items]
+    // Like ESLint's named-key fixes, move an inverted key after its successor.
+    // Swapping fixed slots would move an unlisted key across both named keys.
+    let changed = true
+    while (changed) {
+      changed = false
+      let previous = -1
+      for (let index = 0; index < result.length; index++) {
+        if (!rankByKey.has(key(result[index]))) continue
+        if (previous >= 0 && compare(result[previous], result[index]) > 0) {
+          const [item] = result.splice(previous, 1)
+          result.splice(index, 0, item)
+          changed = true
+          break
+        }
+        previous = index
       }
-      // serialize=false, no key → stable
-    } else {
-      const c = valueCmp(a.sortKey, b.sortKey)
-      if (c !== 0) return c
     }
-    return a.originalIndex - b.originalIndex
-  })
-
-  return decorated.map(d => d.v)
+    return result
+  }
+  return [...items].sort(compare)
 }
 
 export function sortValue<T>(value: T, options: SortOptions = {}): T {
@@ -171,42 +193,6 @@ export function stableStringify(value: unknown, sortKeys: boolean): string {
   return JSON.stringify(normalize(value))
 }
 
-function applyArrayOverride(
-  base: ResolvedArrayValueOptions,
-  ov: ArrayValueOverride,
-): ResolvedArrayValueOptions {
-  const out = { ...base }
-  if (ov.order !== undefined) out.order = ov.order
-  if (ov.caseSensitive !== undefined) out.caseSensitive = ov.caseSensitive
-  if (ov.natural !== undefined) out.natural = ov.natural
-  if (ov.minValues !== undefined) out.minValues = ov.minValues
-  if (ov.key !== undefined) out.key = ov.key
-  if (ov.keys !== undefined) out.keys = ov.keys
-  if (ov.serialize !== undefined) out.serialize = ov.serialize
-  if (ov.sortObjectKeysBeforeSerialize !== undefined)
-    out.sortObjectKeysBeforeSerialize = ov.sortObjectKeysBeforeSerialize
-  return out
-}
-
-function applyObjectOverride(
-  base: ResolvedObjectKeyOptions,
-  ov: ObjectKeyOverride,
-): ResolvedObjectKeyOptions {
-  const out = { ...base }
-  if (Array.isArray(ov.order)) {
-    out.namedOrder = ov.order
-  } else if (ov.order) {
-    out.order = ov.order
-    out.namedOrder = null
-  }
-  if (ov.caseSensitive !== undefined) out.caseSensitive = ov.caseSensitive
-  if (ov.natural !== undefined) out.natural = ov.natural
-  if (ov.minKeys !== undefined) out.minKeys = ov.minKeys
-  if (ov.allowLineSeparatedGroups !== undefined)
-    out.allowLineSeparatedGroups = ov.allowLineSeparatedGroups
-  return out
-}
-
 function pickFirstPresentKey(obj: Record<string, unknown>, keys: string[]): unknown {
   for (const k of keys) {
     if (Object.prototype.hasOwnProperty.call(obj, k)) return obj[k]
@@ -219,24 +205,29 @@ function resolveArrayValueOptions(
   options: SortOptions,
 ): ResolvedArrayValueOptions {
   const base = options.arrayValues ?? {}
-  let result: ResolvedArrayValueOptions = {
-    ...DEFAULT_ARRAY_VALUE,
-    caseSensitive: base.caseSensitive ?? DEFAULT_ARRAY_VALUE.caseSensitive,
+  const result: ResolvedArrayValueOptions = {
+    caseSensitive: base.caseSensitive ?? true,
     key: base.key ?? null,
     keys: base.keys ?? [],
-    minValues: base.minValues ?? DEFAULT_ARRAY_VALUE.minValues,
-    natural: base.natural ?? DEFAULT_ARRAY_VALUE.natural,
-    order: base.order ?? DEFAULT_ARRAY_VALUE.order,
-    serialize: base.serialize ?? DEFAULT_ARRAY_VALUE.serialize,
-    sortObjectKeysBeforeSerialize:
-      base.sortObjectKeysBeforeSerialize ??
-      DEFAULT_ARRAY_VALUE.sortObjectKeysBeforeSerialize,
+    minValues: base.minValues ?? 2,
+    order: base.order ?? 'asc',
+    priority: base.priority ?? [],
+    serialize: base.serialize ?? true,
+    sortObjectKeysBeforeSerialize: base.sortObjectKeysBeforeSerialize ?? true,
+    sortType: base.sortType ?? 'locale',
   }
-  const overrides = base.overrides ?? []
-  for (const ov of overrides) {
-    if (matchesPattern(ov.pathPattern, path)) {
-      result = applyArrayOverride(result, ov)
-    }
+  for (const override of base.overrides ?? []) {
+    if (!matchesPattern(override.pathPattern, path)) continue
+    result.caseSensitive = override.caseSensitive ?? result.caseSensitive
+    if (override.key !== undefined) result.key = override.key
+    result.keys = override.keys ?? result.keys
+    result.minValues = override.minValues ?? result.minValues
+    result.order = override.order ?? result.order
+    result.priority = override.priority ?? result.priority
+    result.serialize = override.serialize ?? result.serialize
+    result.sortObjectKeysBeforeSerialize =
+      override.sortObjectKeysBeforeSerialize ?? result.sortObjectKeysBeforeSerialize
+    result.sortType = override.sortType ?? result.sortType
   }
   return result
 }
@@ -252,21 +243,30 @@ function resolveObjectKeyOptions(
   options: SortOptions,
 ): ResolvedObjectKeyOptions {
   const base = options.objectKeys ?? {}
-  let result: ResolvedObjectKeyOptions = {
-    ...DEFAULT_OBJECT_KEY,
-    allowLineSeparatedGroups:
-      base.allowLineSeparatedGroups ?? DEFAULT_OBJECT_KEY.allowLineSeparatedGroups,
-    caseSensitive: base.caseSensitive ?? DEFAULT_OBJECT_KEY.caseSensitive,
-    minKeys: base.minKeys ?? DEFAULT_OBJECT_KEY.minKeys,
+  const result: ResolvedObjectKeyOptions = {
+    allowLineSeparatedGroups: base.allowLineSeparatedGroups ?? false,
+    caseSensitive: base.caseSensitive ?? true,
+    minKeys: base.minKeys ?? 2,
     namedOrder: null,
-    natural: base.natural ?? DEFAULT_OBJECT_KEY.natural,
-    order: base.order ?? DEFAULT_OBJECT_KEY.order,
+    order: base.order ?? 'asc',
+    preserveUnknownKeys: base.preserveUnknownKeys ?? false,
+    sortType: base.sortType ?? 'locale',
   }
-  const overrides = base.overrides ?? []
-  for (const ov of overrides) {
-    if (matchesPattern(ov.pathPattern, path)) {
-      result = applyObjectOverride(result, ov)
+  for (const override of base.overrides ?? []) {
+    if (!matchesPattern(override.pathPattern, path)) continue
+    if (Array.isArray(override.order)) {
+      result.namedOrder = override.order
+    } else if (override.order) {
+      result.order = override.order
+      result.namedOrder = null
     }
+    result.allowLineSeparatedGroups =
+      override.allowLineSeparatedGroups ?? result.allowLineSeparatedGroups
+    result.caseSensitive = override.caseSensitive ?? result.caseSensitive
+    result.minKeys = override.minKeys ?? result.minKeys
+    result.preserveUnknownKeys =
+      override.preserveUnknownKeys ?? result.preserveUnknownKeys
+    result.sortType = override.sortType ?? result.sortType
   }
   return result
 }
@@ -280,22 +280,6 @@ function sortArray(
   const recursed = arr.map((v, i) => sortNode(v, [...path, i], options))
 
   return sortArrayValues(recursed, path, options)
-}
-
-function sortByNamedOrder(
-  entries: [string, unknown][],
-  resolved: ResolvedObjectKeyOptions,
-): [string, unknown][] {
-  const { rankByKey, restCmpOpts } = buildNamedOrderRanks(resolved)
-  const fallbackCmp = makeStringComparator(restCmpOpts)
-  return [...entries].sort(([a], [b]) => {
-    const ra = rankByKey.get(a)
-    const rb = rankByKey.get(b)
-    if (ra !== undefined && rb !== undefined) return ra - rb
-    if (ra !== undefined) return -1
-    if (rb !== undefined) return 1
-    return fallbackCmp(a, b)
-  })
 }
 
 function sortNode(value: unknown, path: PathSegment[], options: SortOptions): unknown {
@@ -326,22 +310,39 @@ function sortObject(
     return Object.fromEntries(recursed)
   }
 
-  let sorted: [string, unknown][]
-  if (resolved.namedOrder && resolved.namedOrder.length > 0) {
-    sorted = sortByNamedOrder(recursed, resolved)
-  } else {
-    const cmp = makeStringComparator(toComparatorOpts(resolved))
-    sorted = [...recursed].sort(([a], [b]) => cmp(a, b))
-  }
-  return Object.fromEntries(sorted)
+  return Object.fromEntries(sortObjectItems(recursed, resolved, ([name]) => name))
 }
 
 function toComparatorOpts(o: {
   caseSensitive: boolean
-  natural: boolean
   order: SortOrder
+  sortType?: SortType
 }): ComparatorOptions {
-  return { caseSensitive: o.caseSensitive, direction: o.order, natural: o.natural }
+  return {
+    caseSensitive: o.caseSensitive,
+    direction: o.order,
+    sortType: o.sortType,
+  }
+}
+
+interface ArrayItemAdapter<T> {
+  getKey: (item: T, keys: string[]) => unknown
+  getValue: (item: T) => unknown
+  isObject: (item: T) => boolean
+}
+
+interface ResolvedArrayValueOptions extends Required<
+  Omit<ArrayValueOptions, 'key' | 'keys'>
+> {
+  key: string | null
+  keys: string[]
+}
+
+interface ResolvedObjectKeyOptions extends Required<
+  Omit<ObjectKeyOptions, 'allowLineSeparatedGroups'>
+> {
+  allowLineSeparatedGroups: boolean
+  namedOrder: ObjectKeyOrderEntry[] | null
 }
 
 // Re-export for downstream adapters that need to know how options resolve for a given path.
