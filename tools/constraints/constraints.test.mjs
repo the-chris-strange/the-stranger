@@ -1,15 +1,16 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+
 import { constrainManifest } from './constraints.mjs'
 
 const root = {
+  devDependencies: { semver: '^7' },
   engines: { node: '^24 || ^26' },
   license: 'MIT',
   repository: { type: 'git', url: 'https://example.com/repo' },
-  devDependencies: { semver: '^7' },
 }
 test('normalizes metadata and dependency versions without changing the input', () => {
-  const pkg = { name: 'example', dependencies: { semver: '^6', local: 'workspace:*' } }
+  const pkg = { dependencies: { local: 'workspace:*', semver: '^6' }, name: 'example' }
   const result = constrainManifest(root, pkg, 'packages/example')
   assert.equal(result.manifest.engines.node, '^24 || ^26')
   assert.equal(result.manifest.repository.directory, 'packages/example')
@@ -27,10 +28,10 @@ test('reports undeclared external dependencies and incompatible peers', () => {
 })
 test('private tools do not inherit published metadata', () => {
   const pkg = {
-    private: true,
-    license: 'MIT',
-    repository: root.repository,
     engines: { node: '^24' },
+    license: 'MIT',
+    private: true,
+    repository: root.repository,
   }
   const result = constrainManifest(root, pkg, 'tools/example').manifest
   assert.equal(result.license, undefined)

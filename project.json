@@ -13,6 +13,12 @@
         }
       }
     },
+    "constraints-test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --test tools/constraints/constraints.test.mjs"
+      }
+    },
     "lint": {
       "executor": "nx:run-commands",
       "inputs": [
@@ -44,12 +50,6 @@
         "config": ".verdaccio/config.yml",
         "port": 4873,
         "storage": "node_modules/.local-registry/storage"
-      }
-    },
-    "constraints-test": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node --test tools/constraints/constraints.test.mjs"
       }
     }
   },

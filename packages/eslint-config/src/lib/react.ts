@@ -15,7 +15,9 @@ import { languageOptions } from './configs/language-options.js'
 import { namer } from './namer.js'
 import { reactRules } from './rulesets/react.js'
 
-export function configureReact({ react }: ConfigOptions['source']): ConfigWithExtends[] {
+export function configureReact({
+  react,
+}: ConfigOptions['source']): ConfigWithExtends[] {
   if (!Object.values(react).includes(true)) {
     return []
   }

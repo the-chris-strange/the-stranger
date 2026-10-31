@@ -22,9 +22,9 @@ ignorePaths:
   - node_modules
   - out-tsc
   - pnpm-lock.yaml
+  - pnpm-lock.yaml
   - pnpm-workspace.yaml
   - tmp
-  - pnpm-lock.yaml
 dictionaries:
   - companies
   - computing-acronyms

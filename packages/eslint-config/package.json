@@ -52,7 +52,7 @@
     "yaml-eslint-parser": "^2.0.0"
   },
   "devDependencies": {
-    "@nx/eslint-plugin": "22.5.2",
+    "@nx/eslint-plugin": "24.0.3",
     "@types/node": "^24.12.2",
     "@vitest/coverage-v8": "4.1.4",
     "eslint": "^9.39.4",
@@ -62,7 +62,7 @@
     "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "@nx/eslint-plugin": ">=21 <23",
+    "@nx/eslint-plugin": ">=21 <25",
     "eslint": "^9"
   },
   "peerDependenciesMeta": {
@@ -74,6 +74,7 @@
     "node": "^24 || ^26"
   },
   "publishConfig": {
-    "directory": "../../dist/packages/eslint-config"
+    "directory": "../../dist/packages/eslint-config",
+    "linkDirectory": false
   }
 }

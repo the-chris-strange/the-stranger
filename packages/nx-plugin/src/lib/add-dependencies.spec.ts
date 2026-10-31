@@ -1,7 +1,7 @@
 import { type Tree, readJson, writeJson } from '@nx/devkit'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { PackageJson } from 'nx/src/utils/package-json'
+import type { PackageJson } from 'type-fest'
 
 import { createTestTree } from '../test/utils/create-test-tree'
 import { addDependenciesToProject, getWorkspaceVersion } from './add-dependencies'

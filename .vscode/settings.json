@@ -143,7 +143,6 @@
   "python.analysis.typeCheckingMode": "off",
   "search.exclude": {
     "**/.pnp.*": true,
-    "**/.yarn": true,
     "**/node_modules/**": true,
     ".reports": true,
     "coverage": true,

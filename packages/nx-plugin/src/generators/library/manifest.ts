@@ -7,7 +7,7 @@ import {
 } from '@nx/devkit'
 import sortPackageJson from 'sort-package-json'
 
-import type { PackageJson } from 'nx/src/utils/package-json'
+import type { PackageJson } from 'type-fest'
 
 import type { LibrarySchema } from './schema'
 

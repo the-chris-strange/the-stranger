@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "affected": {
+    "legacy": true
+  },
   "generators": {
     "@nx/js": {
       "library": {
@@ -51,7 +54,15 @@
     {
       "plugin": "@nx/vitest",
       "options": {
+        "testMode": "run",
         "testTargetName": "test"
+      }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testMode": "watch",
+        "testTargetName": "watch-tests"
       }
     }
   ],
@@ -150,6 +161,7 @@
       "options": {}
     },
     "test": {
+      "dependsOn": ["^build"],
       "inputs": [
         "default",
         "noEslintConfigs",
@@ -179,6 +191,7 @@
     },
     "typecheck": {
       "dependsOn": ["build", "^typecheck"],
+      "executor": "nx:run-commands",
       "inputs": [
         "{projectRoot}/src/**/*.ts",
         {
@@ -191,11 +204,15 @@
       "outputs": [
         "{workspaceRoot}/out-tsc/{projectRoot}/tsconfig.?(*.)tsbuildinfo",
         "{workspaceRoot}/out-tsc/{projectRoot}/**/*.d.?([cm])ts?(.map)"
-      ]
+      ],
+      "options": {
+        "command": "tsc --build --emitDeclarationOnly",
+        "cwd": "{projectRoot}"
+      }
     },
     "watch-tests": {
       "cache": false,
-      "executor": "@nx/vitest:test",
+      "dependsOn": ["^build"],
       "options": {
         "cwd": "{projectRoot}",
         "watch": true

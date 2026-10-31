@@ -32,9 +32,9 @@
     "type-fest": "^5.8.0"
   },
   "devDependencies": {
-    "@nx/devkit": "22.5.2",
-    "@nx/js": "22.5.2",
-    "@nx/plugin": "22.5.2",
+    "@nx/devkit": "24.0.3",
+    "@nx/js": "24.0.3",
+    "@nx/plugin": "24.0.3",
     "@swc-node/register": "1.11.1",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.26",
@@ -45,16 +45,16 @@
     "jest": "^30.3.0",
     "jsdom": "~26.1.0",
     "jsonc-eslint-parser": "^3.1.0",
-    "nx": "22.5.2",
+    "nx": "24.0.3",
     "typescript": "^5.9.3",
     "vite": "7.3.2",
     "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "@nx/devkit": ">=21 <23",
-    "@nx/js": ">=21 <23",
+    "@nx/devkit": ">=21 <25",
+    "@nx/js": ">=21 <25",
     "jest": ">=29 <31",
-    "nx": ">=21 <23",
+    "nx": ">=21 <25",
     "vite": "^7",
     "vitest": "^4"
   },
@@ -62,7 +62,8 @@
     "node": "^24 || ^26"
   },
   "publishConfig": {
-    "directory": "../../dist/packages/nx-plugin"
+    "directory": "../../dist/packages/nx-plugin",
+    "linkDirectory": false
   },
   "executors": "./executors.json",
   "generators": "./generators.json"

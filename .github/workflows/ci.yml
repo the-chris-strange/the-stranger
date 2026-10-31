@@ -36,4 +36,4 @@ jobs:
       - name: lint, test, build, typecheck
         run: pnpm constraints
       - run: pnpm nx run root:constraints-test
-      - run: pnpm ci
+      - run: pnpm ci --skipNxCache

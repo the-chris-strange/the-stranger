@@ -1,6 +1,6 @@
 import { type Tree, addDependenciesToPackageJson, readJson } from '@nx/devkit'
 
-import type { PackageJson } from 'nx/src/utils/package-json'
+import type { PackageJson } from 'type-fest'
 
 /**
  * Add dependencies to a project's package.json, using the versions specified in the workspace's root package.json.

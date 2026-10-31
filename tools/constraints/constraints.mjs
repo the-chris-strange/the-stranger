@@ -1,7 +1,8 @@
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
-import { readFile, readdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, URL } from 'node:url'
+
 import { satisfies } from 'semver'
 
 export function constrainManifest(root, input, directory, installed = {}) {
@@ -38,7 +39,7 @@ export function constrainManifest(root, input, directory, installed = {}) {
       }
     }
   }
-  return { manifest, errors }
+  return { errors, manifest }
 }
 
 async function main() {
@@ -69,7 +70,7 @@ async function main() {
         if (error.code === 'ENOENT') continue
         throw error
       }
-      const { manifest, errors } = constrainManifest(root, input, directory, installed)
+      const { errors, manifest } = constrainManifest(root, input, directory, installed)
       for (const error of errors) console.error(`${directory}: ${error}`)
       failed ||= errors.length > 0
       if (JSON.stringify(input) !== JSON.stringify(manifest)) {

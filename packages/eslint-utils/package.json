@@ -30,7 +30,7 @@
     "vitest": "4.1.4"
   },
   "peerDependencies": {
-    "@nx/eslint-plugin": ">=21 <23",
+    "@nx/eslint-plugin": ">=21 <25",
     "eslint": "^9"
   },
   "peerDependenciesMeta": {
@@ -42,6 +42,7 @@
     "node": "^24 || ^26"
   },
   "publishConfig": {
-    "directory": "../../dist/packages/eslint-utils"
+    "directory": "../../dist/packages/eslint-utils",
+    "linkDirectory": false
   }
 }

@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
-import { parseEnv } from 'node:util'
 import { createRequire } from 'node:module'
+import { parseEnv } from 'node:util'
 
 // Preserve Yarn's optional environment-file order; existing shell variables win.
 const inherited = new Set(Object.keys(process.env))
@@ -16,8 +16,8 @@ const result = spawnSync(
   process.execPath,
   [require.resolve('nx/bin/nx.js'), ...process.argv.slice(2)],
   {
-    stdio: 'inherit',
     env: process.env,
+    stdio: 'inherit',
   },
 )
 if (result.error) throw result.error

@@ -13,6 +13,8 @@ export default defineConfig(
       '@nx/dependency-checks': [
         'error',
         {
+          // Nx is the plugin host, even though runtime imports use devkit.
+          ignoredDependencies: ['nx'],
           checkVersionMismatches: false,
           ignoredFiles: [
             '{projectRoot}/eslint.config.{ts,js,cjs,mjs}',

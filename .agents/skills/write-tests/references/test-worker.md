@@ -46,14 +46,14 @@ Use describe block titles only when they add context not already obvious from th
 Prefer Nx targets through the workspace package manager:
 
 ```bash
-yarn nx run <project>:test --skip-nx-cache
-yarn nx run <project>:e2e --skip-nx-cache
-yarn nx run <project>:lint --skip-nx-cache
-yarn nx run <project>:typecheck --skip-nx-cache
+pnpm nx run <project>:test --skip-nx-cache
+pnpm nx run <project>:e2e --skip-nx-cache
+pnpm nx run <project>:lint --skip-nx-cache
+pnpm nx run <project>:typecheck --skip-nx-cache
 ```
 
 Check the project configuration before guessing targets or flags:
 
 ```bash
-yarn nx show project <project> --json
+pnpm nx show project <project> --json
 ```

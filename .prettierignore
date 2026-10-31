@@ -20,3 +20,5 @@
 
 # pnpm
 pnpm-workspace.yaml
+
+.nx/self-healing

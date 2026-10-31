@@ -36,6 +36,7 @@
         "outputPath": "out-tsc/tools/nx-plugin",
         "tsConfig": "tools/nx-plugin/tsconfig.lib.json"
       }
-    }
+    },
+    "typecheck": {}
   }
 }

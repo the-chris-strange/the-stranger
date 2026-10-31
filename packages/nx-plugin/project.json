@@ -47,6 +47,7 @@
         "tsConfig": "packages/nx-plugin/tsconfig.lib.json"
       }
     },
+    "typecheck": {},
     "watch-tests": {}
   }
 }

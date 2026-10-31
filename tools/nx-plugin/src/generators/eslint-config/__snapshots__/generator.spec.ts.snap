@@ -111,8 +111,19 @@ export default configure(
   configureOptions,
 
   {
+    files: ['**/vitest.config.mts'],
+    name: 'the-stranger/tests/workspace-config',
+    rules: {
+      '@nx/enforce-module-boundaries': [
+        'error',
+        { allow: ['../../tools/vitest-workspace.mjs'] },
+      ],
+    },
+  },
+
+  {
     name: 'the-stranger/source/config-files',
-    files: ['eslint.config.*', 'prettier.config.mjs', 'yarn.config.cjs'],
+    files: ['eslint.config.*', 'prettier.config.mjs'],
     rules: {
       'perfectionist/sort-objects': 'off',
     },
@@ -274,8 +285,19 @@ export default configure(
   configureOptions,
 
   {
+    files: ['**/vitest.config.mts'],
+    name: 'the-stranger/tests/workspace-config',
+    rules: {
+      '@nx/enforce-module-boundaries': [
+        'error',
+        { allow: ['../../tools/vitest-workspace.mjs'] },
+      ],
+    },
+  },
+
+  {
     name: 'the-stranger/source/config-files',
-    files: ['eslint.config.*', 'prettier.config.mjs', 'yarn.config.cjs'],
+    files: ['eslint.config.*', 'prettier.config.mjs'],
     rules: {
       'perfectionist/sort-objects': 'off',
     },

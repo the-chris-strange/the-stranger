@@ -1,5 +1,3 @@
-import type { LibraryGeneratorSchema } from '@nx/js/src/generators/library/schema'
-
 import type { GeneratorSchema } from '../../lib/generator-schema'
 import type { ViteConfigSchema } from '../vite-config/schema'
 import type { VitestConfigSchema } from '../vitest-config/schema'
@@ -31,10 +29,12 @@ export interface LibrarySchema extends GeneratorSchema, NxLibOptions, ViteOption
   skipTestConfig?: boolean
 }
 
-type NxLibOptions = Pick<
-  LibraryGeneratorSchema,
-  'bundler' | 'testEnvironment' | 'unitTestRunner'
->
+// Keep public options independent of version-specific Nx internal entrypoints.
+interface NxLibOptions {
+  bundler?: 'esbuild' | 'none' | 'rollup' | 'swc' | 'tsc' | 'vite'
+  testEnvironment?: 'jsdom' | 'node'
+  unitTestRunner?: 'jest' | 'none' | 'vitest'
+}
 
 type ViteOptions = Pick<ViteConfigSchema, 'react' | 'rollupExternals' | 'swc'> &
   Pick<VitestConfigSchema, 'globals'>

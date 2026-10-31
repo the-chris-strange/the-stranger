@@ -11,6 +11,7 @@
     "nx-release-publish": {
       "dependsOn": ["write-directive-header"]
     },
+    "typecheck": {},
     "watch-tests": {},
     "write-directive-header": {
       "cache": true,

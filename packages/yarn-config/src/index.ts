@@ -1,4 +1,4 @@
-import { defineConfig } from '@yarnpkg/types'
+import { type Yarn, defineConfig } from '@yarnpkg/types'
 
 import { defineConstraints } from './lib/define-constraints'
 
@@ -9,7 +9,7 @@ export { enforceConsistentProjectDependencies } from './lib/project-dependencies
 export { setProjectVersion } from './lib/project-version.js'
 export { setRepositoryFromRoot as setRepository } from './lib/repository.js'
 
-export default defineConfig({
+const config: Yarn.Config = defineConfig({
   async constraints({ Yarn }) {
     for (const ws of Yarn.workspaces()) {
       if (ws.cwd === '.') {
@@ -27,3 +27,5 @@ export default defineConfig({
     }
   },
 })
+
+export default config

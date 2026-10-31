@@ -1,13 +1,16 @@
 import { defineConfig } from 'vitest/config'
 
+import { workspaceAliases } from '../../tools/vitest-workspace.mjs'
+
 const name = 'nx-plugin-internal' as const
 const projectPath = 'tools/nx-plugin' as const
 const cacheDir = `../../node_modules/.vitest/${projectPath}` as const
 
 export default defineConfig(() => ({
   cacheDir,
+  resolve: { alias: workspaceAliases },
 
-  root: __dirname,
+  root: import.meta.dirname,
 
   test: {
     coverage: {

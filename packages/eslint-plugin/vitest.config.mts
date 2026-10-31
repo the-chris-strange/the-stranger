@@ -1,11 +1,14 @@
 import { defineConfig } from 'vitest/config'
 
+import { workspaceAliases } from '../../tools/vitest-workspace.mjs'
+
 const name = 'eslint-plugin' as const
 const projectPath = `packages/${name}` as const
 const cacheDir = `../../node_modules/.vitest/${projectPath}` as const
 
 export default defineConfig(() => ({
   cacheDir,
+  resolve: { alias: workspaceAliases },
 
   root: import.meta.dirname,
 
