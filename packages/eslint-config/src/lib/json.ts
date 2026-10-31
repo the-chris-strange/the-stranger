@@ -10,7 +10,7 @@ import {
   vscodeJsonSortConfig,
 } from './configs/json/index.js'
 
-export function configureJson({ json }: ConfigOptions) {
+export function configureJson({ json }: ConfigOptions): ConfigWithExtends[] {
   if (!Object.values(json.sort).includes(true)) {
     return []
   }

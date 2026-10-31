@@ -9,7 +9,7 @@ description: Coordinate practical documentation writing in this Nx workspace. Us
 
 Use an orchestrator-led workflow for documentation work. The main agent stays responsible for final integration, review, validation, and user communication; the orchestrator agent scopes the documentation audience and split; dedicated worker sub-agents write README, docstring/JSDoc, and API documentation in disjoint areas.
 
-Before running Nx commands, read `$nx-workspace` if project or target discovery is needed, and read `$nx-run-tasks` if running lint, typecheck, build, or documentation targets. Prefer `yarn nx ...` in this workspace unless current files prove another package manager is required.
+Before running Nx commands, read `$nx-workspace` if project or target discovery is needed, and read `$nx-run-tasks` if running lint, typecheck, build, or documentation targets. Prefer `pnpm nx ...` in this workspace unless current files prove another package manager is required.
 
 ## Workflow
 
@@ -75,11 +75,11 @@ Keep API docs user-facing: document stable imports, options, return values, erro
 Prefer commands through Nx:
 
 ```bash
-yarn nx show project <project> --json
-yarn nx run <project>:lint --skip-nx-cache
-yarn nx run <project>:typecheck --skip-nx-cache
-yarn nx run <project>:test --skip-nx-cache
-yarn nx run <project>:build --skip-nx-cache
+pnpm nx show project <project> --json
+pnpm nx run <project>:lint --skip-nx-cache
+pnpm nx run <project>:typecheck --skip-nx-cache
+pnpm nx run <project>:test --skip-nx-cache
+pnpm nx run <project>:build --skip-nx-cache
 ```
 
 Never guess unfamiliar Nx flags. Check `--help`, `$nx-workspace`, `$nx-run-tasks`, or Nx docs before using them.

@@ -13,7 +13,7 @@ import {
 } from './configs/yaml/index.js'
 import { namer } from './namer.js'
 
-export function configureYaml({ yaml }: ConfigOptions) {
+export function configureYaml({ yaml }: ConfigOptions): ConfigWithExtends[] {
   if (!Object.values(yaml.sort).includes(true)) {
     return []
   }

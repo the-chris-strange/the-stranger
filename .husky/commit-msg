@@ -1,1 +1,1 @@
-yarn commit:lint --edit "$1"
+pnpm commit:lint --edit "$1"

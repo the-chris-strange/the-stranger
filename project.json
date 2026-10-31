@@ -3,22 +3,13 @@
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
     "constraints": {
-      "cache": true,
-      "dependsOn": ["yarn-config:build"],
       "executor": "nx:run-commands",
-      "inputs": [
-        "{workspaceRoot}/package.json",
-        "{workspaceRoot}/packages/*/package.json",
-        { "dependentTasksOutputFiles": "**/*.{js,cjs}" }
-      ],
-      "outputs": ["{workspaceRoot}/package.json", "{workspaceRoot}/packages/*/package.json"],
       "options": {
-        "color": true,
-        "command": "yarn constraints"
+        "command": "node tools/constraints/constraints.mjs"
       },
       "configurations": {
         "fix": {
-          "command": "yarn constraints --fix"
+          "command": "node tools/constraints/constraints.mjs --fix"
         }
       }
     },
@@ -35,15 +26,16 @@
         "!{workspaceRoot}/.gitattributes",
         "!{workspaceRoot}/.prettierignore",
         "!{workspaceRoot}/.vscode/mcp.json",
-        "!{workspaceRoot}/.yarnrc.yml",
         "!{workspaceRoot}/packages/**/*",
         "!{workspaceRoot}/**/LICENSE",
-        "!{workspaceRoot}/yarn.lock",
-        { "externalDependencies": ["eslint"] }
+        "!{workspaceRoot}/pnpm-lock.yaml",
+        {
+          "externalDependencies": ["eslint"]
+        }
       ],
       "options": {
         "command": "eslint .",
-        "ignore-pattern": "{packages,tools}/**/*"
+        "ignore-pattern": "{packages,tools/nx-plugin}/**/*"
       }
     },
     "local-registry": {
@@ -52,6 +44,12 @@
         "config": ".verdaccio/config.yml",
         "port": 4873,
         "storage": "node_modules/.local-registry/storage"
+      }
+    },
+    "constraints-test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --test tools/constraints/constraints.test.mjs"
       }
     }
   },

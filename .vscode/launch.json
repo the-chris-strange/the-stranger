@@ -9,7 +9,7 @@
       "name": "Run tests",
       "request": "launch",
       "runtimeArgs": ["test"],
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "skipFiles": ["<node_internals>/**"],
       "type": "node"
     }

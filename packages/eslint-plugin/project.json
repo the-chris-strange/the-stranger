@@ -9,9 +9,8 @@
       "executor": "@nx/js:tsc"
     },
     "nx-release-publish": {
-      "dependsOn": ["resolve-workspace-dependencies"]
+      "dependsOn": []
     },
-    "resolve-workspace-dependencies": {},
     "watch-tests": {}
   }
 }

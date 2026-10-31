@@ -4,7 +4,7 @@
     {
       "label": "Build",
       "detail": "Build the workspace",
-      "command": "yarn",
+      "command": "pnpm",
       "args": ["build"],
       "group": {
         "isDefault": true,
@@ -16,7 +16,7 @@
     {
       "label": "Test",
       "detail": "Run all unit and e2e tests",
-      "command": "yarn",
+      "command": "pnpm",
       "args": ["test"],
       "group": {
         "isDefault": true,

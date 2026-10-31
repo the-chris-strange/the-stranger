@@ -9,9 +9,8 @@
       "executor": "@nx/js:tsc"
     },
     "nx-release-publish": {
-      "dependsOn": ["write-directive-header", "resolve-workspace-dependencies"]
+      "dependsOn": ["write-directive-header"]
     },
-    "resolve-workspace-dependencies": {},
     "watch-tests": {},
     "write-directive-header": {
       "cache": true,

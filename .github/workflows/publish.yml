@@ -24,14 +24,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v4
-      - run: corepack enable && corepack install
-      - uses: actions/setup-node@v5
+      - uses: jdx/mise-action@v3
         with:
-          cache: yarn
-          node-version: 24
-          registry-url: "https://registry.npmjs.org"
-      - run: yarn install --immutable
+          cache: true
+      - run: pnpm install --frozen-lockfile
       - if: success()
-        run: yarn build
+        run: pnpm build
       - if: success() && github.ref == 'refs/heads/main'
-        run: yarn nx release publish --access public
+        run: pnpm nx release publish --access public

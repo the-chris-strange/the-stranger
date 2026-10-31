@@ -25,7 +25,7 @@ const jestConfigs = getPluginConfigs(jestPlugin)
 const playwrightConfigs = getPluginConfigs(playwrightPlugin)
 const vitestConfigs = getPluginConfigs(vitestPlugin)
 
-export function configureTests({ source, tests }: ConfigOptions) {
+export function configureTests({ source, tests }: ConfigOptions): ConfigWithExtends[] {
   const { disallowedWords = ['should'], e2eTestRunner, unitTestRunner } = tests ?? {}
   const configs: ConfigWithExtends[] = []
 

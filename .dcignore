@@ -1,8 +1,6 @@
 # Ignore file for snyk
 # follows the same syntax as .gitignore
 
-.yarn/*
-.pnp.*
 node_modules
 **/*.spec.ts
 **/*.test.ts

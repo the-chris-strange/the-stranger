@@ -3,10 +3,7 @@
 /node_modules
 /.vs
 
-# yarn
-/yarn.lock
-/.yarn
-/.pnp.*
+/pnpm-lock.yaml
 
 # python stuff
 .venv

@@ -16,7 +16,6 @@ ignorePaths:
   - .prettierignore
   - .verdaccio
   - .vscode
-  - .yarnrc.yml
   - coverage
   - dist
   - env.d.ts
@@ -25,7 +24,7 @@ ignorePaths:
   - pnpm-lock.yaml
   - pnpm-workspace.yaml
   - tmp
-  - yarn.lock
+  - pnpm-lock.yaml
 dictionaries:
   - companies
   - computing-acronyms

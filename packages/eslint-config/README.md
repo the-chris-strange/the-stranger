@@ -138,11 +138,11 @@ export default configure({
 ## Building
 
 ```bash
-yarn nx build eslint-config
+pnpm nx build eslint-config
 ```
 
 ## Running Unit Tests
 
 ```bash
-yarn nx test eslint-config
+pnpm nx test eslint-config
 ```

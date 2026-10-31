@@ -9,7 +9,7 @@ description: Coordinate practical unit and end-to-end test writing in this Nx wo
 
 Use an orchestrator-led workflow for test-writing work. The main agent stays responsible for final integration, review, validation, and user communication; the orchestrator agent manages risk inventory, scope decomposition, worker prompts, and coverage gaps; worker sub-agents write tests in disjoint file areas.
 
-Before running Nx commands, read `$nx-workspace` if project or target discovery is needed, and read `$nx-run-tasks` if running test, lint, build, or e2e targets. Prefer `yarn nx ...` in this workspace unless current files prove another package manager is required.
+Before running Nx commands, read `$nx-workspace` if project or target discovery is needed, and read `$nx-run-tasks` if running test, lint, build, or e2e targets. Prefer `pnpm nx ...` in this workspace unless current files prove another package manager is required.
 
 ## Workflow
 
@@ -63,11 +63,11 @@ Avoid brittle implementation-coupled tests, low-value snapshots, speculative req
 Prefer commands through Nx:
 
 ```bash
-yarn nx show project <project> --json
-yarn nx run <project>:test --skip-nx-cache
-yarn nx run <project>:e2e --skip-nx-cache
-yarn nx run <project>:lint --skip-nx-cache
-yarn nx run <project>:typecheck --skip-nx-cache
+pnpm nx show project <project> --json
+pnpm nx run <project>:test --skip-nx-cache
+pnpm nx run <project>:e2e --skip-nx-cache
+pnpm nx run <project>:lint --skip-nx-cache
+pnpm nx run <project>:typecheck --skip-nx-cache
 ```
 
 Never guess unfamiliar Nx flags. Check `--help`, `$nx-workspace`, `$nx-run-tasks`, or Nx docs before using them.

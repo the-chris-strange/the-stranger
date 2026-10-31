@@ -5,5 +5,6 @@ name = "codex"
 [setup]
 script = '''
 cd "$CODEX_WORKTREE_PATH"
-yarn install
+mise install
+mise exec -- pnpm install --frozen-lockfile
 '''

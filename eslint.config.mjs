@@ -108,7 +108,7 @@ export default configure(
 
   {
     name: 'the-stranger/source/config-files',
-    files: ['eslint.config.*', 'prettier.config.mjs', 'yarn.config.cjs'],
+    files: ['eslint.config.*', 'prettier.config.mjs'],
     rules: {
       'perfectionist/sort-objects': 'off',
     },

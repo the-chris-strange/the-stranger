@@ -12,22 +12,19 @@
     "name": "Chris Strange",
     "email": "mr.chris.strange@gmail.com"
   },
-  "workspaces": [
-    "packages/**",
-    "tools/**"
-  ],
   "scripts": {
-    "build": "nx run-many -t build resolve-workspace-dependencies",
-    "ci": "nx run-many -t lint test build typecheck",
+    "build": "node tools/run-nx.mjs run-many -t build",
+    "ci": "node tools/run-nx.mjs run-many -t lint test build typecheck",
     "commit": "commit",
     "commit:lint": "commitlint",
-    "format": "nx format",
+    "constraints": "node tools/constraints/constraints.mjs",
+    "format": "node tools/run-nx.mjs format",
     "postinstall": "husky",
-    "lint": "nx run-many -t lint",
-    "nx": "nx",
-    "prepack": "nx run-many -t build",
-    "test": "nx run-many -t test",
-    "typecheck": "nx run-many -t typecheck"
+    "lint": "node tools/run-nx.mjs run-many -t lint",
+    "nx": "node tools/run-nx.mjs",
+    "prepack": "node tools/run-nx.mjs run-many -t build",
+    "test": "node tools/run-nx.mjs run-many -t test",
+    "typecheck": "node tools/run-nx.mjs run-many -t typecheck"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
@@ -107,9 +104,15 @@
     "vitest": "4.1.4",
     "yaml-eslint-parser": "^2.0.0"
   },
-  "packageManager": "yarn@4.16.0",
+  "packageManager": "pnpm@12.16.1",
   "engines": {
-    "node": "^24"
+    "node": "^24 || ^26"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.13.0"
+    }
   },
   "nx": {
     "includedScripts": []

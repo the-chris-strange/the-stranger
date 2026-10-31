@@ -81,8 +81,8 @@
     }
   },
   "code-runner.executorMap": {
-    "javascript": "yarn node",
-    "typescript": "yarn exec vite-node"
+    "javascript": "node",
+    "typescript": "pnpm exec vite-node"
   },
   "editor.autoIndent": "full",
   "editor.unicodeHighlight.allowedCharacters": {},

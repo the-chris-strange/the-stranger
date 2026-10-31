@@ -20,16 +20,7 @@ out-tsc
 # dependencies
 ## node.js
 node_modules/
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
 
-# yarn pnp
-.pnp.*
-# \!.pnp.*
-.yarn/sdks
-# \!.yarn/sdks
 
 # caches
 *.tsbuildinfo

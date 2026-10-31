@@ -129,7 +129,9 @@
         "default",
         "eslintConfigs",
         "{workspaceRoot}/tools/eslint-rules/**/*",
-        { "externalDependencies": ["eslint"] }
+        {
+          "externalDependencies": ["eslint"]
+        }
       ],
       "options": {
         "cwd": "{projectRoot}"
@@ -145,26 +147,22 @@
     },
     "nx-release-publish": {
       "dependsOn": ["^nx-release-publish", "build"],
-      "options": {
-        "packageRoot": "{workspaceRoot}/dist/{projectRoot}"
-      }
-    },
-    "resolve-workspace-dependencies": {
-      "dependsOn": ["nx-plugin-internal:build", "build", "^resolve-workspace-dependencies"],
-      "executor": "@the-stranger/nx-plugin-internal:workspace-dependencies",
-      "options": {
-        "destination": "{workspaceRoot}/dist/{projectRoot}/package.json",
-        "source": "{projectRoot}/package.json"
-      }
+      "options": {}
     },
     "test": {
       "inputs": [
         "default",
         "noEslintConfigs",
         "^productionCode",
-        { "externalDependencies": ["vitest"] },
-        { "env": "CI" },
-        { "env": "GITHUB_ACTIONS" }
+        {
+          "externalDependencies": ["vitest"]
+        },
+        {
+          "env": "CI"
+        },
+        {
+          "env": "GITHUB_ACTIONS"
+        }
       ],
       "outputs": [
         "{workspaceRoot}/coverage/{projectRoot}",
@@ -183,8 +181,12 @@
       "dependsOn": ["build", "^typecheck"],
       "inputs": [
         "{projectRoot}/src/**/*.ts",
-        { "dependentTasksOutputFiles": "**/*.d.?([cm])ts" },
-        { "externalDependencies": ["typescript"] }
+        {
+          "dependentTasksOutputFiles": "**/*.d.?([cm])ts"
+        },
+        {
+          "externalDependencies": ["typescript"]
+        }
       ],
       "outputs": [
         "{workspaceRoot}/out-tsc/{projectRoot}/tsconfig.?(*.)tsbuildinfo",

@@ -1,3 +1,13 @@
+# Workspace development
+
+- Install tools with `mise install`; run commands with an activated mise shell or `mise exec --`.
+- `mise.toml` enables `idiomatic_version_file_enable_tools = ["node", "pnpm"]`.
+- Pin pnpm in root `package.json#packageManager` and development Node in `devEngines.runtime`; do not duplicate pins in mise.toml.
+- Published Node compatibility is `^24 || ^26`; keep Node 24 types and validate both majors.
+- Use `pnpm nx` for tasks and `pnpm constraints` for manifest checks.
+- Internal dependencies use `workspace:*`; rely on pnpm packaging to resolve versions.
+- Preserve public Yarn utilities. Obtain approval before optional dependency upgrades.
+
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
 
