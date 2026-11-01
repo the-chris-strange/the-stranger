@@ -18,19 +18,17 @@ export function isPrivate(ws: Workspace) {
 
 export function isRepository(value: unknown): value is RepositoryObject {
   const allowedKeys = new Set(['directory', 'type'])
-  if (
-    value &&
+  return value &&
     typeof value === 'object' &&
     'url' in value &&
     typeof value.url === 'string'
-  ) {
-    return Object.keys(value).every(
-      key =>
-        key === 'url' ||
-        (allowedKeys.has(key) && isStringOrUndefined(value[key as keyof typeof value])),
-    )
-  }
-  return false
+    ? Object.keys(value).every(
+        key =>
+          key === 'url' ||
+          (allowedKeys.has(key) &&
+            isStringOrUndefined(value[key as keyof typeof value])),
+      )
+    : false
 }
 
 export interface PackageManifest {

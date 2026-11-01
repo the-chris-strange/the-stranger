@@ -3,11 +3,13 @@ import {
   FilePatterns,
   getFilePatterns,
 } from '@the-stranger/eslint-utils'
-import globals from 'globals'
+import * as globalsModule from 'globals'
 
 import type { ConfigOptions } from './options.js'
 
 import { namer } from './namer.js'
+
+const globals = globalsModule.default ?? globalsModule
 
 export function configureJs({ js }: ConfigOptions['source']): ConfigWithExtends[] {
   if (!Object.values(js).includes(true)) {

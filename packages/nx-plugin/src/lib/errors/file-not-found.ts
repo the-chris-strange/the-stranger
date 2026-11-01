@@ -9,6 +9,7 @@ export class FileNotFoundError extends Error {
    * @param filepath the path that doesn't exist
    * @param message override the default error message
    */
+  // eslint-disable-next-line unicorn/custom-error-definition -- Preserve the public filepath/message constructor.
   constructor(
     public filepath: string,
     message?: string,

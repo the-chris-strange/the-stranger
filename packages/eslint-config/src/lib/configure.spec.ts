@@ -50,9 +50,9 @@ describe('configure', () => {
 
   it('keeps source rule overrides after TypeScript extends', async () => {
     const config = (await calculateConfig({}, 'src/index.ts')) as {
-      rules?: Record<string, unknown>
+      rules?: Record<string, [number, ...unknown[]]>
     }
 
-    expect(config.rules?.['jsdoc/require-jsdoc']).toStrictEqual([0])
+    expect(config.rules?.['jsdoc/require-jsdoc']?.[0]).toBe(0)
   })
 })

@@ -40,12 +40,7 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "build": {
-          "buildDepsName": "build-deps",
-          "configName": "tsconfig.lib.json",
-          "targetName": "build",
-          "watchDepsName": "watch-deps"
-        },
+        "build": false,
         "typecheck": {
           "targetName": "typecheck"
         }
@@ -101,37 +96,18 @@
     "build": {
       "cache": true,
       "dependsOn": ["^build"],
-      "executor": "@nx/js:tsc",
-      "inputs": ["default", "^productionCode"],
-      "outputs": ["{options.outputPath}/"],
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        "^productionCode",
+        "{workspaceRoot}/tools/build-package.mjs",
+        {
+          "externalDependencies": ["@typescript/native"]
+        }
+      ],
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}", "{workspaceRoot}/out-tsc/{projectRoot}"],
       "options": {
-        "assets": [
-          "{projectRoot}/*.md",
-          {
-            "glob": "**/*.md",
-            "input": "{projectRoot}/docs",
-            "output": "./docs"
-          },
-          {
-            "glob": "LICENSE",
-            "input": "{workspaceRoot}",
-            "output": ""
-          },
-          {
-            "glob": "package.json",
-            "input": "{projectRoot}",
-            "output": "."
-          },
-          {
-            "glob": "**/*.d.ts",
-            "input": "{projectRoot}/src",
-            "output": "./src"
-          }
-        ],
-        "generatePackageJson": true,
-        "main": "{projectRoot}/src/index.ts",
-        "outputPath": "{workspaceRoot}/dist/{projectRoot}",
-        "tsConfig": "{projectRoot}/tsconfig.lib.json"
+        "command": "node tools/build-package.mjs {projectRoot}"
       }
     },
     "lint": {
@@ -152,7 +128,7 @@
           "fix": true
         },
         "warnings": {
-          "maxWarnings": 0
+          "max-warnings": 0
         }
       }
     },
@@ -199,6 +175,9 @@
         },
         {
           "externalDependencies": ["typescript"]
+        },
+        {
+          "externalDependencies": ["@typescript/native"]
         }
       ],
       "outputs": [
@@ -206,7 +185,7 @@
         "{workspaceRoot}/out-tsc/{projectRoot}/**/*.d.?([cm])ts?(.map)"
       ],
       "options": {
-        "command": "tsc --build --emitDeclarationOnly",
+        "command": "node ../../node_modules/@typescript/native/bin/tsc --build --emitDeclarationOnly",
         "cwd": "{projectRoot}"
       }
     },

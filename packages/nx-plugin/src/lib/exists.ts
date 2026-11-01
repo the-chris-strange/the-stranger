@@ -9,8 +9,5 @@ import type { Tree } from '@nx/devkit'
  * @returns true if the file exists; false otherwise
  */
 export function exists(path: string, tree?: Tree) {
-  if (tree) {
-    return tree.exists(path)
-  }
-  return existsSync(path)
+  return tree ? tree.exists(path) : existsSync(path)
 }

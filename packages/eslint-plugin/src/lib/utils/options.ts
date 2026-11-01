@@ -4,10 +4,12 @@ import {
   configure,
 } from '@the-stranger/eslint-config'
 
+import type { Config } from 'eslint/config'
+
 export function disableExcept<K extends keyof ConfigOptions>(
   config: Options,
   ...keys: K[]
-) {
+): Config[] {
   return configure(disableOptionsExcept(config, ...keys))
 }
 

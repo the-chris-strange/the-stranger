@@ -32,7 +32,7 @@ export function objectNamer(config: Config, defaultName?: string): Named<Config>
     const plugins = Object.keys(config.plugins)
     return { ...config, name: namer(plugins[0]) }
   } else {
-    const rules = Object.keys(config.rules ?? {}).map(e => e.split('/')[0])
+    const rules = Object.keys(config.rules ?? {}).map(e => e.split('/', 1)[0])
     const name = [...new Set(rules)].join('/')
     return { ...config, name }
   }

@@ -25,10 +25,7 @@ export function getModuleRoot(specifier: string) {
 
   if (specifier.startsWith('@')) {
     const parts = specifier.split('/')
-    if (parts.length >= 2) {
-      return `${parts[0]}/${parts[1]}`
-    }
-    return specifier
+    return parts.length >= 2 ? `${parts[0]}/${parts[1]}` : specifier
   }
 
   const firstSlash = specifier.indexOf('/')

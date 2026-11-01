@@ -28,3 +28,14 @@ Internal dependencies use `workspace:*`. Nx builds packages into `dist`, and
 pnpm packs/publishes those artifacts using each package's `publishConfig.directory`.
 Pnpm converts workspace protocols to exact versions during packaging. Public
 Yarn configuration helpers remain supported independently of workspace tooling.
+
+### Compiler and tooling APIs
+
+Builds and typechecks use TypeScript 7 through the `@typescript/native` alias.
+TypeScript 6 remains installed as `typescript` because Nx and typescript-eslint
+require its compiler API; TypeScript 7 does not implement that API. Run
+`pnpm build` and `pnpm typecheck` to use the native compiler. `pnpm exec tsc`
+selects the API compatibility installation rather than the project compiler.
+
+Published Nx integrations support Nx 23 and 24. The ESLint packages require
+ESLint 10; Vite and Vitest integrations target Vite 8 and Vitest 5.

@@ -130,7 +130,7 @@ export class TSConfig implements TsConfigJson {
   addReferences(...values: (string | TSConfigReference)[]) {
     for (const value of values) {
       const ref = typeof value === 'string' ? { path: value } : value
-      if (!this.#config.references.some(e => e.path === ref.path)) {
+      if (this.#config.references.every(e => e.path !== ref.path)) {
         this.#config.references.push(ref)
       }
     }

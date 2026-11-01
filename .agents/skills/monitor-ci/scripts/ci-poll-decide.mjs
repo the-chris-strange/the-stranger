@@ -137,8 +137,10 @@ function classify() {
 
   // --- Environment failure ---
   if (failureClassification === 'environment_state') {
-    if (envRerunCount >= 2) return { action: 'done', code: 'environment_rerun_cap' }
-    return { action: 'done', code: 'environment_issue' }
+    return {
+      action: 'done',
+      code: envRerunCount >= 2 ? 'environment_rerun_cap' : 'environment_issue',
+    }
   }
 
   // --- Throttled ---
@@ -270,8 +272,7 @@ function isTimedOut() {
 // ============================================================
 
 function isWaitTimedOut() {
-  if (newCipeTimeoutSeconds <= 0) return false
-  return pollCount * 30 >= newCipeTimeoutSeconds
+  return newCipeTimeoutSeconds <= 0 ? false : pollCount * 30 >= newCipeTimeoutSeconds
 }
 
 // ============================================================
@@ -326,7 +327,7 @@ const messages = {
   polling_timeout: () => 'Polling timeout exceeded.',
   // throttled
   self_healing_throttled: () =>
-    'Self-healing throttled \u2014 too many unapplied fixes.',
+    'Self-healing throttled \u{2014} too many unapplied fixes.',
   sh_running: () => `CI: ${cipeStatus} | Self-healing: ${selfHealingStatus}`,
   verification_pending: () =>
     `CI: FAILED | Self-healing: COMPLETED | Verification: ${verificationStatus}`,
@@ -381,8 +382,7 @@ function buildOutput(decision) {
 function formatMessage(msg) {
   if (verbosity === 'minimal') {
     const currentStatus = `${cipeStatus}|${selfHealingStatus}|${verificationStatus}`
-    if (currentStatus === (prevStatus || '')) return null
-    return msg
+    return currentStatus === (prevStatus || '') ? null : msg
   }
   if (verbosity === 'verbose') {
     return [

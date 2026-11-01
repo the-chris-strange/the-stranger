@@ -44,3 +44,34 @@ interrupted by a reviewer usage limit, so the remaining diff received self-revie
 - Six package tarballs had valid exports, preserved Node engines, and no workspace
   protocols. All six imported in a clean consumer with the Nx ESLint peer installed.
 - Nx release publish completed successfully in dry-run mode for all six packages.
+
+## Approved toolchain upgrades
+
+Nx 21 and 22 support has been removed; peer ranges now start at Nx 23.
+ESLint and its configured plugins/parsers were upgraded to their latest stable
+versions, alongside Commitlint 21, Vite 8 and Vitest 5. The obsolete direct
+react-hooks-extra dependency was removed because the current React plugin no
+longer uses it and it requires an older TypeScript API.
+
+TypeScript 7.0.2 is installed as `@typescript/native`; `typescript` 6.0.3 supplies
+the compiler API required by Nx and typescript-eslint. Builds invoke the native
+compiler and copy package assets; typechecks also invoke version 7 directly.
+This replaces the Nx TSC executor, which invokes the incompatible legacy API.
+The root baseUrl and obsolete skipDefaultLibCheck options were removed for TS7.
+
+The latest React plugin removed the shorthand JSX, naming-convention and
+readonly-props rules configured here; obsolete references were removed. New
+Unicorn coercion, string-ordering and ternary style defaults are explicitly
+disabled to retain the existing policy and avoid changes to parsing behavior.
+Other supported rules and their severity settings remain enabled.
+
+The latest Astro parser/plugin requires Node 24.16 or Node 26.3, so engine
+ranges retain both supported majors while raising their minimum patch releases.
+
+The approved upgrade follow-up passed uncached build, tests, native TypeScript 7
+checks, lint and constraint tests on Node 26.13.0 and 24.19.0. All six tarballs
+contain their exported JavaScript/declarations and resolve workspace dependencies;
+all six import successfully in a fresh consumer. Frozen installation, peer checks,
+formatting, Commitlint 21 and Nx publish dry-run checks passed. The Nx plugin's
+zero-warning lint configuration also passed after using ESLint 10's hyphenated
+CLI option. These follow-up changes received local self-review.

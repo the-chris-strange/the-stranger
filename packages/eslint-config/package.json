@@ -23,47 +23,47 @@
   "module": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
-    "@eslint-react/eslint-plugin": "^2.13.0",
+    "@eslint-react/eslint-plugin": "^5.28.8",
     "@the-stranger/eslint-utils": "workspace:*",
-    "@typescript-eslint/parser": "^8.58.2",
-    "@vitest/eslint-plugin": "^1.6.16",
-    "astro-eslint-parser": "^1.4.0",
+    "@typescript-eslint/parser": "^8.72.1",
+    "@vitest/eslint-plugin": "^1.6.28",
+    "astro-eslint-parser": "^3.2.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-astro": "^1.7.0",
-    "eslint-plugin-cypress": "^6.3.1",
-    "eslint-plugin-jest": "^29.15.2",
-    "eslint-plugin-jsdoc": "^62.9.0",
-    "eslint-plugin-jsonc": "^3.1.2",
+    "eslint-plugin-astro": "^3.2.1",
+    "eslint-plugin-cypress": "^7.0.2",
+    "eslint-plugin-jest": "^29.17.0",
+    "eslint-plugin-jsdoc": "^65.4.2",
+    "eslint-plugin-jsonc": "^3.4.2",
     "eslint-plugin-jsx-a11y-x": "^0.2.0",
-    "eslint-plugin-n": "^17.24.0",
-    "eslint-plugin-perfectionist": "^5.9.0",
-    "eslint-plugin-playwright": "^2.10.2",
-    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-n": "^18.5.0",
+    "eslint-plugin-perfectionist": "^5.13.0",
+    "eslint-plugin-playwright": "^2.12.1",
+    "eslint-plugin-promise": "^7.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-regexp": "^3.1.0",
-    "eslint-plugin-toml": "^1.3.1",
-    "eslint-plugin-unicorn": "^63.0.0",
-    "eslint-plugin-yml": "^3.3.1",
-    "globals": "^17.5.0",
-    "jsonc-eslint-parser": "^3.1.0",
+    "eslint-plugin-regexp": "^3.3.2",
+    "eslint-plugin-toml": "^1.5.0",
+    "eslint-plugin-unicorn": "^79.0.0",
+    "eslint-plugin-yml": "^3.9.0",
+    "globals": "^17.13.0",
+    "jsonc-eslint-parser": "^3.3.0",
     "toml-eslint-parser": "^1.0.3",
     "tslib": "^2.8.1",
-    "typescript-eslint": "^8.58.2",
-    "yaml-eslint-parser": "^2.0.0"
+    "typescript-eslint": "^8.72.1",
+    "yaml-eslint-parser": "^2.1.0"
   },
   "devDependencies": {
     "@nx/eslint-plugin": "24.0.3",
     "@types/node": "^24.12.2",
-    "@vitest/coverage-v8": "4.1.4",
-    "eslint": "^9.39.4",
-    "eslint-plugin-eslint-plugin": "^7.3.2",
-    "jsonc-eslint-parser": "^3.1.0",
-    "typescript": "^5.9.3",
-    "vitest": "4.1.4"
+    "@vitest/coverage-v8": "5.0.5",
+    "eslint": "^10.14.0",
+    "eslint-plugin-eslint-plugin": "^7.6.2",
+    "jsonc-eslint-parser": "^3.3.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
   },
   "peerDependencies": {
-    "@nx/eslint-plugin": ">=21 <25",
-    "eslint": "^9"
+    "@nx/eslint-plugin": ">=23 <25",
+    "eslint": "^10"
   },
   "peerDependenciesMeta": {
     "@nx/eslint-plugin": {
@@ -71,7 +71,7 @@
     }
   },
   "engines": {
-    "node": "^24 || ^26"
+    "node": "^24.16.0 || ^26.3.0"
   },
   "publishConfig": {
     "directory": "../../dist/packages/eslint-config",

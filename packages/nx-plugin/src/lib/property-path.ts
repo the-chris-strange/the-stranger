@@ -126,6 +126,8 @@ export function* splitPropertyPath(path: string) {
     while (i < length && !['.', '[', ']'].includes(path[i])) i += 1
     const token = path.slice(start, i)
     const maybeNumber = Number.parseInt(token, 10)
-    yield Number.isNaN(maybeNumber) || `${maybeNumber}` !== token ? token : maybeNumber
+    yield Number.isNaN(maybeNumber) || String(maybeNumber) !== token
+      ? token
+      : maybeNumber
   }
 }

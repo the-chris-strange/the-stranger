@@ -108,10 +108,7 @@ export class RuleLevels {
    * ```
    */
   private matchType(level: RuleSeverity): RuleSeverity {
-    if (RuleLevels.isSeverity(level)) {
-      return this.severity
-    }
-    return this.severityString
+    return RuleLevels.isSeverity(level) ? this.severity : this.severityString
   }
 }
 

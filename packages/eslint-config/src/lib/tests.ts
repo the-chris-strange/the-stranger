@@ -1,6 +1,5 @@
 import {
   type ConfigWithExtends,
-  type InfiniteConfigArray,
   FilePatterns,
   getFilePatterns,
 } from '@the-stranger/eslint-utils'
@@ -34,7 +33,7 @@ export function configureTests({ source, tests }: ConfigOptions): ConfigWithExte
   }
 
   const baseConfig = {
-    extends: [] as InfiniteConfigArray[],
+    extends: [] as NonNullable<ConfigWithExtends['extends']>,
     files: getFilePatterns(FilePatterns.test),
     name: namer('tests/base'),
     plugins: {} as Exclude<ConfigWithExtends['plugins'], undefined>,

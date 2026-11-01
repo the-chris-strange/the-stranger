@@ -128,10 +128,7 @@ export class OptionalImport<TModule = unknown> {
     }
 
     const target = OptionalImport.extractMissingTarget(message)
-    if (target) {
-      return this.isSameOrSubpath(target)
-    }
-    return false
+    return target ? this.isSameOrSubpath(target) : false
   }
 
   /**

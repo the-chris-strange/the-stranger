@@ -7,7 +7,11 @@ interface SetMatchers<R = unknown> {
 }
 
 declare module 'vitest' {
-  interface Matchers<T> extends SetMatchers<T> {}
+  interface Matchers<
+    R extends Promise<void> | void = Promise<void> | void,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Required by Vitest declaration merging.
+    T = unknown,
+  > extends SetMatchers<R> {}
 }
 
 expect.extend({

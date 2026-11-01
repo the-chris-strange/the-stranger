@@ -15,9 +15,13 @@ export const unicornRules = {
   'unicorn/numeric-separators-style': ['warn', { number: { minimumDigits: 12 } }],
   /** Same as {@link https://typescript-eslint.io/rules/prefer-find} */
   'unicorn/prefer-array-find': 'off',
+  'unicorn/prefer-logical-operator-over-ternary': 'off',
   'unicorn/prefer-math-trunc': 'off',
+  // Preserve existing coercion, ordering, and boolean-expression policies.
+  'unicorn/prefer-number-coercion': 'off',
   /** Same as {@link https://typescript-eslint.io/rules/prefer-regexp-exec} */
   'unicorn/prefer-regexp-test': 'off',
+  'unicorn/require-array-sort-compare': 'off',
 } satisfies Rules
 
 export const unicornTestFileRules = {

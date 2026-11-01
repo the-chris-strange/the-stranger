@@ -1,9 +1,12 @@
 # Workspace development
 
+- Use TypeScript 7 via `@typescript/native` for builds/typechecks; retain TypeScript 6 for Nx and ESLint compiler APIs.
+- Supported Nx peers are `>=23 <25`; ESLint 10, Vite 8 and Vitest 5 are the supported toolchain majors.
+
 - Install tools with `mise install`; run commands with an activated mise shell or `mise exec --`.
 - `mise.toml` enables `idiomatic_version_file_enable_tools = ["node", "pnpm"]`.
 - Pin pnpm in root `package.json#packageManager` and development Node in `devEngines.runtime`; do not duplicate pins in mise.toml.
-- Published Node compatibility is `^24 || ^26`; keep Node 24 types and validate both majors.
+- Published Node compatibility is `^24.16.0 || ^26.3.0`; keep Node 24 types and validate both majors.
 - Use `pnpm nx` for tasks and `pnpm constraints` for manifest checks.
 - Internal dependencies use `workspace:*`; rely on pnpm packaging to resolve versions.
 - Preserve public Yarn utilities. Obtain approval before optional dependency upgrades.

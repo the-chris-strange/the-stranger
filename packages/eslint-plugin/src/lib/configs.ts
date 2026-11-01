@@ -4,6 +4,8 @@ import {
   configure,
 } from '@the-stranger/eslint-config'
 
+import type { Config } from 'eslint/config'
+
 import { disableTypeCheckedConfig } from './disable-type-checked.js'
 import { disableExcept } from './utils/options.js'
 
@@ -48,7 +50,23 @@ const recommendedOptions = {
   yaml: { sort: true },
 } satisfies Options
 
-export const configs = {
+export const configs: Record<
+  | 'disableTypeChecked'
+  | 'json'
+  | 'recommended'
+  | 'recommended/astro'
+  | 'recommended/no-type-checked'
+  | 'recommended/react'
+  | 'recommended/strict'
+  | 'standard'
+  | 'standard/no-type-checked'
+  | 'standard/strict'
+  | 'tests/jest'
+  | 'tests/vitest'
+  | 'toml'
+  | 'yaml',
+  Config[]
+> = {
   'disableTypeChecked': disableTypeCheckedConfig,
   'json': disableExcept({}, 'json'),
   'recommended': configure(recommendedOptions),
