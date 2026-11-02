@@ -9,6 +9,18 @@ import { setLicense } from './license'
 import { setNodeEngine } from './node-engine'
 import { setProjectVersion } from './project-version'
 
+function context(overrides: Partial<PackageManifest> = {}): Yarn {
+  const root = workspace({
+    engines: { node: '^24' },
+    license: 'MIT',
+    repository: { type: 'git', url: 'https://example.test/root' },
+    version: '1.0.0',
+    ...overrides,
+  })
+  root.cwd = '.'
+  return { workspace: () => root } as Yarn
+}
+
 function workspace(overrides: Partial<PackageManifest> = {}): Workspace {
   const manifest: Record<string, unknown> = {
     name: '@scope/foo',
@@ -45,18 +57,6 @@ function workspace(overrides: Partial<PackageManifest> = {}): Workspace {
   }
   ws.pkg.workspace = ws
   return ws
-}
-
-function context(overrides: Partial<PackageManifest> = {}): Yarn {
-  const root = workspace({
-    engines: { node: '^24' },
-    license: 'MIT',
-    repository: { type: 'git', url: 'https://example.test/root' },
-    version: '1.0.0',
-    ...overrides,
-  })
-  root.cwd = '.'
-  return { workspace: () => root } as Yarn
 }
 
 describe('constraint values', () => {

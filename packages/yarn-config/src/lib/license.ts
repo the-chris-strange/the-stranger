@@ -10,7 +10,7 @@ import { getManifest } from './manifest'
  */
 export function setLicense(
   ws: Workspace,
-  yarn: Yarn | string,
+  yarn: string | Yarn,
   options?: ConstraintOptions,
 ) {
   const license =
