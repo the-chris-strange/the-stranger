@@ -45,4 +45,4 @@ export default {
   tabWidth: 2,
   trailingComma: 'all',
   useTabs: false,
-} satisfies Config
+} as const satisfies Config

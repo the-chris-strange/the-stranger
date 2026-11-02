@@ -98,7 +98,7 @@
         "command": "vitest run --config tools/consumer-smoke/smoke.config.mts",
         "cwd": "."
       },
-      "metadata": { "description": "" }
+      "metadata": { "description": "Consumer smoke tests" }
     }
   },
   "includedScripts": []

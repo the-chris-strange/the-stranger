@@ -35,7 +35,6 @@
     "vitest": "4.1.11"
   },
   "peerDependencies": {
-    "@nx/eslint-plugin": ">=21 <24",
     "eslint": "^9 || ^10"
   },
   "peerDependenciesMeta": {

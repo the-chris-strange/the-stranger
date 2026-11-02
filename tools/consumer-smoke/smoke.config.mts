@@ -7,7 +7,7 @@ export default defineConfig({
     include: ['*.spec.mjs'],
     name: 'consumer-smoke',
     passWithNoTests: false,
-    testTimeout: 30_000,
+    testTimeout: 30000,
     watch: false,
   },
 })

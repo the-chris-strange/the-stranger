@@ -22,7 +22,7 @@ function node(code, cwd = root, mode = 'module') {
   return execute(process.execPath, [`--input-type=${mode}`, '--eval', code], {
     cwd,
     env: { ...process.env, NODE_OPTIONS: '', NODE_PATH: '' },
-    timeout: 25_000,
+    timeout: 25000,
   })
 }
 
@@ -54,7 +54,7 @@ it.each([false, true])(
   async installed => {
     const cwd = await consumer(installed)
     await node(
-      `
+      String.raw`
     import assert from 'node:assert/strict'
     import { ESLint } from 'eslint'
     import { configure } from '@the-stranger/eslint-config'
@@ -62,14 +62,14 @@ it.each([false, true])(
     assert.ok(configure().length > 0)
     assert.ok(configs.standard.length > 0)
     const eslint = new ESLint({ overrideConfigFile: true, overrideConfig: configs['standard/no-type-checked'] })
-    const [result] = await eslint.lintText('export const value: number = 1\\n', { filePath: 'standalone.ts' })
+    const [result] = await eslint.lintText('export const value: number = 1\n', { filePath: 'standalone.ts' })
     assert.equal(result.fatalErrorCount, 0)
     const hasNx = configs.recommended.some(config => config.plugins?.['@nx'])
     assert.equal(hasNx, ${installed})
     ${
       installed
         ? "assert.ok(configure({ nx: true }).some(config => config.plugins?.['@nx']))"
-        : 'assert.throws(() => configure({ nx: true }), /@nx\\/eslint-plugin/)'
+        : String.raw`assert.throws(() => configure({ nx: true }), /@nx\/eslint-plugin/)`
     }
   `,
       cwd,
@@ -104,7 +104,7 @@ async function consumer(installed) {
   const copied = new Set(['@the-stranger/eslint-config', '@the-stranger/eslint-plugin'])
   const dependencies = new Set(['eslint'])
   for (const name of copied) {
-    const source = join(root, 'packages', name.split('/')[1])
+    const source = join(root, 'packages', name.split('/', 2)[1])
     const destination = join(cwd, 'node_modules', name)
     await mkdir(destination, { recursive: true })
     await cp(join(source, 'dist'), join(destination, 'dist'), { recursive: true })

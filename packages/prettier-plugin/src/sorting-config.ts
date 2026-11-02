@@ -10,4 +10,4 @@ export default {
   ...config,
   orderedSortConfigFiles: true,
   plugins: [sortingPlugin],
-} satisfies Config
+} as const satisfies Config
