@@ -20,7 +20,6 @@ const merge = createDefu((object, key, value) => {
   if (!Array.isArray(value)) {
     return false
   }
-
   Object.assign(object, { [key]: [...value] })
   return true
 })
@@ -31,6 +30,7 @@ export async function resolveConfig(
   overrides: SortJsonStringOptions,
 ): Promise<SortJsonStringOptions> {
   const explicit = configFile === undefined ? undefined : resolve(cwd, configFile)
+
   if (explicit && !(await stat(explicit)).isFile()) {
     throw new Error(`Configuration is not a file: ${explicit}`)
   }
@@ -64,6 +64,7 @@ export async function resolveConfig(
       }
 
       const path = resolve(context.cwd ?? cwd, source)
+
       let isDirectory = false
       try {
         isDirectory = (await stat(path)).isDirectory()
@@ -136,17 +137,23 @@ function object(
   fields: Record<string, Validator>,
   reserved = false,
 ): boolean {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return false
+  }
+
+  const isReservedKey = (k: string) =>
+    reserved && (k.startsWith('$') || k === '_layers')
+
   for (const [key, setting] of Object.entries(value)) {
-    if (
-      setting === undefined ||
-      (reserved && (key.startsWith('$') || key === '_layers'))
-    )
+    if (setting === undefined || isReservedKey(key)) {
       continue
+    }
+
     if (!Object.hasOwn(fields, key) || !fields[key](setting)) {
       throw new Error(`Invalid configuration option: ${key}`)
     }
   }
+
   return true
 }
 
@@ -187,5 +194,8 @@ function validateConfig(value: unknown): asserts value is ChaoticConfig {
     },
     true,
   )
-  if (!valid) throw new Error('Configuration must contain an options object')
+
+  if (!valid) {
+    throw new Error('Configuration must contain an options object')
+  }
 }
