@@ -46,11 +46,17 @@ ignoreWords:
   - nxignore
 words:
   - archi
+  - citty
+  - defu
   - dotenvx
+  - ebnf
+  - giget
   - globbify
   - lestranger
   - orcid
+  - preflights
   - unprefix
+  - unsets
   - unstub
 languageSettings:
   - languageId: javascript,typescript

@@ -24,34 +24,6 @@
         }
       }
     },
-    "consumer-smoke": {
-      "cache": true,
-      "dependsOn": [
-        "ordered:build",
-        "nx-plugin:build",
-        "nx-plugin-internal:build",
-        "eslint-config:build",
-        "eslint-plugin:build"
-      ],
-      "executor": "nx:run-commands",
-      "inputs": [
-        "default",
-        {
-          "dependentTasksOutputFiles": "**/*",
-          "transitive": true
-        },
-        {
-          "runtime": "node --version"
-        },
-        {
-          "externalDependencies": ["vitest"]
-        }
-      ],
-      "options": {
-        "command": "vitest run --config tools/consumer-smoke/smoke.config.mts",
-        "cwd": "."
-      }
-    },
     "cruise-deps": {
       "cache": true,
       "executor": "nx:run-commands",
@@ -105,6 +77,28 @@
     "release": {
       "cache": false,
       "executor": "@the-stranger/nx-plugin-internal:release"
+    },
+    "smoke-test": {
+      "cache": true,
+      "dependsOn": [
+        "ordered:build",
+        "nx-plugin:build",
+        "nx-plugin-internal:build",
+        "eslint-config:build",
+        "eslint-plugin:build"
+      ],
+      "executor": "nx:run-commands",
+      "inputs": [
+        "default",
+        { "dependentTasksOutputFiles": "**/*", "transitive": true },
+        { "runtime": "node --version" },
+        { "externalDependencies": ["vitest"] }
+      ],
+      "options": {
+        "command": "vitest run --config tools/consumer-smoke/smoke.config.mts",
+        "cwd": "."
+      },
+      "metadata": { "description": "" }
     }
   },
   "includedScripts": []

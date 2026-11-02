@@ -1,11 +1,11 @@
 {
   "recommendations": [
     "arcanis.vscode-zipfs",
-    "davidanson.vscode-markdownlint",
     "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "nrwl.angular-console",
+    "rvben.rumdl",
     "streetsidesoftware.code-spell-checker",
     "vitest.explorer"
   ]
