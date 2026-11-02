@@ -1,8 +1,4 @@
-import {
-  sortMarkdownFrontmatter,
-  sortPackageJson,
-  sortYamlString,
-} from '@the-stranger/ordered'
+import { sortFrontmatter, sortPackageJson, sortYamlString } from '@the-stranger/ordered'
 import { parsers as jsonParsers } from 'prettier/plugins/babel'
 import { parsers as markdownParsers } from 'prettier/plugins/markdown'
 import { parsers as yamlParsers } from 'prettier/plugins/yaml'
@@ -133,7 +129,7 @@ export function createSortingPlugin(rules: SortOptions = {}): Plugin {
   parsers['yaml'] = preprocess(yamlParsers['yaml'], sortYamlString)
 
   for (const name of ['markdown', 'mdx'] as const) {
-    parsers[name] = preprocess(markdownParsers[name], sortMarkdownFrontmatter)
+    parsers[name] = preprocess(markdownParsers[name], sortFrontmatter)
   }
 
   return { options, parsers }

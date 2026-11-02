@@ -11,7 +11,7 @@ export {
 } from './lib/core.js'
 export type { ResolvedArrayValueOptions, ResolvedObjectKeyOptions } from './lib/core.js'
 export { sortJsonString, sortJsonValue } from './lib/json.js'
-export { sortMarkdownFrontmatter } from './lib/markdown.js'
+export { sortFrontmatter } from './lib/markdown.js'
 export { packageJsonSortOrder, sortPackageJson } from './lib/package-json.js'
 export type { PackageJsonSortOptions } from './lib/package-json.js'
 export { matchesPattern, pathToString } from './lib/path.js'

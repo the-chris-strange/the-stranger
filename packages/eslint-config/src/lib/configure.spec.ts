@@ -30,12 +30,13 @@ describe('configure', () => {
     'reports %s using core rule %s without requiring the TypeScript plugin',
     async (source, rule) => {
       const eslint = new ESLint({
-        overrideConfigFile: true,
         overrideConfig: configure({ source: { jsdoc: false, ts: false } }),
+        overrideConfigFile: true,
       })
       const [result] = await eslint.lintText(source, {
         filePath: 'unused.js',
       })
+
       expect(result.messages.some(message => message.ruleId === rule)).toBe(true)
     },
   )
@@ -46,23 +47,28 @@ describe('configure', () => {
     'keeps configurations independent when type checking is created in order %j',
     async (...order) => {
       vi.resetModules()
+
       const { configure: createConfig } = await import('./configure.js')
       let before: unknown
       const configurations = order.map(typeChecked => {
         const configuration = createConfig({
           source: { jsdoc: false, ts: { typeChecked } },
         })
-        if (!typeChecked)
+        if (!typeChecked) {
           before = structuredClone(configuration.map(config => config.rules))
+        }
         return configuration
       })
       const untyped = configurations[order.indexOf(false)]
+
       createConfig()
+
       expect(untyped.map(config => config.rules)).toStrictEqual(before)
 
       for (const [index, overrideConfig] of configurations.entries()) {
         const eslint = new ESLint({ overrideConfig, overrideConfigFile: true })
         const effective = await eslint.calculateConfigForFile('standalone.ts')
+
         expect(effective?.rules?.['@typescript-eslint/no-deprecated']).toStrictEqual(
           order[index] ? [1] : undefined,
         )
@@ -77,7 +83,6 @@ describe('configure', () => {
       try {
         const eslint = new ESLint({
           cwd,
-          overrideConfigFile: true,
           overrideConfig: configure({
             source: {
               jsdoc: false,
@@ -85,10 +90,12 @@ describe('configure', () => {
               ts: { typeChecked: false },
             },
           }),
+          overrideConfigFile: true,
         })
         const [result] = await eslint.lintText('export const count: number = 1\n', {
           filePath: `standalone.${extension}`,
         })
+
         expect(result.fatalErrorCount).toBe(0)
       } finally {
         await rm(cwd, { force: true, recursive: true })
@@ -103,6 +110,7 @@ describe('configure', () => {
         { source: { ts: { strict: true, typeChecked: true, typescript: false } } },
         filePath,
       )) as { rules?: Record<string, [number, ...unknown[]]> }
+
       expect(
         Object.entries(effective.rules ?? {})
           .filter(
@@ -129,12 +137,13 @@ describe('configure', () => {
       overrideConfigFile: true as const,
     }
     const [reported] = await new ESLint(options).lintText(input, { filePath })
-    expect(reported.messages.some(message => message.ruleId === 'yml/sort-keys')).toBe(
-      true,
-    )
     const [fixed] = await new ESLint({ ...options, fix: true }).lintText(input, {
       filePath,
     })
+
+    expect(reported.messages.some(message => message.ruleId === 'yml/sort-keys')).toBe(
+      true,
+    )
     expect(fixed.output).toBe(expected)
     expect(fixed.messages).toStrictEqual([])
   })
@@ -175,13 +184,14 @@ describe('configure', () => {
       const normal = (await calculateConfig({}, filePath)) as {
         rules?: Record<string, unknown>
       }
-      expect(normal).toBeTruthy()
-      expect(normal.rules?.['jsonc/sort-keys']).toBeUndefined()
-      expect(normal.rules?.['yml/sort-keys']).toBeUndefined()
       const enabled = (await calculateConfig(
         { json: true, yaml: true },
         filePath === 'config.yaml' ? 'cspell.config.yaml' : filePath,
       )) as { rules?: Record<string, unknown> }
+
+      expect(normal).toBeTruthy()
+      expect(normal.rules?.['jsonc/sort-keys']).toBeUndefined()
+      expect(normal.rules?.['yml/sort-keys']).toBeUndefined()
       expect(
         enabled.rules?.[
           filePath.endsWith('.json') ? 'jsonc/sort-keys' : 'yml/sort-keys'

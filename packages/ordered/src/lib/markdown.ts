@@ -4,10 +4,7 @@ import { sortYamlString } from './yaml.js'
 
 const FENCE = '---'
 
-export function sortMarkdownFrontmatter(
-  input: string,
-  options: SortOptions = {},
-): string {
+export function sortFrontmatter(input: string, options: SortOptions = {}): string {
   if (!input.startsWith(FENCE)) {
     return input
   }
